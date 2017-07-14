@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>L君</title>
+    <description>因恪守本心而知事情轻重缓急，因尽全力无保留而使其事竟成、光阴未曾虚度，此之谓郑重。 ​​​​
+</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 14 Jul 2017 11:09:59 +0800</pubDate>
+    <lastBuildDate>Fri, 14 Jul 2017 11:09:59 +0800</lastBuildDate>
+    <generator>Jekyll v3.5.0</generator>
+    
+      <item>
+        <title>乐观锁总结</title>
+        <description>&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+&lt;p&gt;公司有次做活动涉及到扣库存,由于没有采取任何加锁措施,结果显而易见,奖品超发,悲剧…&lt;/p&gt;
+</description>
+        <pubDate>Fri, 14 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/java/2017/07/14/optimistic-lock.html</link>
+        <guid isPermaLink="true">http://localhost:4000/java/2017/07/14/optimistic-lock.html</guid>
+        
+        <category>数据库</category>
+        
+        
+        <category>java</category>
+        
+      </item>
+    
+      <item>
+        <title>第一篇博客</title>
+        <description>&lt;p&gt;第一篇博客开通啦&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;研磨时光&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;记录生活&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;反思总结&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 14 Jun 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/life/2017/06/14/my-first-blog.html</link>
+        <guid isPermaLink="true">http://localhost:4000/life/2017/06/14/my-first-blog.html</guid>
+        
+        <category>啊啊</category>
+        
+        <category>bbb</category>
+        
+        
+        <category>life</category>
+        
+      </item>
+    
+      <item>
+        <title>健身基础知识整理</title>
+        <description>&lt;p&gt;将自己收集整理的健身相关知识归结于此处，主要信息来源是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;微信：硬派健身&lt;/li&gt;
+  &lt;li&gt;书籍：青花鱼教练让男人拥有“王”字腹肌&lt;/li&gt;
+  &lt;li&gt;书籍：The New Encyclopedia of Modern Bodybuilding&lt;/li&gt;
+  &lt;li&gt;Google 搜索网络内容&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;分享方式使用的是 Evernote 笔记的分享链接，以便后面自己继续增添更改。&lt;/p&gt;
+
+&lt;h3 id=&quot;基础知识&quot;&gt;基础知识&lt;/h3&gt;
+
+&lt;p&gt;整理收纳基本的健身常识。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDbNuNhR1lNBKnXO4NMD7cbsyXLyeFHonY&quot;&gt;健身目标的确定&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCG7i-skuRM7pajZGUwfJSDNSVAgNRNUh0&quot;&gt;饮食营养安排&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADC_WX5P75BLP5mDwIOCHjaye26HXvZmkx4&quot;&gt;肌肉位置分布&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;推荐看下面两本书，链接是我的笔记：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCRQ846ulxGgr19JDQycXeGuIaOQU5p8Es&quot;&gt;Notes of 硬派健身(Author: 斌卡)&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCEeDWJ3PZHubDIpjDOsip1KKaZs7Ra3wI&quot;&gt;Note: The New Encyclopedia of Modern Bodybuilding&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;基本动作&quot;&gt;基本动作&lt;/h3&gt;
+
+&lt;p&gt;整理收纳在健身房的基础健身动作及其要点。&lt;/p&gt;
+
+&lt;p&gt;推荐看青花鱼教练的两本书。&lt;/p&gt;
+
+&lt;h4 id=&quot;拉伸&quot;&gt;拉伸&lt;/h4&gt;
+&lt;p&gt;锻炼前必须热身，但是否拉伸很有争议。  &lt;br /&gt;
+我的做法是锻炼前热身+核心激活，锻炼后再充分拉伸。&lt;/p&gt;
+
+&lt;p&gt;拉伸的动作非常多且杂，不易整理，汇总部分于此，请自行挑选。 &lt;br /&gt;
+&lt;a href=&quot;https://www.evernote.com/l/ADBKBR5Rm_1DfbkcXnvViS0jRb_eWqgEvV0&quot;&gt;肌肉拉伸大全&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;核心&quot;&gt;核心&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCo2VM8HwtEK7rp5LYkQ-uuAFtBGOcKKb0&quot;&gt;核心 - 平板支撑&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDw_WsqMn5PwqB_vHk1EKZRFwb4sWLut-A&quot;&gt;核心 - 侧向平板支撑&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBqrfSrqkpK-IctfEbc2DKKkmnAP-LYrRg&quot;&gt;核心 - 俄羅斯式扭轉&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;腹&quot;&gt;腹&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBS1o1X4lFHBrlfxGgm33MvktrKM3g0TVM&quot;&gt;腹部训练基础点&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADASwkSZwbZLooNoFD5FhuyWC8t1lLCRsng&quot;&gt;上腹 - 抬腿屈膝卷腹&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADA-fwumzLhOpZSp2IEtlryHSoSLtOPYIyE&quot;&gt;腹部 - V字平衡&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBSC5dt_8pDKqTbKr9iKZIDkg1eJChw79E&quot;&gt;下腹 - 反向卷腹&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;大臂&quot;&gt;大臂&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADC5Pdp9SBxHFqozoEUQ5HGjW0DWkBmJxu0&quot;&gt;肩臂训练基础点&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADAt1FfNJJVMtIxmPUueJRvrZuOiqqX-HTI&quot;&gt;肱二头肌 - 哑铃单臂弯举&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBu74y5MxRHf7oXq5n9fP9cB2Rm-SaNobs&quot;&gt;肱三头肌 - 拉力器&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDwbnKDZmlGaKRdDt6m5vGU7Vd2aS_NVrI&quot;&gt;肱二头肌和肱三头股之间 - 哑铃弯举&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;肩&quot;&gt;肩&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADAllqcvgu9F3JNi4t0YGGqxevgDRptKsu4&quot;&gt;三角肌 - 杠铃头后举&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCIpXaleOhN-JFCz0c58mItO8YNxAMpieI&quot;&gt;三角肌侧面 - 哑铃平举&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDtge2k1kZO06VUOqR5sgrfCPD-05RXkNY&quot;&gt;三角肌后束 - 坐姿俯身飞鸟&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADD2xpCj1xJH1K6G2PAlZSToSjETvzudyQw&quot;&gt;肩袖 - L侧平举&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;胸&quot;&gt;胸&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBIwQOfYjJOMaAc_d6ZGgz0WQZnRSHf6d0&quot;&gt;胸部训练基础点&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADA04WztKSRF8pcYujbf2CdphoumeVRdfEI&quot;&gt;胸大肌 - 哑铃宽握卧推&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCL9gd07nhBCLXt5pll1HIVLfangIBS6so&quot;&gt;胸大肌上部 - 哑铃上斜窄握卧推&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADB0V4o1LrtGeKeUJGWw61IaVDI3doNrBEI&quot;&gt;胸大肌下部 - 杠铃下斜卧推&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADB7Gbt6cR1MGrP3ZbOIyXZHQLyiyTi0JY8&quot;&gt;胸大肌内侧 - 拉力器夹胸&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;背&quot;&gt;背&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADC0CPFDuftAmrCbRQ64As5o68egdZGTPtE&quot;&gt;背部训练基础点&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBcn_R3YKhA871-AgiEUda-SJBcRab7diw&quot;&gt;背阔肌 - 反手胸部引体向上&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBZ6q1PbjhKtqaI_V-_GmcvE-Kk7u96N-M&quot;&gt;背部 - 反手窄距高位下拉&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDPuaf0Tm1NPJN1cRdWLICqslIlCUr6jN4&quot;&gt;背部 - 划船机&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;下背&quot;&gt;下背&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADA6Hac2JaZA46AKvlGWtEDIjL_MNBS0ic0&quot;&gt;背部下方 - 直腿臀桥&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDJU73pkZ1Ke59VYi35mvB-Ipd-iHuEcXE&quot;&gt;背部下方 - 罗马椅挺身&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDnJVGKsFBFj6pnuVN-jUuYV3h0d2l3G_0&quot;&gt;竖脊肌 - 十字挺身&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;臀&quot;&gt;臀&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBfCcGixFNL-aNgvZ85bCtRuvEiqw2Gq9Q&quot;&gt;臀腿训练基础点&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDSRk-4iNdOf6m6QSZsWBUEacN7G5_QRqY&quot;&gt;臀部，下背，后腿 - 罗马尼亚硬拉&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCTIzb_Ex1LVoGajtFEWUTME7V5u6DJkjs&quot;&gt;臀部，股二 - 低位宽握杠铃深蹲&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDv4f5cyFtEY71QKL4fdIXoFri0svbh4yo&quot;&gt;臀大肌 - 站姿直腿后抬&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADC6gadccD9NlJ29G8VhSXQpLkiKVw83wTw&quot;&gt;臀中肌 - 站姿侧抬腿&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;大腿&quot;&gt;大腿&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDhvRv0utBM_qGr5SaynvF6vnYMQJGxm0M&quot;&gt;股二头肌 - 站姿直背体前屈&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADBOf2HBKl5BrLljLjyjCbCS0ykjokL58ys&quot;&gt;股四头肌 - 坐姿腿屈伸&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCdrU7fOC5DY4-iF9uuko7CmRzlWpw4b_w&quot;&gt;股二头肌 - 坐姿腿弯举&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;小腿&quot;&gt;小腿&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADCeRjC95c1A_rSmhSEyyXNlR1ddni6L9vg&quot;&gt;小腿训练基础点&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.evernote.com/l/ADAACBml-a9FRKAkdDLHjZFR_AmpnTK7af4&quot;&gt;比目鱼肌 - 坐姿器械提踵&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;重点动作整理&quot;&gt;重点动作整理&lt;/h3&gt;
+&lt;p&gt;重点动作是一些我个人想要认真掌握的动作，在练习过程中会特别注意收集相关信息。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.evernote.com/l/ADDjn-IGic5OlZl1VyTW7PoRQ9h5nwAHkRk&quot;&gt;动作整理：基础硬拉&lt;/a&gt;   &lt;br /&gt;
+硬拉是我觉得相当难的动作，新人可考虑先做下腰的针对动作，强化后再尝试硬拉动作。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 05 Jun 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/life/2017/06/05/foundation-of-fitness.html</link>
+        <guid isPermaLink="true">http://localhost:4000/life/2017/06/05/foundation-of-fitness.html</guid>
+        
+        <category>健身</category>
+        
+        <category>生活</category>
+        
+        
+        <category>life</category>
+        
+      </item>
+    
+  </channel>
+</rss>
