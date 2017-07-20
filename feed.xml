@@ -6,8 +6,8 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 20 Jul 2017 16:22:00 +0800</pubDate>
-    <lastBuildDate>Thu, 20 Jul 2017 16:22:00 +0800</lastBuildDate>
+    <pubDate>Thu, 20 Jul 2017 17:30:35 +0800</pubDate>
+    <lastBuildDate>Thu, 20 Jul 2017 17:30:35 +0800</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
     
       <item>
@@ -26,6 +26,9 @@
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;&lt;a href=&quot;#幻读&quot;&gt;幻读&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#附录&quot;&gt;附录&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;&lt;a href=&quot;#参考资料&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
@@ -51,9 +54,11 @@
   &lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
 &lt;h3 id=&quot;脏读&quot;&gt;脏读&lt;/h3&gt;
 
-&lt;p&gt;脏读 (dirty read)产生的原因是一个事务读到了另一个事务中&lt;strong&gt;未提交&lt;/strong&gt;的数据&lt;/p&gt;
+&lt;p&gt;脏读(dirty read)产生的原因是一个事务读到了另一个事务中&lt;strong&gt;未提交&lt;/strong&gt;的数据&lt;/p&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
@@ -64,7 +69,7 @@
   &lt;/thead&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt; 开始&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -72,7 +77,7 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  a = 1 &lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  a = 1 &lt;/code&gt;&lt;/td&gt;
       &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -84,7 +89,7 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  a = 5&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  a = 5&lt;/code&gt;&lt;/td&gt;
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
@@ -93,6 +98,7 @@
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;不可重复读&quot;&gt;不可重复读&lt;/h3&gt;
+
 &lt;p&gt;不可重复读(non-repeatable read)是一个事务读到了另一个事务中&lt;strong&gt;已提交&lt;/strong&gt;的数据&lt;/p&gt;
 
 &lt;table&gt;
@@ -112,7 +118,7 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  a = 1 &lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  a = 1 &lt;/code&gt;&lt;/td&gt;
       &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -124,7 +130,7 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  a = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  a = 1&lt;/code&gt;&lt;/td&gt;
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -136,15 +142,15 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  a = 5&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  a = 5&lt;/code&gt;&lt;/td&gt;
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
 &lt;h3 id=&quot;幻读&quot;&gt;幻读&lt;/h3&gt;
+
 &lt;p&gt;幻读(phantom read)是某个事务在读取某个范围内的记录时,另外一个事务又在该范围内插入了新的记录,当之前的事务再次读取该范围的记录时,会产生幻行.&lt;/p&gt;
 
 &lt;table&gt;
@@ -164,7 +170,7 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  2 &lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  2 &lt;/code&gt;&lt;/td&gt;
       &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -180,7 +186,7 @@
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code&gt;# RESULT  3&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;RESULT  3&lt;/code&gt;&lt;/td&gt;
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
@@ -188,6 +194,47 @@
 
 &lt;p&gt;需要注意的是,在Innodb下,是不会出现上述表格中的情况,是因为innodb使用了MVCC(多版本并发控制),但是幻读问题还是会存在,稍后会讨论这个问题.
 &lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;附录&quot;&gt;附录&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;隔离级别&lt;/th&gt;
+      &lt;th&gt;脏读&lt;/th&gt;
+      &lt;th&gt;不可重复读&lt;/th&gt;
+      &lt;th&gt;幻读&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;READ UNCOMMITTED&lt;/td&gt;
+      &lt;td&gt;√&lt;/td&gt;
+      &lt;td&gt;√&lt;/td&gt;
+      &lt;td&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;READ COMMITTED&lt;/td&gt;
+      &lt;td&gt;×&lt;/td&gt;
+      &lt;td&gt;√&lt;/td&gt;
+      &lt;td&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;REPEATABLE READ&lt;/td&gt;
+      &lt;td&gt;×&lt;/td&gt;
+      &lt;td&gt;×&lt;/td&gt;
+      &lt;td&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;SERIALIZABLE&lt;/td&gt;
+      &lt;td&gt;×&lt;/td&gt;
+      &lt;td&gt;×&lt;/td&gt;
+      &lt;td&gt;×&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;参考资料&quot;&gt;参考资料&lt;/h3&gt;
 
