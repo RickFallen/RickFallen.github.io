@@ -6,14 +6,351 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 14 Jul 2017 11:09:59 +0800</pubDate>
-    <lastBuildDate>Fri, 14 Jul 2017 11:09:59 +0800</lastBuildDate>
+    <pubDate>Thu, 20 Jul 2017 16:22:00 +0800</pubDate>
+    <lastBuildDate>Thu, 20 Jul 2017 16:22:00 +0800</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
     
       <item>
+        <title>数据库隔离级别</title>
+        <description>&lt;h2 id=&quot;目录&quot;&gt;目录&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#隔离级别&quot;&gt;隔离级别&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#脏读&quot;&gt;脏读&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#不可重复读&quot;&gt;不可重复读&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#幻读&quot;&gt;幻读&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#参考资料&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;隔离级别&quot;&gt;隔离级别&lt;/h3&gt;
+
+&lt;p&gt;隔离级别是数据库事务ACID特性中I(Isolation,隔离性)的实现,数据库隔离级别是&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;未提交读 (READ UNCOMMITTED)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;提交读 (READ COMMITTED)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;可重复读 (REPEATABLE READ)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;串行化 (SERIALIZABLE)&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;脏读&quot;&gt;脏读&lt;/h3&gt;
+
+&lt;p&gt;脏读 (dirty read)产生的原因是一个事务读到了另一个事务中&lt;strong&gt;未提交&lt;/strong&gt;的数据&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;事务1&lt;/th&gt;
+      &lt;th&gt;事务2&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt; 开始&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT a FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  a = 1 &lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;UPDATE t SET a = 5 WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT a FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  a = 5&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;不可重复读&quot;&gt;不可重复读&lt;/h3&gt;
+&lt;p&gt;不可重复读(non-repeatable read)是一个事务读到了另一个事务中&lt;strong&gt;已提交&lt;/strong&gt;的数据&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;事务1&lt;/th&gt;
+      &lt;th&gt;事务2&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT a FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  a = 1 &lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;UPDATE t SET a = 5 WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT a FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  a = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;COMMIT&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT a FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  a = 5&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;幻读&quot;&gt;幻读&lt;/h3&gt;
+&lt;p&gt;幻读(phantom read)是某个事务在读取某个范围内的记录时,另外一个事务又在该范围内插入了新的记录,当之前的事务再次读取该范围的记录时,会产生幻行.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;事务1&lt;/th&gt;
+      &lt;th&gt;事务2&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT count(*) FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  2 &lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;START TRANSACTION&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;INSERT INTO t values (1)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;COMMIT&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;SELECT count(*) FROM t WHERE id = 1&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code&gt;# RESULT  3&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;需要注意的是,在Innodb下,是不会出现上述表格中的情况,是因为innodb使用了MVCC(多版本并发控制),但是幻读问题还是会存在,稍后会讨论这个问题.
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;参考资料&quot;&gt;参考资料&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Isolation_(database_systems)&quot;&gt;https://en.wikipedia.org/wiki/Isolation_(database_systems)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html&quot;&gt;https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;《高性能Mysql》&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 20 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/mysql/2017/07/20/innodb-isolation.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2017/07/20/innodb-isolation.html</guid>
+        
+        <category>数据库</category>
+        
+        <category>隔离级别</category>
+        
+        <category>innodb</category>
+        
+        
+        <category>mysql</category>
+        
+      </item>
+    
+      <item>
         <title>乐观锁总结</title>
-        <description>&lt;h2 id=&quot;起因&quot;&gt;起因&lt;/h2&gt;
+        <description>&lt;h2 id=&quot;目录&quot;&gt;目录&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#起因&quot;&gt;起因&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#乐观锁介绍&quot;&gt;乐观锁介绍&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#乐观锁实现方式&quot;&gt;乐观锁实现方式&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;#参考资料&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;起因&quot;&gt;起因&lt;/h4&gt;
 &lt;p&gt;公司有次做活动涉及到扣库存,由于没有采取任何加锁措施,结果显而易见,奖品超发,悲剧…&lt;/p&gt;
+
+&lt;h4 id=&quot;乐观锁介绍&quot;&gt;乐观锁介绍&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;what&lt;/p&gt;
+
+    &lt;p&gt;乐观锁是一种并发控制&lt;strong&gt;策略&lt;/strong&gt;,并不是数据库提供的机制,也就意味着需要我们从sql层面上手动实现这种机制.要实现乐观锁需要在表中添加一个version字段(或者时间戳,hash,或者是要扣减的字段本身等等),在事务开始时首先执行查询操作记录version的值,然后执行修改操作,然后校验此时version的值是否跟之前查询的值相等,如果相等,提交事务,否则进行回滚,重试等操作.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;when&lt;/p&gt;
+
+    &lt;p&gt;乐观锁用于典型的并发扣减库存场景,当一条update语句执行时,需要同时满足一个或多个条件才能执行成功,可以认为是幂等性的实现,既多次执行结果始终相同.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;why&lt;/p&gt;
+
+    &lt;p&gt;为什么使用锁,是因为涉及到多个线程同时操作同一个资源,也就是出现所谓的竞态条件,先查询后更新并不是原子性操作,会导致数据不一致,因此就需要锁,使得先查询后更新是一个原子性操作.&lt;/p&gt;
+
+    &lt;p&gt;为什么使用乐观锁,是因为乐观锁适用于高并发场景,当使用悲观锁时可能会导致大量线程处于等待状态,系统吞吐量下降,用悲观锁必须要小心,因为还有可能出现死锁.&lt;/p&gt;
+
+    &lt;p&gt;但是并不代表悲观锁不好,什么时候使用乐观锁和悲观锁要视情况而定.&lt;/p&gt;
+
+    &lt;p&gt;本文主要讲乐观锁,关于悲观锁此处不做展开.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;乐观锁实现方式&quot;&gt;乐观锁实现方式&lt;/h4&gt;
+
+&lt;p&gt;话不多说直接上伪代码&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;普通乐观锁&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;SELECT iD, val1, val2
+     FROM theTable
+     WHERE iD = @theId;
+#{code that calculates new values}
+UPDATE theTable
+     SET val1 = @newVal1,
+         val2 = @newVal2
+     WHERE iD = @theId
+         AND val1 = @oldVal1
+         AND val2 = @oldVal2;
+#{if AffectedRows == 1 }
+    #{go on with your other code}
+#{else}
+    #{decide what to do since it has gone bad... in your code}
+#{endif}
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;基于事务的多字段乐观锁&lt;/p&gt;
+
+    &lt;p&gt;要注意数据库的事务隔离级别&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;SELECT iD, val1, val2
+     FROM theTable
+     WHERE iD = @theId;
+#{code that calculates new values}
+BEGIN TRANSACTION;
+UPDATE anotherTable
+     SET col1 = @newCol1,
+         col2 = @newCol2
+     WHERE iD = @theId;
+UPDATE theTable
+     SET val1 = @newVal1,
+         val2 = @newVal2
+     WHERE iD = @theId
+         AND val1 = @oldVal1
+         AND val2 = @oldVal2;
+#{if AffectedRows == 1 }
+    COMMIT TRANSACTION;
+    #{go on with your other code}
+#{else}
+    ROLLBACK TRANSACTION;
+    #{decide what to do since it has gone bad... in your code}
+#{endif}
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;基于事务的version的乐观锁&lt;/p&gt;
+
+    &lt;p&gt;同样需要事务,只不过这里省略了&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;SELECT iD, val1, val2, version
+     FROM theTable
+     WHERE iD = @theId;
+#{code that calculates new values}
+UPDATE theTable
+     SET val1 = @newVal1,
+         val2 = @newVal2,
+         version = version + 1
+     WHERE iD = @theId
+         AND version = @oldversion;
+#{if AffectedRows == 1 }
+    #{go on with your other code}
+#{else}
+    #{decide what to do since it has gone bad... in your code}
+#{endif}
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;参考资料&quot;&gt;参考资料&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/129329/optimistic-vs-pessimistic-locking&quot;&gt;https://stackoverflow.com/questions/129329/optimistic-vs-pessimistic-locking&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/17431338/optimistic-locking-in-mysql&quot;&gt;https://stackoverflow.com/questions/17431338/optimistic-locking-in-mysql&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Optimistic_concurrency_control&quot;&gt;https://en.wikipedia.org/wiki/Optimistic_concurrency_control&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Fri, 14 Jul 2017 00:00:00 +0800</pubDate>
         <link>http://localhost:4000/java/2017/07/14/optimistic-lock.html</link>
