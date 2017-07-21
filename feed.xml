@@ -6,9 +6,67 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 20 Jul 2017 17:44:20 +0800</pubDate>
-    <lastBuildDate>Thu, 20 Jul 2017 17:44:20 +0800</lastBuildDate>
+    <pubDate>Thu, 20 Jul 2017 17:58:05 +0800</pubDate>
+    <lastBuildDate>Thu, 20 Jul 2017 17:58:05 +0800</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
+    
+      <item>
+        <title>JAVA8 时间API 踩过的坑</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;如何使用java8时间API获取类似System.currentTimeMillis()毫秒数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;LocalDateTime now = LocalDateTime.now();
+ZonedDateTime zdt = now.atZone(ZoneId.systemDefault());
+long actualMilli = zdt.toInstant().toEpochMilli();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;要想获取某个月的第一天,最后一天,第一个周几,下一个周几,最后一个周几&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;TemporalAdjusters&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;碰到形如 2016/Jul/23这样的日期转换报错该如何解决&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;DateTimeFormatter.ofPattern(&quot;yyyy/MMM/dd&quot;);
+DateTimeFormatter.ofPattern(&quot;yyyy/MMM/dd&quot;).withLocale(Locale.ENGLISH);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;求两个日期之间的天数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;ChronoUnit.DAYS.between();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;已知毫秒数,转成LocalDateTime&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;long time = 1500444000000L;
+Instant ofEpochMilli = Instant.ofEpochMilli(time);
+ZonedDateTime atZone = ofEpochMilli.atZone(ZoneId.systemDefault());
+LocalDateTime localDateTime = atZone.toLocalDateTime();
+&lt;/code&gt;&lt;/pre&gt;
+
+</description>
+        <pubDate>Thu, 20 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/java/2017/07/20/java8-datetime-api-best-practice.html</link>
+        <guid isPermaLink="true">http://localhost:4000/java/2017/07/20/java8-datetime-api-best-practice.html</guid>
+        
+        <category>java8</category>
+        
+        <category>时间API</category>
+        
+        
+        <category>java</category>
+        
+      </item>
     
       <item>
         <title>数据库隔离级别</title>
@@ -400,13 +458,13 @@ UPDATE theTable
 &lt;/ol&gt;
 </description>
         <pubDate>Fri, 14 Jul 2017 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/java/2017/07/14/optimistic-lock.html</link>
-        <guid isPermaLink="true">http://localhost:4000/java/2017/07/14/optimistic-lock.html</guid>
+        <link>http://localhost:4000/mysql/2017/07/14/optimistic-lock.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2017/07/14/optimistic-lock.html</guid>
         
         <category>数据库</category>
         
         
-        <category>java</category>
+        <category>mysql</category>
         
       </item>
     

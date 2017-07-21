@@ -6,12 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>java</title>
-  <meta name="description" content="因恪守本心而知事情轻重缓急，因尽全力无保留而使其事竟成、光阴未曾虚度，此之谓郑重。 ​​​​
-">
+  <title>JAVA8 时间API 踩过的坑</title>
+  <meta name="description" content="  如何使用java8时间API获取类似System.currentTimeMillis()毫秒数">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://localhost:4000/java/">
+  <link rel="canonical" href="http://localhost:4000/java/2017/07/20/java8-datetime-api-best-practice.html">
   <link rel="alternate" type="application/rss+xml" title="L君" href="http://localhost:4000/feed.xml">
   <script src = "/assets/highlight/highlight.pack.js"></script> 
   <link rel="stylesheet" href="/assets/highlight/styles/ocean.css">
@@ -106,26 +105,60 @@ var _hmt = _hmt || [];
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">JAVA8 时间API 踩过的坑</h1>
+    <p class="post-meta"><time datetime="2017-07-20T00:00:00+08:00" itemprop="datePublished">Jul 20, 2017</time></p>
+  </header>
 
-  <ul class="post-list">
-  
-    
-      <li>
-        <span class="post-meta">Jul 21, 2017</span>
+  <div class="post-content" itemprop="articleBody">
+    <ul>
+  <li>如何使用java8时间API获取类似System.currentTimeMillis()毫秒数</li>
+</ul>
 
-        <h2>
-          <a class="post-link" href="/java/2017/07/20/java8-datetime-api-best-practice.html">JAVA8 时间API 踩过的坑</a>
-        </h2>
-      </li>
-    
-  </ul>
+<pre><code>LocalDateTime now = LocalDateTime.now();
+ZonedDateTime zdt = now.atZone(ZoneId.systemDefault());
+long actualMilli = zdt.toInstant().toEpochMilli();
+</code></pre>
 
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+<ul>
+  <li>要想获取某个月的第一天,最后一天,第一个周几,下一个周几,最后一个周几</li>
+</ul>
 
-</div>
+<blockquote>
+  <p>TemporalAdjusters</p>
+</blockquote>
+
+<ul>
+  <li>碰到形如 2016/Jul/23这样的日期转换报错该如何解决</li>
+</ul>
+
+<pre><code>DateTimeFormatter.ofPattern("yyyy/MMM/dd");
+DateTimeFormatter.ofPattern("yyyy/MMM/dd").withLocale(Locale.ENGLISH);
+</code></pre>
+
+<ul>
+  <li>求两个日期之间的天数</li>
+</ul>
+
+<pre><code>ChronoUnit.DAYS.between();
+</code></pre>
+
+<ul>
+  <li>已知毫秒数,转成LocalDateTime</li>
+</ul>
+
+<pre><code>long time = 1500444000000L;
+Instant ofEpochMilli = Instant.ofEpochMilli(time);
+ZonedDateTime atZone = ofEpochMilli.atZone(ZoneId.systemDefault());
+LocalDateTime localDateTime = atZone.toLocalDateTime();
+</code></pre>
+
+
+  </div>
+
+</article>
 
       </div>
     </div>
