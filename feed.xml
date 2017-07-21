@@ -6,9 +6,73 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 20 Jul 2017 17:58:05 +0800</pubDate>
-    <lastBuildDate>Thu, 20 Jul 2017 17:58:05 +0800</lastBuildDate>
+    <pubDate>Fri, 21 Jul 2017 15:59:31 +0800</pubDate>
+    <lastBuildDate>Fri, 21 Jul 2017 15:59:31 +0800</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
+    
+      <item>
+        <title>Innodb与MyISAM的区别</title>
+        <description>&lt;p&gt;其实在官方文档里已经可以用以下两张图片大致看出区别&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Innodb&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;img src=&quot;/assets/storage_engine/innodb.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MyISAM&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;img src=&quot;/assets/storage_engine/myisam.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Innodb
+    &lt;ul&gt;
+      &lt;li&gt;事务&lt;/li&gt;
+      &lt;li&gt;外键&lt;/li&gt;
+      &lt;li&gt;行锁,表锁&lt;/li&gt;
+      &lt;li&gt;故障恢复&lt;/li&gt;
+      &lt;li&gt;MVCC(多版本并发控制)&lt;/li&gt;
+      &lt;li&gt;聚簇索引&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;MyISAM
+    &lt;ul&gt;
+      &lt;li&gt;全文索引 (在mysql5.7之后,Inoodb也支持了)&lt;/li&gt;
+      &lt;li&gt;表锁&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;需要注意的是由于两种引擎数据结构的不同,SHOW TABLE STATUS IN TABLE 或者 EXPLAIN SELECT COUNT(*) FROM TABLE 返回的rows在Innodb中是近似值,而MyISAM中是精确值&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;参考资料&quot;&gt;参考资料&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/innodb-introduction.html&quot;&gt;https://dev.mysql.com/doc/refman/5.7/en/innodb-introduction.html&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/myisam-storage-engine.html&quot;&gt;https://dev.mysql.com/doc/refman/5.7/en/myisam-storage-engine.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 21 Jul 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/mysql/2017/07/21/diffierence-between-innodb-and-myisam.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2017/07/21/diffierence-between-innodb-and-myisam.html</guid>
+        
+        <category>数据库</category>
+        
+        <category>innodb</category>
+        
+        <category>myisam</category>
+        
+        
+        <category>mysql</category>
+        
+      </item>
     
       <item>
         <title>JAVA8 时间API 踩过的坑</title>

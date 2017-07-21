@@ -6,12 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>mysql</title>
-  <meta name="description" content="因恪守本心而知事情轻重缓急，因尽全力无保留而使其事竟成、光阴未曾虚度，此之谓郑重。 ​​​​
-">
+  <title>Innodb与MyISAM的区别</title>
+  <meta name="description" content="其实在官方文档里已经可以用以下两张图片大致看出区别">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://localhost:4000/mysql/">
+  <link rel="canonical" href="http://localhost:4000/mysql/2017/07/21/diffierence-between-innodb-and-myisam.html">
   <link rel="alternate" type="application/rss+xml" title="L君" href="http://localhost:4000/feed.xml">
   <script src = "/assets/highlight/highlight.pack.js"></script> 
   <link rel="stylesheet" href="/assets/highlight/styles/ocean.css">
@@ -106,42 +105,64 @@ var _hmt = _hmt || [];
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Innodb与MyISAM的区别</h1>
+    <p class="post-meta"><time datetime="2017-07-21T00:00:00+08:00" itemprop="datePublished">Jul 21, 2017</time></p>
+  </header>
 
-  <ul class="post-list">
-  
-    
-      <li>
-        <span class="post-meta">Jul 21, 2017</span>
+  <div class="post-content" itemprop="articleBody">
+    <p>其实在官方文档里已经可以用以下两张图片大致看出区别</p>
 
-        <h2>
-          <a class="post-link" href="/mysql/2017/07/21/diffierence-between-innodb-and-myisam.html">Innodb与MyISAM的区别</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jul 18, 2017</span>
+<ul>
+  <li>Innodb</li>
+</ul>
 
-        <h2>
-          <a class="post-link" href="/mysql/2017/07/20/innodb-isolation.html">数据库隔离级别</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jul 14, 2017</span>
+<blockquote>
+  <p><img src="/assets/storage_engine/innodb.png" alt="image" /></p>
+</blockquote>
 
-        <h2>
-          <a class="post-link" href="/mysql/2017/07/14/optimistic-lock.html">乐观锁总结</a>
-        </h2>
-      </li>
-    
-  </ul>
+<ul>
+  <li>MyISAM</li>
+</ul>
 
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+<blockquote>
+  <p><img src="/assets/storage_engine/myisam.png" alt="image" /></p>
+</blockquote>
 
-</div>
+<h3 id="总结">总结</h3>
+
+<ul>
+  <li>Innodb
+    <ul>
+      <li>事务</li>
+      <li>外键</li>
+      <li>行锁,表锁</li>
+      <li>故障恢复</li>
+      <li>MVCC(多版本并发控制)</li>
+      <li>聚簇索引</li>
+    </ul>
+  </li>
+  <li>MyISAM
+    <ul>
+      <li>全文索引 (在mysql5.7之后,Inoodb也支持了)</li>
+      <li>表锁</li>
+    </ul>
+  </li>
+  <li>需要注意的是由于两种引擎数据结构的不同,SHOW TABLE STATUS IN TABLE 或者 EXPLAIN SELECT COUNT(*) FROM TABLE 返回的rows在Innodb中是近似值,而MyISAM中是精确值</li>
+</ul>
+
+<h3 id="参考资料">参考资料</h3>
+
+<ul>
+  <li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-introduction.html">https://dev.mysql.com/doc/refman/5.7/en/innodb-introduction.html</a></li>
+  <li><a href="https://dev.mysql.com/doc/refman/5.7/en/myisam-storage-engine.html">https://dev.mysql.com/doc/refman/5.7/en/myisam-storage-engine.html</a></li>
+</ul>
+
+  </div>
+
+</article>
 
       </div>
     </div>
