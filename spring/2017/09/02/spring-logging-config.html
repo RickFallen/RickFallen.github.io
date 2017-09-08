@@ -6,12 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>数据结构与算法</title>
-  <meta name="description" content="因恪守本心而知事情轻重缓急，因尽全力无保留而使其事竟成、光阴未曾虚度，此之谓郑重。 ​​​​
-">
+  <title>spring日志配置整理</title>
+  <meta name="description" content="      事务日志配置  log4j.logger.org.springframework.jdbc.datasource.DataSourceTransactionManager=DEBUG        示例  ">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://localhost:4000/algorithm/">
+  <link rel="canonical" href="http://localhost:4000/spring/2017/09/02/spring-logging-config.html">
   <link rel="alternate" type="application/rss+xml" title="L君" href="http://localhost:4000/feed.xml">
   <script src = "/assets/highlight/highlight.pack.js"></script> 
   <link rel="stylesheet" href="/assets/highlight/styles/ocean.css">
@@ -119,26 +118,35 @@ var _hmt = _hmt || [];
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">spring日志配置整理</h1>
+    <p class="post-meta"><time datetime="2017-09-02T00:00:00+08:00" itemprop="datePublished">Sep 2, 2017</time></p>
+  </header>
 
-  <ul class="post-list">
-  
-    
-      <li>
-        <span class="post-meta">Jul 21, 2017</span>
+  <div class="post-content" itemprop="articleBody">
+    <ul>
+  <li>
+    <p>事务日志配置
+  log4j.logger.org.springframework.jdbc.datasource.DataSourceTransactionManager=DEBUG</p>
+  </li>
+  <li>
+    <p>示例</p>
+  </li>
+</ul>
 
-        <h2>
-          <a class="post-link" href="/algorithm/2017/07/24/time-complex-table.html">时间复杂度速查表</a>
-        </h2>
-      </li>
-    
-  </ul>
+<pre><code>2017-09-08 11:26:28.340 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Creating new transaction with name [TestMapper.test1]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT; ''
+2017-09-08 11:26:28.637 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Acquired Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4] for JDBC transaction
+2017-09-08 11:26:28.642 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Switching JDBC Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4] to manual commit
+2017-09-08 11:26:28.902 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Initiating transaction rollback
+2017-09-08 11:26:28.902 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Rolling back JDBC transaction on Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4]
+2017-09-08 11:26:28.904 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Releasing JDBC Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4] after transaction
+</code></pre>
 
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+  </div>
 
-</div>
+</article>
 
       </div>
     </div>

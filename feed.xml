@@ -6,9 +6,42 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 18 Aug 2017 10:42:43 +0800</pubDate>
-    <lastBuildDate>Fri, 18 Aug 2017 10:42:43 +0800</lastBuildDate>
+    <pubDate>Fri, 08 Sep 2017 15:18:09 +0800</pubDate>
+    <lastBuildDate>Fri, 08 Sep 2017 15:18:09 +0800</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
+    
+      <item>
+        <title>spring日志配置整理</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;事务日志配置
+  log4j.logger.org.springframework.jdbc.datasource.DataSourceTransactionManager=DEBUG&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;示例&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;2017-09-08 11:26:28.340 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Creating new transaction with name [TestMapper.test1]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT; ''
+2017-09-08 11:26:28.637 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Acquired Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4] for JDBC transaction
+2017-09-08 11:26:28.642 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Switching JDBC Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4] to manual commit
+2017-09-08 11:26:28.902 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Initiating transaction rollback
+2017-09-08 11:26:28.902 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Rolling back JDBC transaction on Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4]
+2017-09-08 11:26:28.904 DEBUG 9068 --- [main] o.s.j.d.DataSourceTransactionManager: Releasing JDBC Connection [com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl@38a38ed4] after transaction
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        <pubDate>Sat, 02 Sep 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/spring/2017/09/02/spring-logging-config.html</link>
+        <guid isPermaLink="true">http://localhost:4000/spring/2017/09/02/spring-logging-config.html</guid>
+        
+        <category>spring</category>
+        
+        <category>logging</category>
+        
+        
+        <category>spring</category>
+        
+      </item>
     
       <item>
         <title>时间复杂度速查表</title>
