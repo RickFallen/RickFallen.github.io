@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[title]]></title>
-    <url>%2F2019%2F01%2F22%2Ftitle%2F</url>
-    <content type="text"><![CDATA[测试博客]]></content>
+    <title><![CDATA[吴恩达ml课程编程作业 machine-learning-ex1]]></title>
+    <url>%2F2019%2F01%2F22%2Fml-ex1%2F</url>
+    <content type="text"><![CDATA[warmUpExercise.m 第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵 1A = eye(5); 完成 computeCost.m (计算单变量代价函数) 回想一下我们的单变量hypothesis公式 \[ h(\theta) = \theta_0 + \theta_1x \] 在这个公式中\(x\)指的是变量(variable),\(\theta_0\)和\(\theta_1\)是参数(parameter),之后的工作就是对代价函数(cost function)求导,找出使得代价函数最小(收敛时)\(\theta_0\)和\(\theta_1\)的值 刚开始学的时候有一段时间变量(variable)和参数(parameter)傻傻分不清 \(X\)是我们的数据矩阵,如下 \[ \left[ \begin{matrix} 3\\ 5\\ 8 \end{matrix} \right] \] 每一列代表一个特征,由于我们是单变量代价函数,所有X只有一列,为了不失一般性,可以改写我们的hypothesis公式 \[ h(\theta) = \theta_0x_0+ \theta_1x_1 \] 其中\(x_0\)的值始终为1,在我们的编程作业中\(\theta\)是一个向量代表\(\theta_1\)和\(\theta_2\),如下 \[ \left[ \begin{matrix} 0 \\ 0 \end{matrix} \right] \] 为了用矩阵的乘法表示hypothesis公式,我们需要手动给\(X\)加上一列,如下(在ml编程作业中,已经帮我们添加了第一列1,所以无需我们再手动添加) \[ \left[ \begin{matrix} 1 &amp; 3\\ 1 &amp; 5\\ 1 &amp; 8 \end{matrix} \right] \] 然后执行矩阵的乘法 \[ h = X * \theta^T \] \[ \left[ \begin{matrix} 1 &amp; 3\\ 1 &amp; 5\\ 1 &amp; 8 \end{matrix} \right] * \left[ \begin{matrix} 0 \\ 0 \end{matrix} \right] \] 代价函数 \[ J(\theta) = \frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)}))^2 \] hypothesis计算完成后得到的是个m x 1的向量,代表的是我们通过h公式计算出的预测结果,m代表数据的行数,也就是\(X\)矩阵的行数.\(y\)向量代表的是真实的结果,所以\((h_\theta(x^{(i)}) - y^{(i)}))\)可以直接用两矩阵相减得出,即\(h - y\) 下面要做的就是计算平方和了,计算平方和有两种方法: \(\alpha^T * \alpha\) 永乐大帝在上,受小弟一拜 利用octave/matlib内置矩阵运算方法,先同时给所有数平方,再sum 于是,我们就可以得出我们的代价函数 12h = X * theta;J = 1 / (2 * m) * sum((h - y) .^ 2); 完成. gradientDescent.m (梯度下降) 为了使我们的线性方程方程\(h\)更贴近我们的数据集,因此我们要不断的去改变\(\theta_0\)和\(\theta_1\)这两个参数的值,使得代价函数\(J(\theta)\)取得最小值,如何取得最小值,我们用的是批量梯度下降算法(batch gradient descent algorithm) 回顾我们的批量梯度下降算法,即同时对每一个\(\theta\)求偏导,如下 \[ \theta = \theta - \alpha\cdot\frac{\partial}{\partial\theta}J(\theta) \] 即 \[ \theta_j = \theta_j - \alpha \cdot \frac{1}{m} \sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})\cdot x_j \] 由于我们是单变量,所以j只能取0,1,而且每次迭代我们必须要同时更新\(\theta_0\)和\(\theta_1\) (simultaneously update \(\theta_j\) for all j) 要计算 \((h_\theta(x^{(i)})-y^{(i)})\)的和,我们可以使用矩阵的乘法,由上文知\(X\)矩阵为m x 2 , \((h_\theta(x^{(i)})-y^{(i)})\) 为m维向量,则 \[ \sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})\cdot x_j = X^T*(h_\theta(x^{(i)})-y^{(i)}) = \left[ \begin{matrix} 1 &amp; 1 &amp; 1\\ 3 &amp; 5 &amp; 8\\ \end{matrix} \right] * \left[ \begin{matrix} 0 \\ 0 \\ 0 \end{matrix} \right] \] 可以简单的理解为\(X^T\)矩阵的第一行就是计算\(\theta_0\),第二行就是计算\(\theta_1\),第n行就是计算\(\theta_n\)(n &gt; 1就是多变量线性回归了,在这里我们的n = 1,也就是单变量线性回归) 因此,我们的代码可以这么写 12h = X * theta;theta = theta - alpha / m * (X&apos; * (h - y)); 完成 至此,我们的必修部分的编程作业都已做完,下面来看选修部分的作业 featureNormalize.m (特征标准化) 特征标准化的目的就是为了提升梯度下降的计算速度. 特征标准化包含两个方面: Feature Scaling Mean Normalize 它们将尝试使所有的特征都尽量放缩到-1到1之间(不严格,可有误差) 最简单的实现方式是\(x_n=\frac{x_n-\mu_n}{s_n}\),其中\(u_n\)是平均值,\(s_n\)是标准差 在octave中,一个mxn矩阵是可以和另一个m行的列向量或者n列的行向量相加减的,所以答案如下 123mu = mean(X);sigma = std(X);X_norm = (X_norm - mu) ./ sigma; 完成 computeCostMulti.m 由于矩阵乘法的原因,多变量线性回归的代价函数代码和单变量线性回归的代价函数代码一模一样,不再赘述 12h = X * theta;J = 1 / (2 * m) * sum((h - y) .^ 2); gradientDescentMulti.m 同理,多变量梯度下降的代码和单变量梯度下降的代码一样,不再赘述 12h = X * theta;theta = theta - alpha / m * (X&apos; * (h - y)) ; 完成 normalEqn.m(正规方程) 正规方程适用于特征个数不是特别多的场景(\(x&lt;10,000\)) , 优点: 不用迭代,一次即可计算出结果 不用选取学习率\(\alpha\)(learning rate) 不需要特征放缩 缺点: - 对于特征值个数\(x&gt;10,000\)时计算速度缓慢 - 只适用于线性回归模型,不适用于逻辑回归模型 - 可能出现矩阵不可逆的情况 公式: \[ (X*X^T)^{-1}X^Ty \] 由于公式本来就是用矩阵表示,所以用octave/matlib实现起来一点都不难,代码如下: 1theta = pinv(X&apos; * X) * X&apos; * y; 完成 最后,提交作业]]></content>
       <categories>
-        <category>分类1</category>
+        <category>ml编程作业</category>
       </categories>
       <tags>
-        <tag>标签1</tag>
-        <tag>标签2</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Hello World]]></title>
-    <url>%2F2019%2F01%2F22%2Fhello-world%2F</url>
-    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
-      <categories>
-        <category>分类2</category>
-      </categories>
-      <tags>
-        <tag>标签3</tag>
-        <tag>标签4</tag>
+        <tag>machine-learning</tag>
+        <tag>吴恩达</tag>
+        <tag>Andrew Ng</tag>
+        <tag>编程作业</tag>
+        <tag>machine-learning-ex1</tag>
       </tags>
   </entry>
 </search>
