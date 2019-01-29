@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[吴恩达ml课程编程作业 machine-learning-ex3]]></title>
+    <url>%2F2019%2F01%2F29%2Fml-ex3%2F</url>
+    <content type="text"><![CDATA[lrCostFunction.m 这道题在上一个练习里已经做过,不再赘述: 123456h = sigmoid(X * theta);J = -1 / m * (y&apos; * log(h) + (1 - y)&apos; * log(1 - h)) + lambda / (2 * m) * sum(theta(2:end) .^ 2);theta_tmp = theta;theta_tmp(1) = 0;grad = 1 / m * (X&apos; * (h - y)) + lambda / m * theta_tmp; 完成 oneVsAll.m 这道题的目的是通过fmincg算法训练出针对每一个分类(这里是1-10)所对应的\(\theta_0\)到\(\theta_n\)值,然后用这些\(\theta\)值去识别新的图片 我们的特征矩阵是5000x400,每一行代表一个图片,加上一列\(x_0\)就是5000x401,针对10个分类,我们最后要返回的all_theta是10x401的矩阵,所以我们要对所有分类(1-10)进行循环并组合成all_theta. all_theta第一行代表数字1经过训练后所对应的所有\(\theta\)值,第二行代表数字2经过训练后所对应的所有\(\theta\)值 ... 第10行代表数字0经过训练后所对应的所有\(\theta\)值 12345678for c = 1:num_labels initial_theta = zeros(n + 1, 1); options = optimset(&apos;GradObj&apos;, &apos;on&apos;, &apos;MaxIter&apos;, 50); [theta] = ... fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ... initial_theta, options); all_theta(c,:) = theta&apos;; endfor 完成 predictOneVsAll.m 得到了所有分类(对应1-10的数字)的\(\theta\)值后,接下来就要利用这些值去识别新的图片了 我们的\(X\)矩阵是5000x401,all_theta矩阵是10x401.很显然我们要用矩阵\(X\)与all_theta矩阵的转置相乘,再代入sigmoid函数,得到的是5000 x 10的矩阵,行数就是图片张数,第一列代表的是图片为1时的概率,第二列代表的是图片为2的概率...第十列代表的是图片为0概率 最后要做的是取每一行中概率最大的那一列就是图片最终识别结果 12h = sigmoid(X * all_theta&apos;);[max_num,p] = max(h , [] , 2); 注:max函数第3个参数传1代表求每一列的最大值,最后返回的是行向量.第3个参数传2代表求每一行的最大值,最后返回的是列向量.max函数第一个返回值代表最大的数是几,第二个参数代表这个最大数的下标 predict.m 之前的题目是用逻辑回归识别手写图片,这道题是用神经网络(Neural Network)识别手写图片 相比逻辑回归的线性classifier,NN可以执行更加复杂的任务,在这个练习中,我们要用Feedforward Propagation算法实现一个3层神经网络,算法如下图所示: 因此,代码如下: 123456789a_1 = [ones(m,1) , X];z_2 = a_1 * Theta1&apos;;a_2 = [ones(m,1),sigmoid(z_2)];z_3 = a_2 * Theta2&apos;;a_3 = sigmoid(z_3);[max_num,p] = max(a_3,[],2); 完成]]></content>
+      <categories>
+        <category>ml编程作业</category>
+      </categories>
+      <tags>
+        <tag>machine-learning</tag>
+        <tag>吴恩达</tag>
+        <tag>Andrew Ng</tag>
+        <tag>编程作业</tag>
+        <tag>machine-learning-ex3</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[吴恩达ml课程编程作业 machine-learning-ex2]]></title>
     <url>%2F2019%2F01%2F28%2Fml-ex2%2F</url>
     <content type="text"><![CDATA[sigmoid.m 第一题比较简单,让我们实现Sigmoid函数,函数如下: \[ g(z)=\frac{1}{1+e^{-z}} \] 1g = 1 ./ (1 + exp(-z)); 完成 costFunction.m (逻辑回归的代价函数) 逻辑回归的hypothesis函数如下 \[ h_\theta(x)=g(\theta^Tx) \] 其中\(g\)就是我们刚才实现的sigmoid函数,逻辑回归的代价函数如下: \[ J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))) \] 为什么这么复杂呢...因为这个函数可以把我们的代价函数变成非凸函数(non-convex),这样在求导的时候就不会出现local minimum 有了ex-1的基础,用octave/matlib实现也不是那么困难了,代码如下 12h = sigmoid(X * theta);J = -1 / m * (y&apos; * log(h) + (1 - y)&apos; * log(1 - h)); 逻辑回归的梯度下降与线性回归的梯度下降公式长的一样: \[ \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)} \] 注:下标\(j\)代表第几个特征 需要注意的是,虽然它们公式长的一样,但是注意\(h_\theta(x)\)的实现方式是不同的,代码实现如下: 1grad = 1 / m * (X&apos; * (h - y)); 完成 predict.m 也是一道简单的题,直接上结果 12h = sigmoid(X * theta);p = h &gt;= 0.5; costFunctionReg.m 这道题主要是代价函数的正则化,用来解决过拟合(over-fitting)的问题,算法如下: \[ J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))) + \frac{\lambda}{2m}\sum_{j=1}^{n}\theta_j^2 \] 其中\(m\)代表数据的条数,\(n\)代表特征个数,需要注意的是,正则化是不包括\(\theta_0\)的 关于向量的平方和已经在上一篇ex-1中介绍过了,因此代码实现如下: 123h = sigmoid(X * theta);theta_temp = theta(2:end);J = -1 / m * (y&apos; * log(h) + (1 - y)&apos; * log(1 - h)) + lambda / (2 * m) * sum(theta_temp .^ 2); 接下来就要计算梯度值了,跟计算代价函数一样,计算梯度值的时候对\(\theta_0\)不做正则化处理 \[ \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)} \] 对于\(\theta_0\)之外的参数,需要加上正则化处理 \[ \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac{\lambda}{m}\theta_j \] 因此,在计算的时候,我们可以手动的给\(\theta_0\)赋值为0,这样就可以用一个公式来计算,不用判断是否为\(\theta_0\),计算梯度的代码如下: 12theta_temp = [0;theta_temp];grad = 1 / m * (X&apos; * (h - y)) + lambda / m * theta_temp; 完成]]></content>
