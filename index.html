@@ -96,16 +96,16 @@
 
 
 
-  <meta name="description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+  <meta name="description" content="黄沙百战穿金甲，不破楼兰终不还。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ricky Wu">
 <meta property="og:url" content="http://wucf.me/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+<meta property="og:description" content="黄沙百战穿金甲，不破楼兰终不还。">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ricky Wu">
-<meta name="twitter:description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+<meta name="twitter:description" content="黄沙百战穿金甲，不破楼兰终不还。">
 
 
 
@@ -372,11 +372,238 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/08/15/jvm/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chengfu Wu">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ricky Wu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/08/15/jvm/" class="post-title-link" itemprop="url">Spring 总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-15 19:49:52" itemprop="dateCreated datePublished" datetime="2019-08-15T19:49:52+08:00">2019-08-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-26 10:04:43" itemprop="dateModified" datetime="2019-08-26T10:04:43+08:00">2019-08-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/复习/" itemprop="url" rel="index"><span itemprop="name">复习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/15/jvm/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/15/jvm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">3.5k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">9 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <meta name="referrer" content="no-referrer">
+<h1 id="jvm-知识整理">JVM 知识整理</h1>
+<h2 id="q-a">Q &amp; A</h2>
+<h3 id="为什么会-stw">为什么会 STW</h3>
+<p>根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种</p>
+<ol type="1">
+<li>MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用.</li>
+<li>SWEEP - 清除阶段, 扫描没有被标记的内存</li>
+<li>COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片</li>
+</ol>
+<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max{内存碎片}时, Serial Old GC 会进行碎片整理, 当然这需要花费很多时间.
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/08/15/jvm/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/08/14/spring/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
-      <meta itemprop="description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
       <meta itemprop="image" content="/images/head.jpg">
     </span>
 
@@ -634,11 +861,236 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/08/12/spring-mvc/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chengfu Wu">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ricky Wu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/08/12/spring-mvc/" class="post-title-link" itemprop="url">SpringMVC 总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-12 19:49:52" itemprop="dateCreated datePublished" datetime="2019-08-12T19:49:52+08:00">2019-08-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-26 10:04:29" itemprop="dateModified" datetime="2019-08-26T10:04:29+08:00">2019-08-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/复习/" itemprop="url" rel="index"><span itemprop="name">复习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/12/spring-mvc/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/12/spring-mvc/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">2.4k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">6 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <meta name="referrer" content="no-referrer">
+<h1 id="spring-mvc-总结">Spring MVC 总结</h1>
+<h2 id="qa">Q&amp;A</h2>
+<h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
+<p>Spring 官方文档的一张图就很好诠释了父子容器</p>
+<blockquote>
+<p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
+</blockquote>
+<p>由此可见, 子容器是可以继承父容器的所有 Bean 的.
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/08/12/spring-mvc/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/01/29/ml-ex3/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
-      <meta itemprop="description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
       <meta itemprop="image" content="/images/head.jpg">
     </span>
 
@@ -845,7 +1297,7 @@
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
-      <meta itemprop="description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
       <meta itemprop="image" content="/images/head.jpg">
     </span>
 
@@ -1053,7 +1505,7 @@
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
-      <meta itemprop="description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
       <meta itemprop="image" content="/images/head.jpg">
     </span>
 
@@ -1270,7 +1722,7 @@
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
-      <meta itemprop="description" content="蓬生麻中，不扶而直；白沙在涅，与之俱黑。">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
       <meta itemprop="image" content="/images/head.jpg">
     </span>
 
@@ -1508,7 +1960,7 @@
               <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="Chengfu Wu">
             
               <p class="site-author-name" itemprop="name">Chengfu Wu</p>
-              <p class="site-description motion-element" itemprop="description">蓬生麻中，不扶而直；白沙在涅，与之俱黑。</p>
+              <p class="site-description motion-element" itemprop="description">黄沙百战穿金甲，不破楼兰终不还。</p>
           </div>
 
           
@@ -1518,7 +1970,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2119,6 +2571,10 @@
 
   
   
+    
+      
+    
+      
     
       
     
