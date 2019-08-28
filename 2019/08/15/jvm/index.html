@@ -109,7 +109,8 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg">
-<meta property="og:updated_time" content="2019-08-26T08:53:19.070Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg">
+<meta property="og:updated_time" content="2019-08-28T15:01:34.583Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM 总结">
 <meta name="twitter:description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact">
@@ -439,7 +440,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-26 16:53:19" itemprop="dateModified" datetime="2019-08-26T16:53:19+08:00">2019-08-26</time>
+                <time title="修改时间：2019-08-28 23:01:34" itemprop="dateModified" datetime="2019-08-28T23:01:34+08:00">2019-08-28</time>
               
             
           </span>
@@ -495,7 +496,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">3.5k</span>
+                <span title="本文字数">3.9k</span>
               
 
               
@@ -509,7 +510,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">9 分钟</span>
+                <span title="阅读时长">10 分钟</span>
               
             </div>
           
@@ -539,12 +540,14 @@
 <li>SWEEP - 清除阶段, 扫描没有被标记的内存</li>
 <li>COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片</li>
 </ol>
-<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max{内存碎片}时, Serial Old GC 会进行碎片整理, 当然这需要花费很多时间. <a id="more"></a> 参考<a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-惨嚎world" target="_blank" rel="noopener">why STW</a></p>
+<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max{内存碎片}时, Serial Old GC 会进行碎片整理, 当然这需要花费很多时间.</p>
+<a id="more"></a>
+<p>参考<a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-惨嚎world" target="_blank" rel="noopener">why STW</a></p>
 <h3 id="cms-收集器什么时候可能触发-stw-的-full-gc">CMS 收集器什么时候可能触发 STW 的 FULL GC</h3>
 <ol type="1">
 <li>Perm 空间不足</li>
-<li>CMS GC 时出现 promotion failed 和 concurrent mode failure（concurrent mode failure 发生的原因一般是CMS正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止CMS，直接进行Serial Old GC）</li>
-<li>统计得到的Young GC晋升到老年代的平均大小大于老年代的剩余空间</li>
+<li>CMS GC 时出现 promotion failed 和 concurrent mode failure（concurrent mode failure 发生的原因一般是CMS正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止 CMS，直接进行Serial Old GC）</li>
+<li>统计得到的 Young GC 晋升到老年代的平均大小大于老年代的剩余空间</li>
 <li>主动触发Full GC（执行jmap -histo:live [pid]）来避免碎片问题</li>
 </ol>
 <h3 id="如果新生代内存不够-会出现什么情况">如果新生代内存不够, 会出现什么情况</h3>
@@ -678,28 +681,66 @@
 <li>Parallel</li>
 <li>CMS(只用于老年代垃圾回收)</li>
 </ul>
+<h3 id="关于栈帧">关于栈帧</h3>
+<ul>
+<li><p>每个栈帧入栈出站都代表一次方法从开始到结束的过程</p></li>
+<li><p>只有位于栈顶的栈帧才是有效的, 这个栈帧叫做当前方法</p></li>
+<li><p>栈帧由以下元素组成</p>
+<ul>
+<li>局部变量表</li>
+<li>操作数栈</li>
+<li>动态链接</li>
+<li>返回地址</li>
+<li>....</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg"></p></li>
+</ul>
+<h4 id="局部变量表">局部变量表</h4>
+<ol type="1">
+<li>基本单位为 Slot ,虚拟机规范并没有明确规定 Slot 大小</li>
+<li>必须能存的下 boolean byte char short int float reference returnAddress 类型的数据</li>
+<li>long 与 double 类型被分割存储</li>
+<li>局部变量表的大小在编译时就被完全确定</li>
+<li>对于非静态方法, Slot 的第0位指向的是对象本身, 也就是 this</li>
+</ol>
+<h4 id="操作数栈">操作数栈</h4>
+<ol type="1">
+<li>编译时确定最大深度</li>
+<li>算术运算是取操作数栈的前两位, 运算结果再入栈</li>
+<li>也可以用来调用其他方法时传递参数</li>
+</ol>
+<h4 id="动态连接">动态连接</h4>
+<ol type="1">
+<li>每个栈帧都包含一个指向运行时常量池中该栈帧所属方法的引用</li>
+</ol>
 <h2 id="一些-blog">一些 blog</h2>
 <table>
 <thead>
 <tr class="header">
-<th><a href="https://stackoverflow.com/questions/27186799/what-are-gc-roots-for-classes" target="_blank" rel="noopener">What are GC roots for classes?</a></th>
+<th>引用</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-world" target="_blank" rel="noopener"><strong>Why does the JVM full GC need to stop-the-world?</strong></a></td>
+<td><a href="https://stackoverflow.com/questions/27186799/what-are-gc-roots-for-classes" target="_blank" rel="noopener">What are GC roots for classes?</a></td>
 </tr>
 <tr class="even">
-<td><a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/index.html" target="_blank" rel="noopener"><strong>HotSpot Virtual Machine Garbage Collection Tuning Guide</strong></a></td>
+<td><a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-world" target="_blank" rel="noopener">Why does the JVM full GC need to stop-the-world?</a></td>
 </tr>
 <tr class="odd">
-<td><a href="https://www.opsian.com/blog/javas-new-zgc-is-very-exciting/" target="_blank" rel="noopener"><strong>ZGC</strong></a></td>
+<td><a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/index.html" target="_blank" rel="noopener">HotSpot Virtual Machine Garbage Collection Tuning Guide</a></td>
 </tr>
 <tr class="even">
-<td><a href="http://psy-lob-saw.blogspot.com/2014/10/the-jvm-write-barrier-card-marking.html" target="_blank" rel="noopener"><strong>Card Marking 解决老年代引用新生代对象</strong></a></td>
+<td><a href="https://www.opsian.com/blog/javas-new-zgc-is-very-exciting/" target="_blank" rel="noopener">ZGC</a></td>
 </tr>
 <tr class="odd">
-<td><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html" target="_blank" rel="noopener"><strong>从实际案例聊聊Java应用的GC优化</strong></a></td>
+<td><a href="http://psy-lob-saw.blogspot.com/2014/10/the-jvm-write-barrier-card-marking.html" target="_blank" rel="noopener">Card Marking 解决老年代引用新生代对象</a></td>
+</tr>
+<tr class="even">
+<td><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html" target="_blank" rel="noopener">从实际案例聊聊Java应用的GC优化</a></td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.ibm.com/developerworks/library/it-haggar_bytecode/index.html" target="_blank" rel="noopener">Java bytecode</a></td>
 </tr>
 </tbody>
 </table>
@@ -741,8 +782,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/14/spring/" rel="next" title="Spring 总结">
-                <i class="fa fa-chevron-left"></i> Spring 总结
+              <a href="/2019/08/14/spring/" rel="next" title="Spring Core 总结">
+                <i class="fa fa-chevron-left"></i> Spring Core 总结
               </a>
             
           </div>
@@ -750,6 +791,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/26/spring-mvc/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -942,7 +987,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jvm-知识整理"><span class="nav-text">JVM 知识整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#q-a"><span class="nav-text">Q &amp; A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么会-stw"><span class="nav-text">为什么会 STW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-收集器什么时候可能触发-stw-的-full-gc"><span class="nav-text">CMS 收集器什么时候可能触发 STW 的 FULL GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果新生代内存不够-会出现什么情况"><span class="nav-text">如果新生代内存不够, 会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果新生代-gc-后内存依然不够-会出现什么情况"><span class="nav-text">如果新生代 GC 后内存依然不够, 会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eden-区执行完垃圾回收之后会怎样"><span class="nav-text">Eden 区执行完垃圾回收之后会怎样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#survivor-区的对象是如何到老年代的"><span class="nav-text">Survivor 区的对象是如何到老年代的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-收集器的标记清除过程"><span class="nav-text">CMS 收集器的标记清除过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的垃圾收集器有哪些"><span class="nav-text">常见的垃圾收集器有哪些</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见虚拟机"><span class="nav-text">常见虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-垃圾回收算法基础"><span class="nav-text">Hotspot 垃圾回收算法基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-虚拟机内存"><span class="nav-text">Hotspot 虚拟机内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-虚拟机常见收集器"><span class="nav-text">Hotspot 虚拟机常见收集器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些-blog"><span class="nav-text">一些 blog</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jvm-知识整理"><span class="nav-text">JVM 知识整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#q-a"><span class="nav-text">Q &amp; A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么会-stw"><span class="nav-text">为什么会 STW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-收集器什么时候可能触发-stw-的-full-gc"><span class="nav-text">CMS 收集器什么时候可能触发 STW 的 FULL GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果新生代内存不够-会出现什么情况"><span class="nav-text">如果新生代内存不够, 会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果新生代-gc-后内存依然不够-会出现什么情况"><span class="nav-text">如果新生代 GC 后内存依然不够, 会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eden-区执行完垃圾回收之后会怎样"><span class="nav-text">Eden 区执行完垃圾回收之后会怎样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#survivor-区的对象是如何到老年代的"><span class="nav-text">Survivor 区的对象是如何到老年代的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-收集器的标记清除过程"><span class="nav-text">CMS 收集器的标记清除过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的垃圾收集器有哪些"><span class="nav-text">常见的垃圾收集器有哪些</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见虚拟机"><span class="nav-text">常见虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-垃圾回收算法基础"><span class="nav-text">Hotspot 垃圾回收算法基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-虚拟机内存"><span class="nav-text">Hotspot 虚拟机内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-虚拟机常见收集器"><span class="nav-text">Hotspot 虚拟机常见收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于栈帧"><span class="nav-text">关于栈帧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#局部变量表"><span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作数栈"><span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态连接"><span class="nav-text">动态连接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些-blog"><span class="nav-text">一些 blog</span></a></li></ol></li></ol></div>
             
 
           </div>
