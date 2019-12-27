@@ -96,30 +96,37 @@
 
 
 
-  <meta name="description" content="Spring MVC 总结 Q&amp;amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that">
+  <meta name="description" content="目标检测之SSD SSD 全称 Single Shot MultiBox Detector 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一. 最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析. 我们知道, Faster R-CNN 在当时的目标检测领域">
+<meta name="keywords" content="deep learning,Single Shot MultiBox Detector,目标检测,Object Detection">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ricky Wu">
-<meta property="og:url" content="http://wucf.me/2019/08/26/spring-mvc/index.html">
+<meta property="og:title" content="浅谈目标检测之SSD">
+<meta property="og:url" content="http://wucf.me/2019/12/14/SSD/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="Spring MVC 总结 Q&amp;amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that">
+<meta property="og:description" content="目标检测之SSD SSD 全称 Single Shot MultiBox Detector 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一. 最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析. 我们知道, Faster R-CNN 在当时的目标检测领域">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg">
-<meta property="og:updated_time" content="2019-08-28T06:33:13.658Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg">
+<meta property="og:updated_time" content="2019-12-27T14:49:55.012Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ricky Wu">
-<meta name="twitter:description" content="Spring MVC 总结 Q&amp;amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg">
+<meta name="twitter:title" content="浅谈目标检测之SSD">
+<meta name="twitter:description" content="目标检测之SSD SSD 全称 Single Shot MultiBox Detector 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一. 最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析. 我们知道, Faster R-CNN 在当时的目标检测领域">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg">
 
 
 
 
 
 
-  <link rel="canonical" href="http://wucf.me/2019/08/26/spring-mvc/">
+  <link rel="canonical" href="http://wucf.me/2019/12/14/SSD/">
 
 
 
@@ -129,7 +136,7 @@
   };
 </script>
 
-  <title> | Ricky Wu</title>
+  <title>浅谈目标检测之SSD | Ricky Wu</title>
   
 
 
@@ -378,7 +385,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/08/26/spring-mvc/">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/12/14/SSD/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
@@ -395,7 +402,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">浅谈目标检测之SSD
 
               
             
@@ -421,7 +428,7 @@
                 
               
 
-              <time title="创建时间：2019-08-26 10:03:08" itemprop="dateCreated datePublished" datetime="2019-08-26T10:03:08+08:00">2019-08-26</time>
+              <time title="创建时间：2019-12-14 19:49:52" itemprop="dateCreated datePublished" datetime="2019-12-14T19:49:52+08:00">2019-12-14</time>
             
 
             
@@ -438,11 +445,29 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-28 14:33:13" itemprop="dateModified" datetime="2019-08-28T14:33:13+08:00">2019-08-28</time>
+                <time title="修改时间：2019-12-27 22:49:55" itemprop="dateModified" datetime="2019-12-27T22:49:55+08:00">2019-12-27</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/deep-learning/" itemprop="url" rel="index"><span itemprop="name">deep learning</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -452,9 +477,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/26/spring-mvc/#comments" itemprop="discussionUrl">
+                <a href="/2019/12/14/SSD/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/26/spring-mvc/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/14/SSD/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -476,7 +501,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">5.4k</span>
+                <span title="本文字数">4.1k</span>
               
 
               
@@ -490,7 +515,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">14 分钟</span>
+                <span title="阅读时长">10 分钟</span>
               
             </div>
           
@@ -510,291 +535,80 @@
       
 
       
-        <h1 id="spring-mvc-总结">Spring MVC 总结</h1>
-<h2 id="qa">Q&amp;A</h2>
-<h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
-<p>Spring 官方文档的一张图就很好诠释了父子容器</p>
-<blockquote>
-<p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
-</blockquote>
-<p>由此可见, 子容器是可以继承父容器的所有 Bean 的.</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg"></p>
-<ol type="1">
-<li>在 web.xml 中, ContextLoaderListener 会初始化父容器
-<ol type="1">
-<li>创建 ConfigurableWebApplicationContext
-<ul>
-<li>configureAndRefreshWebApplicationContext</li>
-<li>喜闻乐见的 refresh 方法, 开始创建IOC容器</li>
-</ul></li>
-<li>父容器创建完成之后, 创建 DispatcherServlet
-<ul>
-<li>执行Servlet的 init</li>
-<li>执行 initServletBean</li>
-<li>initWebApplicationContext</li>
-<li>setParent</li>
-<li>configureAndRefreshWebApplicationContext</li>
-<li>喜闻乐见的 refresh 方法, 开始创建IOC容器</li>
-</ul></li>
-</ol></li>
-</ol>
-<h3 id="只有子容器-没有父容器可以吗">只有子容器, 没有父容器可以吗</h3>
-<p>当然可以</p>
-<h3 id="spring-mvc-如何实现注解自动装配">Spring MVC 如何实现注解自动装配</h3>
-<ol type="1">
-<li>要实现自动装配, 必须借助于 Servlet 的 SPI
-<ol type="1">
-<li>SPI 要求我们必须在 META-INF.services 包下指定实现 ServletContainerInitializer 接口的类</li>
-<li>spring-web 包就已经提供了这个实现叫做 SpringServletContainerInitializer</li>
-</ol></li>
-<li>阅读 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span> 源码可知, Spring 已经给我们默认提供了几个 <code>WebApplicationInitialize</code> 实现
-<ul>
-<li>AbstractContextLoaderInitializer</li>
-<li>AbstractDispatcherServletInitializer</li>
-<li>AbstractAnnotationConfigDispatcherServletInitializer</li>
-</ul></li>
-<li>我们只需要实现 AbstractAnnotationConfigDispatcherServletInitializer 即可
-<ol type="1">
-<li>指定 RootConfigClass 也就是父容器(可不指定)</li>
-<li>指定 ServletConfigClass</li>
-<li>指定拦截路径</li>
-</ol></li>
-</ol>
-<p>有了自动装配, 我们就可以使用 java 编程的方式实现 web 开发, 不需要任何的 xml 文件(包括 web.xml)</p>
-<h3 id="spring-boot-如何实现自动装配">Spring Boot 如何实现自动装配</h3>
-<ol type="1">
-<li>前端控制器装配 : DispatcherServletAutoConfiguration</li>
-<li>配置装配 : WebMvcAutoConfiguration 替换 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span></li>
-<li>Servlet 容器装配 : ServletWebServerFactoryAutoConfiguration</li>
-</ol>
-<h2 id="基础知识">基础知识</h2>
-<h3 id="spring-web-mvc-架构">Spring Web MVC 架构</h3>
-<p><a href="http://www.corej2eepatterns.com/FrontController.htm" target="_blank" rel="noopener">前端控制器模式</a></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg"></p>
-<h3 id="mvc-核心组件">MVC 核心组件</h3>
-<table>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Bean 类型</th>
-<th style="text-align: left;">作用</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">HandlerMapping</td>
-<td style="text-align: left;">映射请求（Request）到处理器（Handler）加上其关联的拦截器（HandlerInterceptor）列表，其映射关系基于不同的 HandlerMapping 实现的一些标准细节。其中两种主要 HandlerMapping 实现， RequestMappingHandlerMapping支持标注 <span class="citation" data-cites="RequestMapping">@RequestMapping</span> 的方法， SimpleUrlHandlerMapping 维护精确的URI路径与处理器的映射</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">HandlerAdapter</td>
-<td style="text-align: left;">帮助 DispatcherServlet 调用请求处理器（Handler），无需关注其中实际的调用细节。比如，调用注解实现的 Controller 需要解析其关联的注解. HandlerAdapter的主要目的是为了屏蔽与 DispatcherServlet 之间的诸多细节。</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-exceptionhandlers" target="_blank" rel="noopener">HandlerExceptionResolver</a></td>
-<td style="text-align: left;">解析异常，可能策略是将异常处理映射到其他处理器（Handlers） 、或到某个 HTML错误页面，或者其他。</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-viewresolver" target="_blank" rel="noopener">ViewResolver</a></td>
-<td style="text-align: left;">从处理器（Handler）返回字符类型的逻辑视图名称解析出实际的 View 对象，该对象将渲染后的内容输出到HTTP 响应中。</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-localeresolver" target="_blank" rel="noopener">LocaleResolver</a>, <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-timezone" target="_blank" rel="noopener">LocaleContextResolver</a></td>
-<td style="text-align: left;">从客户端解析出 Locale ，为其实现国际化视图。</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart" target="_blank" rel="noopener">MultipartResolver</a></td>
-<td style="text-align: left;">解析多部分请求（如 Web 浏览器文件上传）的抽象实现</td>
-</tr>
-</tbody>
-</table>
-<h3 id="mvc-交互流程">MVC 交互流程</h3>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg"></p>
-<h3 id="注解驱动实现-spring-web-mvc">注解驱动实现 Spring Web MVC</h3>
-<ol type="1">
-<li>注解配置: <span class="citation" data-cites="Configuration">@Configuration</span></li>
-<li>组件激活: <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span>
-<ul>
-<li>注册 RequestMappingHandlerMapping</li>
-<li>注册 RequestMappingHandlerAdapter</li>
-</ul></li>
-<li>自定义组件: WebMvcConfigurer
-<ul>
-<li>添加拦截器</li>
-<li>配置内容协商器</li>
-<li>配置异步支持</li>
-<li>等等...</li>
-</ul></li>
-</ol>
-<h3 id="rest-内容协商">REST 内容协商</h3>
-<p>内容协商其实不仅仅包含 REST , 还有视图协商 , 由于工作中已经不再使用视图解析器, 所以主要来研究 REST 内容协商.</p>
-<table>
-<colgroup>
-<col style="width: 18%">
-<col style="width: 27%">
-<col style="width: 54%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>组件名称</th>
-<th>实现</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>内容协商管理器</td>
-<td>ContentNegotiationManager</td>
-<td>ContentNegotiationStrategy 控制策略</td>
-</tr>
-<tr class="even">
-<td>媒体类型</td>
-<td>MediaType</td>
-<td>HTTP 消息媒体类型, 如 text/html</td>
-</tr>
-<tr class="odd">
-<td>消费媒体类型</td>
-<td><span class="citation" data-cites="RequestMapping#consumes">@RequestMapping#consumes</span></td>
-<td>请求头 Content-type 媒体类型映射</td>
-</tr>
-<tr class="even">
-<td>生产媒体类型</td>
-<td><span class="citation" data-cites="RequestMapping#produces">@RequestMapping#produces</span></td>
-<td>响应头 Content-type 媒体类型映射</td>
-</tr>
-<tr class="odd">
-<td>HTTP 消息转换器</td>
-<td>HttpMessageConverter</td>
-<td>HTTP 消息转换器, 用于反序列化 HTTP 请求或序列化响应配置 REST 相关的组件</td>
-</tr>
-<tr class="even">
-<td>Web MVC 配置器</td>
-<td>WebMvcConfigurer</td>
-<td>配置 REST 的相关组件</td>
-</tr>
-<tr class="odd">
-<td>处理方法</td>
-<td>HandlerMethod</td>
-<td><span class="citation" data-cites="RequestMapping">@RequestMapping</span> 标注的方法</td>
-</tr>
-<tr class="even">
-<td>处理方法参数解析器</td>
-<td>HandlerMethodArgumentResolver</td>
-<td>用于 HTTP 请求中解析 HandlerMethod 参数内容</td>
-</tr>
-<tr class="odd">
-<td>处理方法返回值解析器</td>
-<td>HandlerMethodReturnValueHandler</td>
-<td>用于 HandlerMethod 返回值解析为 HTTP 相应内容</td>
-</tr>
-</tbody>
-</table>
-<p>知道了内容协商的核心组件后 , 再来看看 Spring MVC 的 REST 处理流程</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg"></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg"></p>
-<h3 id="spring-异常处理机制">Spring 异常处理机制</h3>
-<p>官方文档中说 <code>DispatcherServlet</code> 会委托给一个 <code>HandlerExceptionResolver</code> 链去处理异常</p>
-<p>Spring MVC 自带的异常处理器有如下几种</p>
-<table>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>HandlerExceptionResolver</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>SimpleMappingExceptionResolver</td>
-<td>A mapping between exception class names and error view names. Useful for rendering error pages in a browser application.</td>
-</tr>
-<tr class="even">
-<td><a href="https://docs.spring.io/spring-framework/docs/5.0.15.RELEASE/javadoc-api/org/springframework/web/servlet/mvc/support/DefaultHandlerExceptionResolver.html" target="_blank" rel="noopener">DefaultHandlerExceptionResolver</a></td>
-<td>Resolves exceptions raised by Spring MVC and maps them to HTTP status codes. Also see alternative <code>ResponseEntityExceptionHandler</code> and <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-rest-exceptions" target="_blank" rel="noopener">REST API exceptions</a>.</td>
-</tr>
-<tr class="odd">
-<td>ResponseStatusExceptionResolver</td>
-<td>Resolves exceptions with the <code>@ResponseStatus</code> annotation and maps them to HTTP status codes based on the value in the annotation.</td>
-</tr>
-<tr class="even">
-<td>ExceptionHandlerExceptionResolver</td>
-<td>Resolves exceptions by invoking an <code>@ExceptionHandler</code> method in an <code>@Controller</code> or a <code>@ControllerAdvice</code> class. See <span class="citation" data-cites="ExceptionHandler">[@ExceptionHandler methods]</span>(https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-exceptionhandler).</td>
-</tr>
-</tbody>
-</table>
-<p>需要注意的点:</p>
-<ul>
-<li><p>只需声明我们自定义的 HandlerExceptionResolver 实现为 Spring 组件, 就会被 Spring 添加到异常处理链中</p></li>
-<li><p>HandlerExceptionResolver 返回的 ModelAndView 即为错误页面</p></li>
-<li><p>如果异常处理完成且不希望中断异常执行链, 则返回 null</p></li>
-<li><p>如果异常处理完成且希望中断异常执行链, 则返回空的 ModelAndView 即可</p></li>
-<li><p>可以实现 Ordered 接口来指定 HandlerExceptionResolver 的调用顺序</p></li>
-</ul>
-<h3 id="spring-mvc-常用注解">Spring MVC 常用注解</h3>
-<table>
-<colgroup>
-<col style="width: 22%">
-<col style="width: 77%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>注解</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="citation" data-cites="RequestParam">@RequestParam</span></td>
-<td>从请求中获取参数值</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="RequestHeader">@RequestHeader</span></td>
-<td>获取请求头 <br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Accept-Encoding")<br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Keep-Alive")</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="CookieValue">@CookieValue</span></td>
-<td>获取 Cookie 中的值 <br><span class="citation" data-cites="CookieValue">@CookieValue</span>("JSESSIONID")</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="ModelAttribute">@ModelAttribute</span></td>
-<td>从 request 中获取参数值, 并赋值到对应的对象中</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="RequestBody">@RequestBody</span></td>
-<td>从 request 中通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion" target="_blank" rel="noopener">HttpMessageConverter</a> 反序列化到对象中</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="ResponseBody">@ResponseBody</span></td>
-<td>把返回对象通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion" target="_blank" rel="noopener">HttpMessageConverter</a> 序列化到 response 中</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span></td>
-<td>处理自定义异常<br>写在 Controller 里则只处理本 Controller 里的异常<br>如果想要处理全局异常, 则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br>注意全局异常在本地异常方法执行后才执行</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span></td>
-<td>支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br>官方不建议随意使用, 会显著的影响性能</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="InitBinder">@InitBinder</span></td>
-<td>需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br>目的是为了自定义类型转换</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="PathVariable">@PathVariable</span></td>
-<td>用来解析 REST 请求中的变量</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="CrossOrigin">@CrossOrigin</span></td>
-<td>跨域支持<br>可以标注在 Controller 方法和类上<br>如果想实现更加精细的配置, 在 WebMvcConfigurer 中重写 addCorsMappings</td>
-</tr>
-</tbody>
-</table>
-
+        <h1 id="目标检测之ssd">目标检测之SSD</h1>
+<p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一.</p>
+<p>最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析.</p>
+<p>我们知道, Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩, 但是受制于模型本身的 two-stage 架构Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片, 我们知道流畅的视频一般都是 24fps 以上, 因此 Faster R-CNN 还远远达不到实时处理视频的要求. <a id="more"></a> 为了满足实时目标识别的要求, SSD/YOLO 横空出世, 下图是当时主流目标检测算法在 VOC2007 数据集上的表现.</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg"></p>
+<p>可以看出在当时 SSD 力压群雄, 在 300x300 分辨率的图片下 mAP 达到了的 77% , fps 也高达 46 , 在 512x512 分辨率虽然识别速度不及 SSD300 , 但是 mAP 却达到了惊人的 80% , 这样的成绩在当年可是吊打 Faster R-CNN 和 YOLO. 值得一提的是 VOC2007 数据集上大物体较多, 对 SSD 算法比较友好, 但是在小物体识别方面, SSD 还是远远不如 Faster R-CNN 的, 至于为什么这个待会儿再说</p>
+<p>为什么 SSD 在达到如此高的识别率时还能保证非常快的呢, 这与 SSD 的 one-stage 架构模型是分不开的,下面看一段 Faster R-CNN 伪代码</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">ROIs = region_proposal(feature_maps)</span><br><span class="line"><span class="keyword">for</span> ROI <span class="keyword">in</span> ROIs</span><br><span class="line">    patch = roi_align(feature_maps, ROI)</span><br><span class="line">    results = detector2(patch) <span class="comment"># Reduce the amount of work here!</span></span><br></pre></td></tr></tbody></table></figure>
+<p>上面代码是典型的 two-stage , 先找到大约 2000 个候选区, 再对每个候选区的物体分别进行识别, 这是最耗时的地方. SSD 等 one-stage 算法的伪代码如下</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">results = detector3(feature_maps) <span class="comment"># No more separate step for ROIs</span></span><br></pre></td></tr></tbody></table></figure>
+<h2 id="ssd-架构模型">SSD 架构模型</h2>
+<p>先来看看 SSD 的整体架构</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg"></p>
+<p>是不是一脸懵逼, 没关系我也是. 我们把整个模型架构可以拆分成两部分来看, 第一部分是用 vgg16 网络来抽取特征得到特征图 (feature maps)</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg"></p>
+<p>SSD 使用 <strong>Conv4_3</strong> 这一层来抽取特征图, 为什么这么多层偏偏使用 <strong>Conv4_3</strong> 呢, 来看下图就能明白</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg"></p>
+<p>我们知道不同维度的特征图所抽取得到的图像特征是不同的, 某些特征图可能代表边界, 有些代表纹理, 而 vgg16 的 <strong>Conv4_3</strong> 这一层就代表物体特征, 在使用 <strong>Conv4_3</strong> 后, SSD 又额外添加了 6 层辅助卷积层, 目的是<strong>为了识别不同大小的目标</strong>, 至于为什么稍后再做说明</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg"></p>
+<p>在使用 vgg16 得到物体特征图后, SSD 额外添加了</p>
+<h2 id="默认边界框-default-boundary-box">默认边界框 <strong>Default boundary box</strong></h2>
+<p>注: default box 跟 priors box 其实是一回事</p>
+<p>默认边界框的概念与 Faster R-CNN 中的<strong>锚点</strong>概念相似, 就是预设一些目标预选框和 ground truth 进行对比, 而且默认边界框是人为设定的, 也就意味着程序不用经过复杂的算法去生成默认边界框, 这大大减少了计算量, 而且默认边界框的大小的选择非常有讲究.</p>
+<p>为什么说是有讲究, <strong>因为 SSD 选择的 4 个或 6 个默认边界框的长宽比例几乎囊括了生活中上常见物体的形状</strong>, SSD 在不同的特征图上有不同个数的默认边界框, 但也只可能是 4 个或 6 个.</p>
+<p><strong>至于为什么 SSD 选择了(4 , 6) 是因为在识别速度和识别精度之间做了取舍, 默认边界框多了, 识别精度会提高, 但是识别速度会下降, 反之亦然</strong></p>
+<p>关于默认边界框的选取的详细内容可以参考<a href="https://medium.com/@vivek.yadav/part-1-generating-anchor-boxes-for-yolo-like-network-for-vehicle-detection-using-kitti-dataset-b2fe033e5807" target="_blank" rel="noopener">Generating Anchor boxes for Yolo-like network for vehicle detection using KITTI dataset</a></p>
+<p>在特征图每个单元(或者也可以简单的理解为矩阵的每个点)上都会生成 4 个或 6 个默认边界框, 所有特征图加起来一共会生成 <strong>8732</strong> 个默认边界框 (注: 8732 是 300x300 分辨率的图像, 512x512 分辨率的图像则是 24564 个默认边界框)</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg"></p>
+<h2 id="默认边界框匹配策略">默认边界框匹配策略</h2>
+<p>如果在某一个固定的特征单元上, 某个默认边界框和 ground truth 的 IOU 大于 0.5 则把这个默认边界框视为正匹配, 否则就是负匹配. (IoU 即 the intersection over the union, 是两个图像的交集比并集, 又称为 Jaccard 相似系数)</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg"></p>
+<p>为了简单起见, 我们把特征图看做 8x8 (实际是 38x38 或者其他) 并且只有 3 个默认候选框</p>
+<p>在第 5 行第 4 列这个特征单元上, 蓝色代表 ground truth , 绿色代表默认边界框, 其中 1, 2 两个默认候选框的 IoU 大于 0.5 则 1, 2 两个默认候选框就是正匹配, 这样我们就可以得到目标的大致形状.</p>
+<h2 id="多尺度特征图">多尺度特征图</h2>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg"></p>
+<p>上图源自 SSD 论文, 论文中也是假设有一个 8x8 特征图一个 4x4 特征图, 以及 3 个默认边界框</p>
+<p>可以看到在 8x8 特征图上, 狗狗的所有默认边界框与 ground truth 的 IoU 小于 0.5, 因此在 8x8 特征图上, 狗狗不会被识别出来, 但是在 8x8 特征图上, 猫的 3 个默认边界框有 2 个 IoU 大于 0.5 (蓝色框框), 因此猫在图片中的的形状被大致确认下来.</p>
+<p>反而在 4x4 特征图上, 狗狗的一个默认边界框与 ground truth 的 IoU 大于 0.5 (红色框框) , 但是猫的 IoU 都小于 0.5, 因此猫在 4x4 特征图上就没有被识别出来</p>
+<p>这就是多尺度特征图, 对于 8x8 特征图我们叫做高分辨率特征图 (higher resolution feature maps) , 反之亦然</p>
+<p><strong>高分辨率特征图非常适合识别小物体, 低分辨率特征图非常适合识别大物体</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg"></p>
+<p>SSD 总共有 6 个尺度的特征图参与目标识别, 这就保证了对不同尺寸的物体都可以有较好的识别表现.</p>
+<p>值得注意的是输入图像的分辨率是 300x300 , 但是我们第一个特征图是 38x38, 从 300 到 38 是个非常大的比例了, 从而造成 SSD 对小目标的识别效果不是很好</p>
+<h2 id="总结">总结</h2>
+<p>下面用一张图来总结 SSD</p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg"></p>
+<p>在前 3 个特征图上, 由于特征图分辨率高, 并没有识别出汽车, 紧接着最后 3 个特征图都识别出了汽车, 并且一共生成了 4 个边界框, 最后再经过非极大抑制最终确定一个边界框, 至此识别完成.</p>
+<p>ps : 目前刚入门目标检测没多久, 知识储备还较少, 还是只菜 <span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f436.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f436.png?v8">🐶</span> , 这篇文章就先这样, 等以后知识丰富了回过头来再改 <span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f638.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f638.png?v8">😸</span><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f602.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f602.png?v8">😂</span></p>
+<h1 id="参考资料">参考资料</h1>
+<p>[1] <a href="https://docs.google.com/presentation/d/1rtfeV_VmdGdZD5ObVVpPDPIODSDxKnFSU0bsN_rgZXc/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g179f601b72_0_51" target="_blank" rel="noopener">SSD PPT</a></p>
+<p>[2] <a href="https://blog.csdn.net/WZZ18191171661/article/details/79444217" target="_blank" rel="noopener">SSD详解</a></p>
+<p>[3] <a href="https://towardsdatascience.com/understanding-ssd-multibox-real-time-object-detection-in-deep-learning-495ef744fab" target="_blank" rel="noopener">Understanding SSD MultiBox — Real-Time Object Detection In Deep Learning</a></p>
+<p>[4] <a href="https://medium.com/@jonathan_hui/ssd-object-detection-single-shot-multibox-detector-for-real-time-processing-9bd8deac0e06" target="_blank" rel="noopener">SSD object detection: Single Shot MultiBox Detector for real-time processing</a></p>
+<p>[5] <a href="https://medium.com/@jonathan_hui/what-do-we-learn-from-single-shot-object-detectors-ssd-yolo-fpn-focal-loss-3888677c5f4d" target="_blank" rel="noopener">What do we learn from single shot object detectors (SSD, YOLOv3), FPN &amp; Focal loss (RetinaNet)?</a></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
       
     </div>
 
@@ -814,6 +628,18 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/deep-learning/" rel="tag"># deep learning</a>
+          
+            <a href="/tags/Single-Shot-MultiBox-Detector/" rel="tag"># Single Shot MultiBox Detector</a>
+          
+            <a href="/tags/目标检测/" rel="tag"># 目标检测</a>
+          
+            <a href="/tags/Object-Detection/" rel="tag"># Object Detection</a>
+          
+        </div>
       
 
       
@@ -911,7 +737,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -930,7 +756,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -963,7 +791,15 @@
                     
                       
                     
-                    <span class="site-state-item-count">10</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -995,7 +831,7 @@
                   
                     
                   
-                  <a href="mailto:wucf@dtinsure.com" title="E-Mail &rarr; mailto:wucf@dtinsure.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  <a href="mailto:403519557@qq.com" title="E-Mail &rarr; mailto:403519557@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
                 </span>
               
             </div>
@@ -1025,7 +861,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-mvc-总结"><span class="nav-text">Spring MVC 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何理解-spring-mvc-的父子容器"><span class="nav-text">如何理解 Spring MVC 的父子容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#只有子容器-没有父容器可以吗"><span class="nav-text">只有子容器, 没有父容器可以吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-如何实现注解自动装配"><span class="nav-text">Spring MVC 如何实现注解自动装配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-boot-如何实现自动装配"><span class="nav-text">Spring Boot 如何实现自动装配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-web-mvc-架构"><span class="nav-text">Spring Web MVC 架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-核心组件"><span class="nav-text">MVC 核心组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-交互流程"><span class="nav-text">MVC 交互流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注解驱动实现-spring-web-mvc"><span class="nav-text">注解驱动实现 Spring Web MVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rest-内容协商"><span class="nav-text">REST 内容协商</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-异常处理机制"><span class="nav-text">Spring 异常处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-常用注解"><span class="nav-text">Spring MVC 常用注解</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目标检测之ssd"><span class="nav-text">目标检测之SSD</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ssd-架构模型"><span class="nav-text">SSD 架构模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认边界框-default-boundary-box"><span class="nav-text">默认边界框 Default boundary box</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认边界框匹配策略"><span class="nav-text">默认边界框匹配策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多尺度特征图"><span class="nav-text">多尺度特征图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
@@ -1183,9 +1019,9 @@
   
     <script>
       var disqus_config = function () {
-        this.page.url = "http://wucf.me/2019/08/26/spring-mvc/";
-        this.page.identifier = "2019/08/26/spring-mvc/";
-        this.page.title = '';
+        this.page.url = "http://wucf.me/2019/12/14/SSD/";
+        this.page.identifier = "2019/12/14/SSD/";
+        this.page.title = '浅谈目标检测之SSD';
         };
       function loadComments () {
         var d = document, s = d.createElement('script');
