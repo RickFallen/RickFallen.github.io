@@ -96,13 +96,13 @@
 
 
 
-  <meta name="description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact">
+  <meta name="description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老">
 <meta name="keywords" content="spring,spring framework">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM 总结">
 <meta property="og:url" content="http://wucf.me/2019/08/15/jvm/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact">
+<meta property="og:description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg">
@@ -110,10 +110,10 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg">
-<meta property="og:updated_time" content="2019-08-28T15:01:34.583Z">
+<meta property="og:updated_time" content="2019-08-28T15:01:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM 总结">
-<meta name="twitter:description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact">
+<meta name="twitter:description" content="JVM 知识整理 Q &amp;amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg">
 
 
@@ -496,7 +496,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">3.9k</span>
+                <span title="本文字数">3.7k</span>
               
 
               
@@ -510,7 +510,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">10 分钟</span>
+                <span title="阅读时长">9 分钟</span>
               
             </div>
           
@@ -673,7 +673,7 @@
 <figure>
 <img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory"><figcaption>Java Heap Memory</figcaption>
 </figure>
-<p>为什么这么划分, 是根据现实场景中对象的生命周期分布来决定的, 大部分对象都是"朝生夕死". 一般情况下, 经历过数次 GC 依然存活的对象会被分配到老年代中(有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
+<p>为什么这么划分, 是根据现实场景中对象的生命周期分布来决定的, 大部分对象都是&quot;朝生夕死&quot;. 一般情况下, 经历过数次 GC 依然存活的对象会被分配到老年代中(有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
 <h3 id="hotspot-虚拟机常见收集器">Hotspot 虚拟机常见收集器</h3>
 <ul>
 <li>Serial</li>
@@ -782,8 +782,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/14/spring/" rel="next" title="Spring Core 总结">
-                <i class="fa fa-chevron-left"></i> Spring Core 总结
+              <a href="/2019/08/14/spring-mvc/" rel="next" title="Spring MVC 总结">
+                <i class="fa fa-chevron-left"></i> Spring MVC 总结
               </a>
             
           </div>
@@ -873,7 +873,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -894,7 +894,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -935,7 +939,19 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -967,7 +983,7 @@
                   
                     
                   
-                  <a href="mailto:wucf@dtinsure.com" title="E-Mail &rarr; mailto:wucf@dtinsure.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  <a href="/403519557@qq.com" title="E-Mail &rarr; 403519557@qq.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
                 </span>
               
             </div>
@@ -1017,7 +1033,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
