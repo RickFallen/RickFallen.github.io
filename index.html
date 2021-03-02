@@ -372,7 +372,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://wucf.me/2021/02/25/gnn_getting_started/">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2020/03/01/ubuntu20.04_install_gnn/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chengfu Wu">
@@ -392,7 +392,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2021/02/25/gnn_getting_started/" class="post-title-link" itemprop="url">GNN（图神经网络）学习资料整理</a>
+                <a href="/2020/03/01/ubuntu20.04_install_gnn/" class="post-title-link" itemprop="url">ubuntu20.04 安装图神经网络（GNN）相关包</a>
               
             
           </h1>
@@ -417,12 +417,24 @@
                 
               
 
-              <time title="创建时间：2021-02-25 22:27:50 / 修改时间：23:04:28" itemprop="dateCreated datePublished" datetime="2021-02-25T22:27:50+08:00">2021-02-25</time>
+              <time title="创建时间：2020-03-01 15:20:50" itemprop="dateCreated datePublished" datetime="2020-03-01T15:20:50+08:00">2020-03-01</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-02 23:49:12" itemprop="dateModified" datetime="2021-03-02T23:49:12+08:00">2021-03-02</time>
               
             
           </span>
@@ -439,7 +451,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/图神经网络/" itemprop="url" rel="index"><span itemprop="name">图神经网络</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/deep-learning/" itemprop="url" rel="index"><span itemprop="name">deep learning</span></a></span>
 
                 
                 
@@ -454,9 +466,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2021/02/25/gnn_getting_started/#comments" itemprop="discussionUrl">
+                <a href="/2020/03/01/ubuntu20.04_install_gnn/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/02/25/gnn_getting_started/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/03/01/ubuntu20.04_install_gnn/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -478,7 +490,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">220</span>
+                <span title="本文字数">2.9k</span>
               
 
               
@@ -492,7 +504,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">1 分钟</span>
+                <span title="阅读时长">7 分钟</span>
               
             </div>
           
@@ -514,15 +526,22 @@
       
         
           <meta name="referrer" content="no-referrer">
-<h2 id="gnn图神经网络学习资料整理">GNN（图神经网络）学习资料整理</h2>
-<h2 id="书籍">书籍</h2>
+<h1 id="ubuntu-20.04-安装图神经网络gnn相关包">ubuntu 20.04 安装图神经网络（GNN）相关包</h1>
+<h2 id="前言">前言</h2>
+<p>做好 Windows、Ubuntu 双系统之后开始安装图神经网络需要的各种包。遇到了各种问题，花了整整一天的时间才最终调试完毕。完美运行代码，没有 error 没有 warning。</p>
+<h2 id="安装显卡驱动略">安装显卡驱动（略）</h2>
+<p>查看显卡驱动是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<h2 id="安装anaconda略">安装Anaconda（略）</h2>
+<p><strong>使用 conda 环境本来是方便包管理，但是安装 pyG 和 torch 必须只能用 pip install，不然会报错（错误内容见 pyG 安装）。</strong></p>
+<p><strong>用 conda 只是图个创建环境方便，一旦使用 pip，以后安装就尽量全部使用 pip，防止包冲突。</strong></p>
 <ul>
-<li><a href="https://sci-hub.se/10.2200/s00980ed1v01y202001aim045" target="_blank" rel="noopener">图神经网络导论 (Introduction to Graph Neural Networks)</a></li>
+<li><a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/" target="_blank" rel="noopener">Anaconda清华源</a></li>
 </ul>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2021/02/25/gnn_getting_started/#more" rel="contents">
+              <a class="btn" href="/2020/03/01/ubuntu20.04_install_gnn/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2656,7 +2675,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2709,7 +2728,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

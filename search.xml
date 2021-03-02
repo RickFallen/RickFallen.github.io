@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[GNN（图神经网络）学习资料整理]]></title>
-    <url>%2F2021%2F02%2F25%2Fgnn_getting_started%2F</url>
-    <content type="text"><![CDATA[GNN（图神经网络）学习资料整理 书籍 图神经网络导论 (Introduction to Graph Neural Networks) 论文 课程 CS224W: Machine Learning with Graphs 参考资料 [1] Graph NN（一）——概述, 教程, 工具, GCN [2] Graph Neural Network（GNN）综述 [3] 图神经网络与深度学习在智能交通中的应用：综述Survey]]></content>
+    <title><![CDATA[ubuntu20.04 安装图神经网络（GNN）相关包]]></title>
+    <url>%2F2020%2F03%2F01%2Fubuntu20.04_install_gnn%2F</url>
+    <content type="text"><![CDATA[ubuntu 20.04 安装图神经网络（GNN）相关包 前言 做好 Windows、Ubuntu 双系统之后开始安装图神经网络需要的各种包。遇到了各种问题，花了整整一天的时间才最终调试完毕。完美运行代码，没有 error 没有 warning。 安装显卡驱动（略） 查看显卡驱动是否安装成功 1nvidia-smi 安装Anaconda（略） 使用 conda 环境本来是方便包管理，但是安装 pyG 和 torch 必须只能用 pip install，不然会报错（错误内容见 pyG 安装）。 用 conda 只是图个创建环境方便，一旦使用 pip，以后安装就尽量全部使用 pip，防止包冲突。 Anaconda清华源 创建 conda 环境 12conda create -n gnn python=3.7 numpy=1.16.1conda activate gnn 注：为什么numpy版本用 1.16.1 呢？详见numpy.ufunc size changed, may indicate binary incompatibility. Expected 216 from C header, got 192 from PyObject. 安装 CUDA 11.1 安装cuda(要使用runfile方式 用别的会出错) 注：使用 runfile 安装时要取消勾选显卡驱动（既不安装显卡驱动，因为它会自动卸载已安装的显卡驱动，并且安装的驱动可能是很旧的版本），安装完成后要添加环境变量。 Please make sure that - PATH includes /usr/local/cuda-11.1/bin - LD_LIBRARY_PATH includes /usr/local/cuda-11.1/lib64, or, add /usr/local/cuda-11.1/lib64 to /etc/ld.so.conf and run ldconfig as root 12export PATH="$PATH:/usr/local/cuda-11.1/bin"export LD_LIBRARY_PATH="/usr/local/cuda-11.1/lib64" 安装 CUDNN（略） 安装torch 配置pip pip清华源 安装 1pip install torch==1.7.0+cu110 torchvision==0.8.1+cu110 torchaudio===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html 版本对应非常重要，一定要注意！！！ 版本对应非常重要，一定要注意！！！ 版本对应非常重要，一定要注意！！！ 版本对应非常重要，一定要注意！！！ 版本对应非常重要，一定要注意！！！ 安装pyG 如果采用conda安装会遇到Undefined symbol: _ZN5torch3jit17parseSchemaOrNameERKSs问题 I have solved this problem. The reason is that: do not install pytorch via anaconda-navigator ! It will install both cpu and gpu versions, even though you only select the pytorch. You can download the specific version of the pytorch from: https://github.com/rusty1s/pytorch_geometric/issues/999 and this problem will be solved. All dependent packages are listed: cu101/torch-1.4.0-cp38-cp38-linux_x86_64.whl cu101/torchvision-0.5.0-cp38-cp38-linux_x86_64.whl torch_cluster-1.5.3+cu101-cp38-cp38-linux_x86_64.whl torch_scatter-2.0.4+cu101-cp38-cp38-linux_x86_64.whl torch_sparse-0.6.1+cu101-cp38-cp38-linux_x86_64.whl torch_spline_conv-1.2.0+cu101-cp38-cp38-linux_x86_64.whl 应采用pip手动安装的方式，同样注意版本号的对应关系 12345pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.7.0+cu110.htmlpip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.7.0+cu110.htmlpip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.7.0+cu110.htmlpip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.7.0+cu110.htmlpip install torch-geometric 安装 jupyter 1conda install -c conda-forge jupyterlab -y 安装 networkX 1conda install -c anaconda networkx -y 安装 matplotlib 1conda install -c conda-forge matplotlib -y 简单验证 1234567import torcha = torch.tensor(1.)print("cuda is available: &#123;&#125;".format(torch.cuda.is_available()))a.cuda()from torch.backends import cudnnprint("cudnn is available: &#123;&#125;".format(cudnn.is_available()))print("cudnn is acceptable: &#123;&#125;".format(cudnn.is_acceptable(a.cuda()))) 究极验证 CS224W - Colab 0.ipynb 如果上述代码下载到本地完美运行则代表完美安装成功]]></content>
       <categories>
-        <category>图神经网络</category>
+        <category>deep learning</category>
       </categories>
       <tags>
-        <tag>GNN - 图神经网络</tag>
-        <tag>Graph Neural Networks</tag>
+        <tag>ubuntu 20.04</tag>
+        <tag>图神经网络</tag>
+        <tag>软件</tag>
       </tags>
   </entry>
   <entry>
