@@ -1263,7 +1263,8 @@
 <span id="more"></span>
 <h2 id="创建-conda-环境">创建 conda 环境</h2>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda create -n gnn python=3.7 numpy=1.16.1</span><br><span class="line">conda activate gnn</span><br></pre></td></tr></table></figure>
-<p>注：为什么numpy版本用 1.16.1 呢？详见<a href="https://github.com/scikit-image/scikit-image/issues/3655">numpy.ufunc size changed, may indicate binary incompatibility. Expected 216 from C header, got 192 from PyObject.</a></p>
+<p>注：为什么numpy版本用 1.16.1 呢？</p>
+<p>详见<a href="https://github.com/scikit-image/scikit-image/issues/3655">numpy.ufunc size changed, may indicate binary incompatibility. Expected 216 from C header, got 192 from PyObject.</a></p>
 <h2 id="安装-cuda-11.1">安装 CUDA 11.1</h2>
 <p><a href="https://developer.nvidia.com/zh-cn/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=2004&amp;target_type=runfilelocal">安装cuda(要使用runfile方式 用别的会出错)</a></p>
 <p>注：使用 runfile 安装时要取消勾选显卡驱动（既不安装显卡驱动，因为它会自动卸载已安装的显卡驱动，并且安装的驱动可能是很旧的版本），安装完成后要添加环境变量。</p>
