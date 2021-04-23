@@ -1,535 +1,337 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=6.7.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '6.7.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta name="description" content="Spring MVC 总结 Q&amp;amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that need">
-<meta name="keywords" content="spring,spring framework">
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="Spring MVC 总结 Q&amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that need">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring MVC 总结">
 <meta property="og:url" content="http://wucf.me/2019/08/14/spring-mvc/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="Spring MVC 总结 Q&amp;amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that need">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:description" content="Spring MVC 总结 Q&amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that need">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg">
-<meta property="og:updated_time" content="2019-09-02T03:26:04.000Z">
+<meta property="article:published_time" content="2019-08-14T11:49:52.000Z">
+<meta property="article:modified_time" content="2019-09-02T03:26:04.000Z">
+<meta property="article:author" content="Chengfu Wu">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="spring framework">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring MVC 总结">
-<meta name="twitter:description" content="Spring MVC 总结 Q&amp;amp;A 如何理解 Spring MVC 的父子容器 Spring 官方文档的一张图就很好诠释了父子容器  The root WebApplicationContext typically contains infrastructure beans such as data repositories and business services that need">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg">
 
 
+<link rel="canonical" href="http://wucf.me/2019/08/14/spring-mvc/">
 
 
-
-
-  <link rel="canonical" href="http://wucf.me/2019/08/14/spring-mvc/">
-
-
-
-<script id="page.configurations">
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
-
-  <title>Spring MVC 总结 | Ricky Wu</title>
+<title>Spring MVC 总结 | Ricky Wu</title>
   
-
-
-
-
-
-
-
-
 
 
 
 
   <noscript>
   <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
 
-  .use-motion .logo,
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
 
-  
-  
-    
-  
-
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Ricky Wu</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    
-      
-        <p class="site-subtitle">that's not the shape of my heart</p>
-      
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Ricky Wu</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">that's not the shape of my heart</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
   </div>
 </div>
 
 
 
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-categories">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
-
-  </li>
-
-      
-      
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
-        </li>
-      
-    </ul>
-  
-
-  
-
-  
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
-
-
-
-    </div>
-  
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
 </nav>
 
 
 
-  
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
 
-
+    </div>
+  </div>
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-mvc-%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">Spring MVC 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-number">1.1.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3-spring-mvc-%E7%9A%84%E7%88%B6%E5%AD%90%E5%AE%B9%E5%99%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">如何理解 Spring MVC 的父子容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E6%9C%89%E5%AD%90%E5%AE%B9%E5%99%A8-%E6%B2%A1%E6%9C%89%E7%88%B6%E5%AE%B9%E5%99%A8%E5%8F%AF%E4%BB%A5%E5%90%97"><span class="nav-number">1.1.2.</span> <span class="nav-text">只有子容器, 没有父容器可以吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B3%A8%E8%A7%A3%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D"><span class="nav-number">1.1.3.</span> <span class="nav-text">Spring MVC 如何实现注解自动装配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-boot-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D"><span class="nav-number">1.1.4.</span> <span class="nav-text">Spring Boot 如何实现自动装配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-web-mvc-%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">Spring Web MVC 架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">MVC 核心组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-%E4%BA%A4%E4%BA%92%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.3.</span> <span class="nav-text">MVC 交互流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E9%A9%B1%E5%8A%A8%E5%AE%9E%E7%8E%B0-spring-web-mvc"><span class="nav-number">1.2.4.</span> <span class="nav-text">注解驱动实现 Spring Web MVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rest-%E5%86%85%E5%AE%B9%E5%8D%8F%E5%95%86"><span class="nav-number">1.2.5.</span> <span class="nav-text">REST 内容协商</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="nav-number">1.2.6.</span> <span class="nav-text">Spring 异常处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.2.7.</span> <span class="nav-text">Spring MVC 常用注解</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chengfu Wu"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Chengfu Wu</p>
+  <div class="site-description" itemprop="description">黄沙百战穿金甲，不破楼兰终不还。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-            
+    <div class="main-inner post posts-expand">
 
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/08/14/spring-mvc/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
       <meta itemprop="name" content="Chengfu Wu">
       <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
-      <meta itemprop="image" content="/images/head.jpg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Ricky Wu">
     </span>
-
-    
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring MVC 总结
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Spring MVC 总结
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              
-            
-          </h1>
-        
+      <time title="创建时间：2019-08-14 19:49:52" itemprop="dateCreated datePublished" datetime="2019-08-14T19:49:52+08:00">2019-08-14</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2019-09-02 11:26:04" itemprop="dateModified" datetime="2019-09-02T11:26:04+08:00">2019-09-02</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%A4%8D%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">复习</span></a>
+        </span>
+    </span>
 
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-14 19:49:52" itemprop="dateCreated datePublished" datetime="2019-08-14T19:49:52+08:00">2019-08-14</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-09-02 11:26:04" itemprop="dateModified" datetime="2019-09-02T11:26:04+08:00">2019-09-02</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/复习/" itemprop="url" rel="index"><span itemprop="name">复习</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/08/14/spring-mvc/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/14/spring-mvc/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">5.2k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">13 分钟</span>
-              
-            </div>
-          
-
-          
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
 
         </div>
       </header>
-    
 
     
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <meta name="referrer" content="no-referrer">
+        <meta name="referrer" content="no-referrer" />
 <h1 id="spring-mvc-总结">Spring MVC 总结</h1>
 <h2 id="qa">Q&amp;A</h2>
 <h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
@@ -538,8 +340,8 @@
 <p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
 </blockquote>
 <p>由此可见, 子容器是可以继承父容器的所有 Bean 的.</p>
-<a id="more"></a>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg"></p>
+<span id="more"></span>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg" /></p>
 <ol type="1">
 <li>在 web.xml 中, ContextLoaderListener 会初始化父容器
 <ol type="1">
@@ -590,13 +392,13 @@
 </ol>
 <h2 id="基础知识">基础知识</h2>
 <h3 id="spring-web-mvc-架构">Spring Web MVC 架构</h3>
-<p><a href="http://www.corej2eepatterns.com/FrontController.htm" target="_blank" rel="noopener">前端控制器模式</a></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg"></p>
+<p><a target="_blank" rel="noopener" href="http://www.corej2eepatterns.com/FrontController.htm">前端控制器模式</a></p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg" /></p>
 <h3 id="mvc-核心组件">MVC 核心组件</h3>
 <table>
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -614,25 +416,25 @@
 <td style="text-align: left;">帮助 DispatcherServlet 调用请求处理器（Handler），无需关注其中实际的调用细节。比如，调用注解实现的 Controller 需要解析其关联的注解. HandlerAdapter的主要目的是为了屏蔽与 DispatcherServlet 之间的诸多细节。</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-exceptionhandlers" target="_blank" rel="noopener">HandlerExceptionResolver</a></td>
+<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-exceptionhandlers">HandlerExceptionResolver</a></td>
 <td style="text-align: left;">解析异常，可能策略是将异常处理映射到其他处理器（Handlers） 、或到某个 HTML错误页面，或者其他。</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-viewresolver" target="_blank" rel="noopener">ViewResolver</a></td>
+<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-viewresolver">ViewResolver</a></td>
 <td style="text-align: left;">从处理器（Handler）返回字符类型的逻辑视图名称解析出实际的 View 对象，该对象将渲染后的内容输出到HTTP 响应中。</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-localeresolver" target="_blank" rel="noopener">LocaleResolver</a>, <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-timezone" target="_blank" rel="noopener">LocaleContextResolver</a></td>
+<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-localeresolver">LocaleResolver</a>, <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-timezone">LocaleContextResolver</a></td>
 <td style="text-align: left;">从客户端解析出 Locale ，为其实现国际化视图。</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart" target="_blank" rel="noopener">MultipartResolver</a></td>
+<td style="text-align: left;"><a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart">MultipartResolver</a></td>
 <td style="text-align: left;">解析多部分请求（如 Web 浏览器文件上传）的抽象实现</td>
 </tr>
 </tbody>
 </table>
 <h3 id="mvc-交互流程">MVC 交互流程</h3>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg" /></p>
 <h3 id="注解驱动实现-spring-web-mvc">注解驱动实现 Spring Web MVC</h3>
 <ol type="1">
 <li>注解配置: <span class="citation" data-cites="Configuration">@Configuration</span></li>
@@ -653,9 +455,9 @@
 <p>内容协商其实不仅仅包含 REST , 还有视图协商 , 由于工作中已经不再使用视图解析器, 所以主要来研究 REST 内容协商.</p>
 <table>
 <colgroup>
-<col style="width: 18%">
-<col style="width: 27%">
-<col style="width: 54%">
+<col style="width: 18%" />
+<col style="width: 27%" />
+<col style="width: 54%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -713,15 +515,15 @@
 </tbody>
 </table>
 <p>知道了内容协商的核心组件后 , 再来看看 Spring MVC 的 REST 处理流程</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg"></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg" /></p>
+<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg" /></p>
 <h3 id="spring-异常处理机制">Spring 异常处理机制</h3>
 <p>官方文档中说 <code>DispatcherServlet</code> 会委托给一个 <code>HandlerExceptionResolver</code> 链去处理异常</p>
 <p>Spring MVC 自带的异常处理器有如下几种</p>
 <table>
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -735,8 +537,8 @@
 <td>A mapping between exception class names and error view names. Useful for rendering error pages in a browser application.</td>
 </tr>
 <tr class="even">
-<td><a href="https://docs.spring.io/spring-framework/docs/5.0.15.RELEASE/javadoc-api/org/springframework/web/servlet/mvc/support/DefaultHandlerExceptionResolver.html" target="_blank" rel="noopener">DefaultHandlerExceptionResolver</a></td>
-<td>Resolves exceptions raised by Spring MVC and maps them to HTTP status codes. Also see alternative <code>ResponseEntityExceptionHandler</code> and <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-rest-exceptions" target="_blank" rel="noopener">REST API exceptions</a>.</td>
+<td><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.0.15.RELEASE/javadoc-api/org/springframework/web/servlet/mvc/support/DefaultHandlerExceptionResolver.html">DefaultHandlerExceptionResolver</a></td>
+<td>Resolves exceptions raised by Spring MVC and maps them to HTTP status codes. Also see alternative <code>ResponseEntityExceptionHandler</code> and <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-rest-exceptions">REST API exceptions</a>.</td>
 </tr>
 <tr class="odd">
 <td>ResponseStatusExceptionResolver</td>
@@ -759,8 +561,8 @@
 <h3 id="spring-mvc-常用注解">Spring MVC 常用注解</h3>
 <table>
 <colgroup>
-<col style="width: 22%">
-<col style="width: 77%">
+<col style="width: 22%" />
+<col style="width: 77%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -775,11 +577,11 @@
 </tr>
 <tr class="even">
 <td><span class="citation" data-cites="RequestHeader">@RequestHeader</span></td>
-<td>获取请求头 <br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>(&quot;Accept-Encoding&quot;)<br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>(&quot;Keep-Alive&quot;)</td>
+<td>获取请求头 <br /><span class="citation" data-cites="RequestHeader">@RequestHeader</span>(&quot;Accept-Encoding&quot;)<br /><span class="citation" data-cites="RequestHeader">@RequestHeader</span>(&quot;Keep-Alive&quot;)</td>
 </tr>
 <tr class="odd">
 <td><span class="citation" data-cites="CookieValue">@CookieValue</span></td>
-<td>获取 Cookie 中的值 <br><span class="citation" data-cites="CookieValue">@CookieValue</span>(&quot;JSESSIONID&quot;)</td>
+<td>获取 Cookie 中的值 <br /><span class="citation" data-cites="CookieValue">@CookieValue</span>(&quot;JSESSIONID&quot;)</td>
 </tr>
 <tr class="even">
 <td><span class="citation" data-cites="ModelAttribute">@ModelAttribute</span></td>
@@ -787,23 +589,23 @@
 </tr>
 <tr class="odd">
 <td><span class="citation" data-cites="RequestBody">@RequestBody</span></td>
-<td>从 request 中通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion" target="_blank" rel="noopener">HttpMessageConverter</a> 反序列化到对象中</td>
+<td>从 request 中通过 <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 反序列化到对象中</td>
 </tr>
 <tr class="even">
 <td><span class="citation" data-cites="ResponseBody">@ResponseBody</span></td>
-<td>把返回对象通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion" target="_blank" rel="noopener">HttpMessageConverter</a> 序列化到 response 中</td>
+<td>把返回对象通过 <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 序列化到 response 中</td>
 </tr>
 <tr class="odd">
 <td><span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span></td>
-<td>处理自定义异常<br>写在 Controller 里则只处理本 Controller 里的异常<br>如果想要处理全局异常, 则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br>注意全局异常在本地异常方法执行后才执行</td>
+<td>处理自定义异常<br />写在 Controller 里则只处理本 Controller 里的异常<br />如果想要处理全局异常, 则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br />注意全局异常在本地异常方法执行后才执行</td>
 </tr>
 <tr class="even">
 <td><span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span></td>
-<td>支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br>官方不建议随意使用, 会显著的影响性能</td>
+<td>支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br />官方不建议随意使用, 会显著的影响性能</td>
 </tr>
 <tr class="odd">
 <td><span class="citation" data-cites="InitBinder">@InitBinder</span></td>
-<td>需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br>目的是为了自定义类型转换</td>
+<td>需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br />目的是为了自定义类型转换</td>
 </tr>
 <tr class="even">
 <td><span class="citation" data-cites="PathVariable">@PathVariable</span></td>
@@ -811,901 +613,153 @@
 </tr>
 <tr class="odd">
 <td><span class="citation" data-cites="CrossOrigin">@CrossOrigin</span></td>
-<td>跨域支持<br>可以标注在 Controller 方法和类上<br>如果想实现更加精细的配置, 在 WebMvcConfigurer 中重写 addCorsMappings</td>
+<td>跨域支持<br />可以标注在 Controller 方法和类上<br />如果想实现更加精细的配置, 在 WebMvcConfigurer 中重写 addCorsMappings</td>
 </tr>
 </tbody>
 </table>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-      
-    
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/spring/" rel="tag"># spring</a>
-          
-            <a href="/tags/spring-framework/" rel="tag"># spring framework</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/08/14/spring/" rel="next" title="Spring Core 总结">
-                <i class="fa fa-chevron-left"></i> Spring Core 总结
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/spring/" rel="tag"># spring</a>
+              <a href="/tags/spring-framework/" rel="tag"># spring framework</a>
           </div>
 
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/15/jvm/" rel="prev" title="JVM 总结">
-                JVM 总结 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="comments">
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-      </div>
-    </div>
-
-  
-
-
-
-        </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
 
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="Chengfu Wu">
-            
-              <p class="site-author-name" itemprop="name">Chengfu Wu</p>
-              <p class="site-description motion-element" itemprop="description">黄沙百战穿金甲，不破楼兰终不还。</p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">10</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">分类</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">21</span>
-                    <span class="site-state-item-name">标签</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/RickFallen" title="GitHub &rarr; https://github.com/RickFallen" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="/403519557@qq.com" title="E-Mail &rarr; 403519557@qq.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                </span>
-              
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/08/14/spring/" rel="prev" title="Spring Core 总结">
+                  <i class="fa fa-chevron-left"></i> Spring Core 总结
+                </a>
             </div>
-          
-
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-mvc-总结"><span class="nav-text">Spring MVC 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何理解-spring-mvc-的父子容器"><span class="nav-text">如何理解 Spring MVC 的父子容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#只有子容器-没有父容器可以吗"><span class="nav-text">只有子容器, 没有父容器可以吗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-如何实现注解自动装配"><span class="nav-text">Spring MVC 如何实现注解自动装配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-boot-如何实现自动装配"><span class="nav-text">Spring Boot 如何实现自动装配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-web-mvc-架构"><span class="nav-text">Spring Web MVC 架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-核心组件"><span class="nav-text">MVC 核心组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-交互流程"><span class="nav-text">MVC 交互流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注解驱动实现-spring-web-mvc"><span class="nav-text">注解驱动实现 Spring Web MVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rest-内容协商"><span class="nav-text">REST 内容协商</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-异常处理机制"><span class="nav-text">Spring 异常处理机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-mvc-常用注解"><span class="nav-text">Spring MVC 常用注解</span></a></li></ol></li></ol></li></ol></div>
-            
-
+            <div class="post-nav-item">
+                <a href="/2019/08/15/jvm/" rel="next" title="JVM 总结">
+                  JVM 总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
-
-  
-
-  
+    </footer>
+  </article>
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.7.0</div>
-
-
-
-
-        
 
 
 
 
 
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
 
 
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-          <span id="scrollpercent"><span>0</span>%</span>
-        
-      </div>
-    
-
-    
-
-    
-
-    
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">27k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">46 分钟</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
 
   
 
-<script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+
+
+
+  <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'none'
+      },
+      options: {
+        renderActions: {
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
   }
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/src/utils.js?v=6.7.0"></script>
-
-  <script src="/js/src/motion.js?v=6.7.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/src/affix.js?v=6.7.0"></script>
-
-  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
-
-
-
-  
-  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
-<script src="/js/src/post-details.js?v=6.7.0"></script>
-
-
-
-  
-
-
-  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
-
-
-
-  
-
-  
-    <script id="dsq-count-scr" src="https://ricky-wu.disqus.com/count.js" async></script>
-  
-
-  
-    <script>
-      var disqus_config = function () {
-        this.page.url = "http://wucf.me/2019/08/14/spring-mvc/";
-        this.page.identifier = "2019/08/14/spring-mvc/";
-        this.page.title = 'Spring MVC 总结';
-        };
-      function loadComments () {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://ricky-wu.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      }
-      
-        $(function () {
-          var offsetTop = $('#comments').offset().top - $(window).height();
-          if (offsetTop <= 0) {
-            // load directly when there's no a scrollbar
-            loadComments();
-          } else {
-            $(window).on('scroll.disqus_scroll', function () {
-              // offsetTop may changes because of manually resizing browser window or lazy loading images.
-              var offsetTop = $('#comments').offset().top - $(window).height();
-              var scrollTop = $(window).scrollTop();
-
-              // pre-load comments a bit? (margin or anything else)
-              if (offsetTop - scrollTop < 60) {
-                $(window).off('.disqus_scroll');
-                loadComments();
-              }
-            });
-          }
-        });
-      
-    </script>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  <script>
-    // Popup Window;
-    var isfetched = false;
-    var isXml = true;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length === 0) {
-      search_path = "search.xml";
-    } else if (/json$/i.test(search_path)) {
-      isXml = false;
-    }
-    var path = "/" + search_path;
-    // monitor main search box;
-
-    var onPopupClose = function (e) {
-      $('.popup').hide();
-      $('#local-search-input').val('');
-      $('.search-result-list').remove();
-      $('#no-result').remove();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    }
-
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.search-popup-overlay').click(onPopupClose);
-      $('.popup').toggle();
-      var $localSearchInput = $('#local-search-input');
-      $localSearchInput.attr("autocapitalize", "none");
-      $localSearchInput.attr("autocorrect", "off");
-      $localSearchInput.focus();
-    }
-
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-
-      // start loading animation
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
-          '<div id="search-loading-icon">' +
-          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
-          '</div>' +
-          '</div>')
-        .css('overflow', 'hidden');
-      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
-
-      
-
-      $.ajax({
-        url: path,
-        dataType: isXml ? "xml" : "json",
-        async: true,
-        success: function(res) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = isXml ? $("entry", res).map(function() {
-            return {
-              title: $("title", this).text(),
-              content: $("content",this).text(),
-              url: $("url" , this).text()
-            };
-          }).get() : res;
-          var input = document.getElementById(search_id);
-          var resultContent = document.getElementById(content_id);
-          var inputEventFunction = function() {
-            var searchText = input.value.trim().toLowerCase();
-            var keywords = searchText.split(/[\s\-]+/);
-            if (keywords.length > 1) {
-              keywords.push(searchText);
-            }
-            var resultItems = [];
-            if (searchText.length > 0) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var hitCount = 0;
-                var searchTextCount = 0;
-                var title = data.title.trim();
-                var titleInLowerCase = title.toLowerCase();
-                var content = data.content.trim().replace(/<[^>]+>/g,"");
-                
-                var contentInLowerCase = content.toLowerCase();
-                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
-                var indexOfTitle = [];
-                var indexOfContent = [];
-                // only match articles with not empty titles
-                if(title != '') {
-                  keywords.forEach(function(keyword) {
-                    function getIndexByWord(word, text, caseSensitive) {
-                      var wordLen = word.length;
-                      if (wordLen === 0) {
-                        return [];
-                      }
-                      var startPosition = 0, position = [], index = [];
-                      if (!caseSensitive) {
-                        text = text.toLowerCase();
-                        word = word.toLowerCase();
-                      }
-                      while ((position = text.indexOf(word, startPosition)) > -1) {
-                        index.push({position: position, word: word});
-                        startPosition = position + wordLen;
-                      }
-                      return index;
-                    }
-
-                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
-                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
-                  });
-                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
-                    isMatch = true;
-                    hitCount = indexOfTitle.length + indexOfContent.length;
-                  }
-                }
-
-                // show search results
-
-                if (isMatch) {
-                  // sort index by position of keyword
-
-                  [indexOfTitle, indexOfContent].forEach(function (index) {
-                    index.sort(function (itemLeft, itemRight) {
-                      if (itemRight.position !== itemLeft.position) {
-                        return itemRight.position - itemLeft.position;
-                      } else {
-                        return itemLeft.word.length - itemRight.word.length;
-                      }
-                    });
-                  });
-
-                  // merge hits into slices
-
-                  function mergeIntoSlice(text, start, end, index) {
-                    var item = index[index.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    var hits = [];
-                    var searchTextCountInSlice = 0;
-                    while (position + word.length <= end && index.length != 0) {
-                      if (word === searchText) {
-                        searchTextCountInSlice++;
-                      }
-                      hits.push({position: position, length: word.length});
-                      var wordEnd = position + word.length;
-
-                      // move to next position of hit
-
-                      index.pop();
-                      while (index.length != 0) {
-                        item = index[index.length - 1];
-                        position = item.position;
-                        word = item.word;
-                        if (wordEnd > position) {
-                          index.pop();
-                        } else {
-                          break;
-                        }
-                      }
-                    }
-                    searchTextCount += searchTextCountInSlice;
-                    return {
-                      hits: hits,
-                      start: start,
-                      end: end,
-                      searchTextCount: searchTextCountInSlice
-                    };
-                  }
-
-                  var slicesOfTitle = [];
-                  if (indexOfTitle.length != 0) {
-                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
-                  }
-
-                  var slicesOfContent = [];
-                  while (indexOfContent.length != 0) {
-                    var item = indexOfContent[indexOfContent.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    // cut out 100 characters
-                    var start = position - 20;
-                    var end = position + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if (end < position + word.length) {
-                      end = position + word.length;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
-                  }
-
-                  // sort slices in content by search text's count and hits' count
-
-                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
-                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
-                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
-                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
-                      return sliceRight.hits.length - sliceLeft.hits.length;
-                    } else {
-                      return sliceLeft.start - sliceRight.start;
-                    }
-                  });
-
-                  // select top N slices in content
-
-                  var upperBound = parseInt('1');
-                  if (upperBound >= 0) {
-                    slicesOfContent = slicesOfContent.slice(0, upperBound);
-                  }
-
-                  // highlight title and content
-
-                  function highlightKeyword(text, slice) {
-                    var result = '';
-                    var prevEnd = slice.start;
-                    slice.hits.forEach(function (hit) {
-                      result += text.substring(prevEnd, hit.position);
-                      var end = hit.position + hit.length;
-                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
-                      prevEnd = end;
-                    });
-                    result += text.substring(prevEnd, slice.end);
-                    return result;
-                  }
-
-                  var resultItem = '';
-
-                  if (slicesOfTitle.length != 0) {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
-                  } else {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
-                  }
-
-                  slicesOfContent.forEach(function (slice) {
-                    resultItem += "<a href='" + articleUrl + "'>" +
-                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
-                      "...</p>" + "</a>";
-                  });
-
-                  resultItem += "</li>";
-                  resultItems.push({
-                    item: resultItem,
-                    searchTextCount: searchTextCount,
-                    hitCount: hitCount,
-                    id: resultItems.length
-                  });
-                }
-              })
-            };
-            if (keywords.length === 1 && keywords[0] === "") {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
-            } else if (resultItems.length === 0) {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
-            } else {
-              resultItems.sort(function (resultLeft, resultRight) {
-                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
-                  return resultRight.searchTextCount - resultLeft.searchTextCount;
-                } else if (resultLeft.hitCount !== resultRight.hitCount) {
-                  return resultRight.hitCount - resultLeft.hitCount;
-                } else {
-                  return resultRight.id - resultLeft.id;
-                }
-              });
-              var searchResultList = '<ul class=\"search-result-list\">';
-              resultItems.forEach(function (result) {
-                searchResultList += result.item;
-              })
-              searchResultList += "</ul>";
-              resultContent.innerHTML = searchResultList;
-            }
-          }
-
-          if ('auto' === 'auto') {
-            input.addEventListener('input', inputEventFunction);
-          } else {
-            $('.search-icon').click(inputEventFunction);
-            input.addEventListener('keypress', function (event) {
-              if (event.keyCode === 13) {
-                inputEventFunction();
-              }
-            });
-          }
-
-          // remove loading animation
-          $(".local-search-pop-overlay").remove();
-          $('body').css('overflow', '');
-
-          proceedsearch();
-        }
-      });
-    }
-
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched === false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
-
-    $('.popup-btn-close').click(onPopupClose);
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-    $(document).on('keyup', function (event) {
-      var shouldDismissSearchPopup = event.which === 27 &&
-        $('.search-popup').is(':visible');
-      if (shouldDismissSearchPopup) {
-        onPopupClose();
-      }
-    });
-  </script>
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    }
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-      for (i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-      }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<style>
-.MathJax_Display {
-  overflow: auto hidden;
-}
-</style><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
-
-    
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>

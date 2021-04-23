@@ -1,540 +1,345 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=6.7.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '6.7.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta name="description" content="warmUpExercise.m 第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵 1A = eye(5); 完成 computeCost.m (计算单变量代价函数) 回想一下我们的单变量hypothesis公式">
-<meta name="keywords" content="machine-learning,吴恩达,Andrew Ng,编程作业,machine-learning-ex1">
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="warmUpExercise.m 第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵 1A &#x3D; eye(5); 完成 computeCost.m (计算单变量代价函数) 回想一下我们的单变量hypothesis公式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="吴恩达ml课程编程作业 machine-learning-ex1">
 <meta property="og:url" content="http://wucf.me/2019/01/22/ml-ex1/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="warmUpExercise.m 第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵 1A = eye(5); 完成 computeCost.m (计算单变量代价函数) 回想一下我们的单变量hypothesis公式">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:description" content="warmUpExercise.m 第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵 1A &#x3D; eye(5); 完成 computeCost.m (计算单变量代价函数) 回想一下我们的单变量hypothesis公式">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://wucf.me/images/ex1-submit.jpg">
-<meta property="og:updated_time" content="2019-01-28T15:46:19.000Z">
+<meta property="article:published_time" content="2019-01-22T11:49:52.000Z">
+<meta property="article:modified_time" content="2019-01-28T15:46:19.000Z">
+<meta property="article:author" content="Chengfu Wu">
+<meta property="article:tag" content="machine-learning">
+<meta property="article:tag" content="吴恩达">
+<meta property="article:tag" content="Andrew Ng">
+<meta property="article:tag" content="编程作业">
+<meta property="article:tag" content="machine-learning-ex1">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="吴恩达ml课程编程作业 machine-learning-ex1">
-<meta name="twitter:description" content="warmUpExercise.m 第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵 1A = eye(5); 完成 computeCost.m (计算单变量代价函数) 回想一下我们的单变量hypothesis公式">
 <meta name="twitter:image" content="http://wucf.me/images/ex1-submit.jpg">
 
 
+<link rel="canonical" href="http://wucf.me/2019/01/22/ml-ex1/">
 
 
-
-
-  <link rel="canonical" href="http://wucf.me/2019/01/22/ml-ex1/">
-
-
-
-<script id="page.configurations">
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
-
-  <title>吴恩达ml课程编程作业 machine-learning-ex1 | Ricky Wu</title>
+<title>吴恩达ml课程编程作业 machine-learning-ex1 | Ricky Wu</title>
   
-
-
-
-
-
-
-
-
 
 
 
 
   <noscript>
   <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
 
-  .use-motion .logo,
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
 
-  
-  
-    
-  
-
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Ricky Wu</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    
-      
-        <p class="site-subtitle">that's not the shape of my heart</p>
-      
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Ricky Wu</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">that's not the shape of my heart</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
   </div>
 </div>
 
 
 
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-categories">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
-
-  </li>
-
-      
-      
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
-        </li>
-      
-    </ul>
-  
-
-  
-
-  
-    <div class="site-search">
-      
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
-
-
-
-    </div>
-  
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
 </nav>
 
 
 
-  
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
 
-
+    </div>
+  </div>
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#warmupexercise.m"><span class="nav-number">1.</span> <span class="nav-text">warmUpExercise.m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computecost.m-%E8%AE%A1%E7%AE%97%E5%8D%95%E5%8F%98%E9%87%8F%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">computeCost.m (计算单变量代价函数)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradientdescent.m-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D"><span class="nav-number">3.</span> <span class="nav-text">gradientDescent.m (梯度下降)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#featurenormalize.m-%E7%89%B9%E5%BE%81%E6%A0%87%E5%87%86%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">featureNormalize.m (特征标准化)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computecostmulti.m"><span class="nav-number">5.</span> <span class="nav-text">computeCostMulti.m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradientdescentmulti.m"><span class="nav-number">6.</span> <span class="nav-text">gradientDescentMulti.m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#normaleqn.m%E6%AD%A3%E8%A7%84%E6%96%B9%E7%A8%8B"><span class="nav-number">7.</span> <span class="nav-text">normalEqn.m(正规方程)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chengfu Wu"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Chengfu Wu</p>
+  <div class="site-description" itemprop="description">黄沙百战穿金甲，不破楼兰终不还。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-            
+    <div class="main-inner post posts-expand">
 
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/01/22/ml-ex1/">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
       <meta itemprop="name" content="Chengfu Wu">
       <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
-      <meta itemprop="image" content="/images/head.jpg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Ricky Wu">
     </span>
-
-    
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          吴恩达ml课程编程作业 machine-learning-ex1
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">吴恩达ml课程编程作业 machine-learning-ex1
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              
-            
-          </h1>
-        
+      <time title="创建时间：2019-01-22 19:49:52" itemprop="dateCreated datePublished" datetime="2019-01-22T19:49:52+08:00">2019-01-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2019-01-28 23:46:19" itemprop="dateModified" datetime="2019-01-28T23:46:19+08:00">2019-01-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/ml%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/" itemprop="url" rel="index"><span itemprop="name">ml编程作业</span></a>
+        </span>
+    </span>
 
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-01-22 19:49:52" itemprop="dateCreated datePublished" datetime="2019-01-22T19:49:52+08:00">2019-01-22</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-01-28 23:46:19" itemprop="dateModified" datetime="2019-01-28T23:46:19+08:00">2019-01-28</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ml编程作业/" itemprop="url" rel="index"><span itemprop="name">ml编程作业</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/22/ml-ex1/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/01/22/ml-ex1/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">3.6k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">9 分钟</span>
-              
-            </div>
-          
-
-          
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
 
         </div>
       </header>
-    
 
     
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
         <h2 id="warmupexercise.m">warmUpExercise.m</h2>
 <p>第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A = eye(5);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; eye(5);</span><br></pre></td></tr></table></figure>
 <p>完成</p>
 <h2 id="computecost.m-计算单变量代价函数">computeCost.m (计算单变量代价函数)</h2>
-<p>回想一下我们的单变量hypothesis公式 <a id="more"></a></p>
+<p>回想一下我们的单变量hypothesis公式 <span id="more"></span></p>
 <p><span class="math display">\[
     h(\theta) = \theta_0 + \theta_1x
 \]</span></p>
-<p>在这个公式中<span class="math inline">\(x\)</span>指的是变量(variable),<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>是参数(parameter),之后的工作就是对代价函数(cost function)求导,找出使得代价函数最小(收敛时)<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>的值 <br> <del>刚开始学的时候有一段时间变量(variable)和参数(parameter)傻傻分不清</del> <br></p>
+<p>在这个公式中<span class="math inline">\(x\)</span>指的是变量(variable),<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>是参数(parameter),之后的工作就是对代价函数(cost function)求导,找出使得代价函数最小(收敛时)<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>的值 <br> <del>刚开始学的时候有一段时间变量(variable)和参数(parameter)傻傻分不清</del> <br/></p>
 <p><span class="math inline">\(X\)</span>是我们的数据矩阵,如下</p>
 <p><span class="math display">\[
 \left[
@@ -588,21 +393,20 @@
 <p>代价函数</p>
 <p><span class="math display">\[
     J(\theta) = \frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)}))^2
-\]</span> hypothesis计算完成后得到的是个<strong>m x 1</strong>的向量,代表的是我们通过h公式计算出的预测结果,m代表数据的行数,也就是<span class="math inline">\(X\)</span>矩阵的行数.<span class="math inline">\(y\)</span>向量代表的是真实的结果,所以<span class="math inline">\((h_\theta(x^{(i)}) - y^{(i)}))\)</span>可以直接用两矩阵相减得出,即<span class="math inline">\(h - y\)</span> <br></p>
+\]</span> hypothesis计算完成后得到的是个<strong>m x 1</strong>的向量,代表的是我们通过h公式计算出的预测结果,m代表数据的行数,也就是<span class="math inline">\(X\)</span>矩阵的行数.<span class="math inline">\(y\)</span>向量代表的是真实的结果,所以<span class="math inline">\((h_\theta(x^{(i)}) - y^{(i)}))\)</span>可以直接用两矩阵相减得出,即<span class="math inline">\(h - y\)</span> <br/></p>
 <p>下面要做的就是计算平方和了,计算平方和有两种方法:</p>
 <ul>
 <li><span class="math inline">\(\alpha^T * \alpha\)</span> <del>永乐大帝在上,受小弟一拜</del></li>
 <li>利用octave/matlib内置矩阵运算方法,先同时给所有数平方,再sum</li>
 </ul>
-<p>于是,我们就可以得出我们的代价函数 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">J = 1 / (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></table></figure></p>
-<p>完成.</p>
+<p>于是,我们就可以得出我们的代价函数 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">J &#x3D; 1 &#x2F; (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></table></figure> 完成.</p>
 <h2 id="gradientdescent.m-梯度下降">gradientDescent.m (梯度下降)</h2>
-<p>为了使我们的线性方程方程<span class="math inline">\(h\)</span>更贴近我们的数据集,因此我们要不断的去改变<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>这两个参数的值,使得代价函数<span class="math inline">\(J(\theta)\)</span>取得最小值,如何取得最小值,我们用的是<strong>批量梯度下降算法(batch gradient descent algorithm)</strong> <br></p>
+<p>为了使我们的线性方程方程<span class="math inline">\(h\)</span>更贴近我们的数据集,因此我们要不断的去改变<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>这两个参数的值,使得代价函数<span class="math inline">\(J(\theta)\)</span>取得最小值,如何取得最小值,我们用的是<strong>批量梯度下降算法(batch gradient descent algorithm)</strong> <br/></p>
 <p>回顾我们的批量梯度下降算法,即同时对每一个<span class="math inline">\(\theta\)</span>求偏导,如下 <span class="math display">\[
     \theta = \theta - \alpha\cdot\frac{\partial}{\partial\theta}J(\theta)
 \]</span> 即 <span class="math display">\[
     \theta_j = \theta_j - \alpha \cdot \frac{1}{m} \sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})\cdot x_j
-\]</span> 由于我们是单变量,所以j只能取0,1,而且每次迭代我们必须要同时更新<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span> <strong>(simultaneously update <span class="math inline">\(\theta_j\)</span> for all j)</strong><br> 要计算 <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span>的和,我们可以使用矩阵的乘法,由上文知<span class="math inline">\(X\)</span>矩阵为m x 2 , <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span> 为m维向量,则</p>
+\]</span> 由于我们是单变量,所以j只能取0,1,而且每次迭代我们必须要同时更新<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span> <strong>(simultaneously update <span class="math inline">\(\theta_j\)</span> for all j)</strong><br/> 要计算 <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span>的和,我们可以使用矩阵的乘法,由上文知<span class="math inline">\(X\)</span>矩阵为m x 2 , <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span> 为m维向量,则</p>
 <p><span class="math display">\[
     \sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})\cdot x_j = X^T*(h_\theta(x^{(i)})-y^{(i)}) =    
     \left[
@@ -618,10 +422,9 @@
     \end{matrix}  
 \right]
 \]</span></p>
-<p>可以简单的理解为<span class="math inline">\(X^T\)</span>矩阵的第一行就是计算<span class="math inline">\(\theta_0\)</span>,第二行就是计算<span class="math inline">\(\theta_1\)</span>,第n行就是计算<span class="math inline">\(\theta_n\)</span>(n &gt; 1就是多变量线性回归了,在这里我们的n = 1,也就是单变量线性回归)<br> 因此,我们的代码可以这么写 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">theta = theta - alpha / m * (X&apos; * (h - y));</span><br></pre></td></tr></table></figure></p>
-<p>完成</p>
+<p>可以简单的理解为<span class="math inline">\(X^T\)</span>矩阵的第一行就是计算<span class="math inline">\(\theta_0\)</span>,第二行就是计算<span class="math inline">\(\theta_1\)</span>,第n行就是计算<span class="math inline">\(\theta_n\)</span>(n &gt; 1就是多变量线性回归了,在这里我们的n = 1,也就是单变量线性回归)<br/> 因此,我们的代码可以这么写 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">theta &#x3D; theta - alpha &#x2F; m * (X&#39; * (h - y));</span><br></pre></td></tr></table></figure> 完成</p>
 <p>至此,我们的必修部分的编程作业都已做完,下面来看选修部分的作业</p>
-<hr>
+<hr />
 <h2 id="featurenormalize.m-特征标准化">featureNormalize.m (特征标准化)</h2>
 <p>特征标准化的目的就是为了提升梯度下降的计算速度.</p>
 <p>特征标准化包含两个方面:</p>
@@ -632,14 +435,14 @@
 <p>它们将尝试使所有的特征都尽量放缩到-1到1之间(不严格,可有误差)</p>
 <p>最简单的实现方式是<span class="math inline">\(x_n=\frac{x_n-\mu_n}{s_n}\)</span>,其中<span class="math inline">\(u_n\)</span>是平均值,<span class="math inline">\(s_n\)</span>是标准差</p>
 <p>在octave中,一个mxn矩阵是可以和另一个m行的列向量或者n列的行向量相加减的,所以答案如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mu = mean(X);</span><br><span class="line">sigma = std(X);</span><br><span class="line">X_norm = (X_norm - mu) ./ sigma;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mu &#x3D; mean(X);</span><br><span class="line">sigma &#x3D; std(X);</span><br><span class="line">X_norm &#x3D; (X_norm - mu) .&#x2F; sigma;</span><br></pre></td></tr></table></figure>
 <p>完成</p>
 <h2 id="computecostmulti.m">computeCostMulti.m</h2>
 <p>由于矩阵乘法的原因,多变量线性回归的代价函数代码和单变量线性回归的代价函数代码一模一样,不再赘述</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">J = 1 / (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">J &#x3D; 1 &#x2F; (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></table></figure>
 <h2 id="gradientdescentmulti.m">gradientDescentMulti.m</h2>
 <p>同理,多变量梯度下降的代码和单变量梯度下降的代码一样,不再赘述</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">theta = theta - alpha / m * (X&apos; * (h - y)) ;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">theta &#x3D; theta - alpha &#x2F; m * (X&#39; * (h - y)) ;</span><br></pre></td></tr></table></figure>
 <p>完成</p>
 <h2 id="normaleqn.m正规方程">normalEqn.m(正规方程)</h2>
 <p>正规方程适用于特征个数不是特别多的场景(<span class="math inline">\(x&lt;10,000\)</span>) , 优点:</p>
@@ -653,903 +456,153 @@
     (X*X^T)^{-1}X^Ty
 \]</span></p>
 <p>由于公式本来就是用矩阵表示,所以用octave/matlib实现起来一点都不难,代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theta = pinv(X&apos; * X) * X&apos; * y;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theta &#x3D; pinv(X&#39; * X) * X&#39; * y;</span><br></pre></td></tr></table></figure>
 <p>完成</p>
 <p>最后,提交作业</p>
-<p><img src="/images/ex1-submit.jpg"></p>
+<p><img src="/images/ex1-submit.jpg" /></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-      
-    
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/machine-learning/" rel="tag"># machine-learning</a>
-          
-            <a href="/tags/吴恩达/" rel="tag"># 吴恩达</a>
-          
-            <a href="/tags/Andrew-Ng/" rel="tag"># Andrew Ng</a>
-          
-            <a href="/tags/编程作业/" rel="tag"># 编程作业</a>
-          
-            <a href="/tags/machine-learning-ex1/" rel="tag"># machine-learning-ex1</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
+          <div class="post-tags">
+              <a href="/tags/machine-learning/" rel="tag"># machine-learning</a>
+              <a href="/tags/%E5%90%B4%E6%81%A9%E8%BE%BE/" rel="tag"># 吴恩达</a>
+              <a href="/tags/Andrew-Ng/" rel="tag"># Andrew Ng</a>
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/" rel="tag"># 编程作业</a>
+              <a href="/tags/machine-learning-ex1/" rel="tag"># machine-learning-ex1</a>
           </div>
 
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/28/of_study/" rel="prev" title="论读书">
-                论读书 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="comments">
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-      </div>
-    </div>
-
-  
-
-
-
-        </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
 
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/head.jpg" alt="Chengfu Wu">
-            
-              <p class="site-author-name" itemprop="name">Chengfu Wu</p>
-              <p class="site-description motion-element" itemprop="description">黄沙百战穿金甲，不破楼兰终不还。</p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">10</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">分类</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">21</span>
-                    <span class="site-state-item-name">标签</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/RickFallen" title="GitHub &rarr; https://github.com/RickFallen" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="/403519557@qq.com" title="E-Mail &rarr; 403519557@qq.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                </span>
-              
+          <div class="post-nav">
+            <div class="post-nav-item">
             </div>
-          
-
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#warmupexercise.m"><span class="nav-text">warmUpExercise.m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computecost.m-计算单变量代价函数"><span class="nav-text">computeCost.m (计算单变量代价函数)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradientdescent.m-梯度下降"><span class="nav-text">gradientDescent.m (梯度下降)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#featurenormalize.m-特征标准化"><span class="nav-text">featureNormalize.m (特征标准化)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computecostmulti.m"><span class="nav-text">computeCostMulti.m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradientdescentmulti.m"><span class="nav-text">gradientDescentMulti.m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#normaleqn.m正规方程"><span class="nav-text">normalEqn.m(正规方程)</span></a></li></ol></div>
-            
-
+            <div class="post-nav-item">
+                <a href="/2019/01/28/of_study/" rel="next" title="论读书">
+                  论读书 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
-
-  
-
-  
+    </footer>
+  </article>
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.7.0</div>
-
-
-
-
-        
 
 
 
 
 
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
 
 
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-          <span id="scrollpercent"><span>0</span>%</span>
-        
-      </div>
-    
-
-    
-
-    
-
-    
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">27k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">46 分钟</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
 
   
 
-<script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+
+
+
+  <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'none'
+      },
+      options: {
+        renderActions: {
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
   }
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/src/utils.js?v=6.7.0"></script>
-
-  <script src="/js/src/motion.js?v=6.7.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/src/affix.js?v=6.7.0"></script>
-
-  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
-
-
-
-  
-  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
-<script src="/js/src/post-details.js?v=6.7.0"></script>
-
-
-
-  
-
-
-  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
-
-
-
-  
-
-  
-    <script id="dsq-count-scr" src="https://ricky-wu.disqus.com/count.js" async></script>
-  
-
-  
-    <script>
-      var disqus_config = function () {
-        this.page.url = "http://wucf.me/2019/01/22/ml-ex1/";
-        this.page.identifier = "2019/01/22/ml-ex1/";
-        this.page.title = '吴恩达ml课程编程作业 machine-learning-ex1';
-        };
-      function loadComments () {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://ricky-wu.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      }
-      
-        $(function () {
-          var offsetTop = $('#comments').offset().top - $(window).height();
-          if (offsetTop <= 0) {
-            // load directly when there's no a scrollbar
-            loadComments();
-          } else {
-            $(window).on('scroll.disqus_scroll', function () {
-              // offsetTop may changes because of manually resizing browser window or lazy loading images.
-              var offsetTop = $('#comments').offset().top - $(window).height();
-              var scrollTop = $(window).scrollTop();
-
-              // pre-load comments a bit? (margin or anything else)
-              if (offsetTop - scrollTop < 60) {
-                $(window).off('.disqus_scroll');
-                loadComments();
-              }
-            });
-          }
-        });
-      
-    </script>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  <script>
-    // Popup Window;
-    var isfetched = false;
-    var isXml = true;
-    // Search DB path;
-    var search_path = "search.xml";
-    if (search_path.length === 0) {
-      search_path = "search.xml";
-    } else if (/json$/i.test(search_path)) {
-      isXml = false;
-    }
-    var path = "/" + search_path;
-    // monitor main search box;
-
-    var onPopupClose = function (e) {
-      $('.popup').hide();
-      $('#local-search-input').val('');
-      $('.search-result-list').remove();
-      $('#no-result').remove();
-      $(".local-search-pop-overlay").remove();
-      $('body').css('overflow', '');
-    }
-
-    function proceedsearch() {
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
-        .css('overflow', 'hidden');
-      $('.search-popup-overlay').click(onPopupClose);
-      $('.popup').toggle();
-      var $localSearchInput = $('#local-search-input');
-      $localSearchInput.attr("autocapitalize", "none");
-      $localSearchInput.attr("autocorrect", "off");
-      $localSearchInput.focus();
-    }
-
-    // search function;
-    var searchFunc = function(path, search_id, content_id) {
-      'use strict';
-
-      // start loading animation
-      $("body")
-        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
-          '<div id="search-loading-icon">' +
-          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
-          '</div>' +
-          '</div>')
-        .css('overflow', 'hidden');
-      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
-
-      
-
-      $.ajax({
-        url: path,
-        dataType: isXml ? "xml" : "json",
-        async: true,
-        success: function(res) {
-          // get the contents from search data
-          isfetched = true;
-          $('.popup').detach().appendTo('.header-inner');
-          var datas = isXml ? $("entry", res).map(function() {
-            return {
-              title: $("title", this).text(),
-              content: $("content",this).text(),
-              url: $("url" , this).text()
-            };
-          }).get() : res;
-          var input = document.getElementById(search_id);
-          var resultContent = document.getElementById(content_id);
-          var inputEventFunction = function() {
-            var searchText = input.value.trim().toLowerCase();
-            var keywords = searchText.split(/[\s\-]+/);
-            if (keywords.length > 1) {
-              keywords.push(searchText);
-            }
-            var resultItems = [];
-            if (searchText.length > 0) {
-              // perform local searching
-              datas.forEach(function(data) {
-                var isMatch = false;
-                var hitCount = 0;
-                var searchTextCount = 0;
-                var title = data.title.trim();
-                var titleInLowerCase = title.toLowerCase();
-                var content = data.content.trim().replace(/<[^>]+>/g,"");
-                
-                var contentInLowerCase = content.toLowerCase();
-                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
-                var indexOfTitle = [];
-                var indexOfContent = [];
-                // only match articles with not empty titles
-                if(title != '') {
-                  keywords.forEach(function(keyword) {
-                    function getIndexByWord(word, text, caseSensitive) {
-                      var wordLen = word.length;
-                      if (wordLen === 0) {
-                        return [];
-                      }
-                      var startPosition = 0, position = [], index = [];
-                      if (!caseSensitive) {
-                        text = text.toLowerCase();
-                        word = word.toLowerCase();
-                      }
-                      while ((position = text.indexOf(word, startPosition)) > -1) {
-                        index.push({position: position, word: word});
-                        startPosition = position + wordLen;
-                      }
-                      return index;
-                    }
-
-                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
-                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
-                  });
-                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
-                    isMatch = true;
-                    hitCount = indexOfTitle.length + indexOfContent.length;
-                  }
-                }
-
-                // show search results
-
-                if (isMatch) {
-                  // sort index by position of keyword
-
-                  [indexOfTitle, indexOfContent].forEach(function (index) {
-                    index.sort(function (itemLeft, itemRight) {
-                      if (itemRight.position !== itemLeft.position) {
-                        return itemRight.position - itemLeft.position;
-                      } else {
-                        return itemLeft.word.length - itemRight.word.length;
-                      }
-                    });
-                  });
-
-                  // merge hits into slices
-
-                  function mergeIntoSlice(text, start, end, index) {
-                    var item = index[index.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    var hits = [];
-                    var searchTextCountInSlice = 0;
-                    while (position + word.length <= end && index.length != 0) {
-                      if (word === searchText) {
-                        searchTextCountInSlice++;
-                      }
-                      hits.push({position: position, length: word.length});
-                      var wordEnd = position + word.length;
-
-                      // move to next position of hit
-
-                      index.pop();
-                      while (index.length != 0) {
-                        item = index[index.length - 1];
-                        position = item.position;
-                        word = item.word;
-                        if (wordEnd > position) {
-                          index.pop();
-                        } else {
-                          break;
-                        }
-                      }
-                    }
-                    searchTextCount += searchTextCountInSlice;
-                    return {
-                      hits: hits,
-                      start: start,
-                      end: end,
-                      searchTextCount: searchTextCountInSlice
-                    };
-                  }
-
-                  var slicesOfTitle = [];
-                  if (indexOfTitle.length != 0) {
-                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
-                  }
-
-                  var slicesOfContent = [];
-                  while (indexOfContent.length != 0) {
-                    var item = indexOfContent[indexOfContent.length - 1];
-                    var position = item.position;
-                    var word = item.word;
-                    // cut out 100 characters
-                    var start = position - 20;
-                    var end = position + 80;
-                    if(start < 0){
-                      start = 0;
-                    }
-                    if (end < position + word.length) {
-                      end = position + word.length;
-                    }
-                    if(end > content.length){
-                      end = content.length;
-                    }
-                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
-                  }
-
-                  // sort slices in content by search text's count and hits' count
-
-                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
-                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
-                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
-                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
-                      return sliceRight.hits.length - sliceLeft.hits.length;
-                    } else {
-                      return sliceLeft.start - sliceRight.start;
-                    }
-                  });
-
-                  // select top N slices in content
-
-                  var upperBound = parseInt('1');
-                  if (upperBound >= 0) {
-                    slicesOfContent = slicesOfContent.slice(0, upperBound);
-                  }
-
-                  // highlight title and content
-
-                  function highlightKeyword(text, slice) {
-                    var result = '';
-                    var prevEnd = slice.start;
-                    slice.hits.forEach(function (hit) {
-                      result += text.substring(prevEnd, hit.position);
-                      var end = hit.position + hit.length;
-                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
-                      prevEnd = end;
-                    });
-                    result += text.substring(prevEnd, slice.end);
-                    return result;
-                  }
-
-                  var resultItem = '';
-
-                  if (slicesOfTitle.length != 0) {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
-                  } else {
-                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
-                  }
-
-                  slicesOfContent.forEach(function (slice) {
-                    resultItem += "<a href='" + articleUrl + "'>" +
-                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
-                      "...</p>" + "</a>";
-                  });
-
-                  resultItem += "</li>";
-                  resultItems.push({
-                    item: resultItem,
-                    searchTextCount: searchTextCount,
-                    hitCount: hitCount,
-                    id: resultItems.length
-                  });
-                }
-              })
-            };
-            if (keywords.length === 1 && keywords[0] === "") {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
-            } else if (resultItems.length === 0) {
-              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
-            } else {
-              resultItems.sort(function (resultLeft, resultRight) {
-                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
-                  return resultRight.searchTextCount - resultLeft.searchTextCount;
-                } else if (resultLeft.hitCount !== resultRight.hitCount) {
-                  return resultRight.hitCount - resultLeft.hitCount;
-                } else {
-                  return resultRight.id - resultLeft.id;
-                }
-              });
-              var searchResultList = '<ul class=\"search-result-list\">';
-              resultItems.forEach(function (result) {
-                searchResultList += result.item;
-              })
-              searchResultList += "</ul>";
-              resultContent.innerHTML = searchResultList;
-            }
-          }
-
-          if ('auto' === 'auto') {
-            input.addEventListener('input', inputEventFunction);
-          } else {
-            $('.search-icon').click(inputEventFunction);
-            input.addEventListener('keypress', function (event) {
-              if (event.keyCode === 13) {
-                inputEventFunction();
-              }
-            });
-          }
-
-          // remove loading animation
-          $(".local-search-pop-overlay").remove();
-          $('body').css('overflow', '');
-
-          proceedsearch();
-        }
-      });
-    }
-
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched === false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
-
-    $('.popup-btn-close').click(onPopupClose);
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-    $(document).on('keyup', function (event) {
-      var shouldDismissSearchPopup = event.which === 27 &&
-        $('.search-popup').is(':visible');
-      if (shouldDismissSearchPopup) {
-        onPopupClose();
-      }
-    });
-  </script>
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    }
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-      for (i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-      }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-<style>
-.MathJax_Display {
-  overflow: auto hidden;
-}
-</style><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
-
-    
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>
