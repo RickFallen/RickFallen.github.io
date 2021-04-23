@@ -8,7 +8,7 @@
 <p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一.</p>
 <p>最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析.</p>
 <p>我们知道, Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩, 但是受制于模型本身的 two-stage 架构Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片, 我们知道流畅的视频一般都是 24fps 以上, 因此 Faster R-CNN 还远远达不到实时处理视频的要求. <span id="more"></span> 为了满足实时目标识别的要求, SSD/YOLO 横空出世, 下图是当时主流目标检测算法在 VOC2007 数据集上的表现.</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg" /></p>
 <p>可以看出在当时 SSD 力压群雄, 在 300x300 分辨率的图片下 mAP 达到了的 77% , fps 也高达 46 , 在 512x512 分辨率虽然识别速度不及 SSD300 , 但是 mAP 却达到了惊人的 80% , 这样的成绩在当年可是吊打 Faster R-CNN 和 YOLO. 值得一提的是 VOC2007 数据集上大物体较多, 对 SSD 算法比较友好, 但是在小物体识别方面, SSD 还是远远不如 Faster R-CNN 的, 至于为什么这个待会儿再说</p>
 <p>为什么 SSD 在达到如此高的识别率时还能保证非常快的呢, 这与 SSD 的 one-stage 架构模型是分不开的,下面看一段 Faster R-CNN 伪代码</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">ROIs = region_proposal(feature_maps)</span><br><span class="line"><span class="keyword">for</span> ROI <span class="keyword">in</span> ROIs</span><br><span class="line">    patch = roi_align(feature_maps, ROI)</span><br><span class="line">    results = detector2(patch) <span class="comment"># Reduce the amount of work here!</span></span><br></pre></td></tr></table></figure>
@@ -16,13 +16,13 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">results = detector3(feature_maps) <span class="comment"># No more separate step for ROIs</span></span><br></pre></td></tr></table></figure>
 <h2 id="ssd-架构模型">SSD 架构模型</h2>
 <p>先来看看 SSD 的整体架构</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg" /></p>
 <p>是不是一脸懵逼, 没关系我也是. 我们把整个模型架构可以拆分成两部分来看, 第一部分是用 vgg16 网络来抽取特征得到特征图 (feature maps)</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg" /></p>
 <p>SSD 使用 <strong>Conv4_3</strong> 这一层来抽取特征图, 为什么这么多层偏偏使用 <strong>Conv4_3</strong> 呢, 来看下图就能明白</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg" /></p>
 <p>我们知道不同维度的特征图所抽取得到的图像特征是不同的, 某些特征图可能代表边界, 有些代表纹理, 而 vgg16 的 <strong>Conv4_3</strong> 这一层就代表物体特征, 在使用 <strong>Conv4_3</strong> 后, SSD 又额外添加了 6 层辅助卷积层, 目的是<strong>为了识别不同大小的目标</strong>, 至于为什么稍后再做说明</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg" /></p>
 <p>在使用 vgg16 得到物体特征图后, SSD 额外添加了</p>
 <h2 id="默认边界框-default-boundary-box">默认边界框 <strong>Default boundary box</strong></h2>
 <p>注: default box 跟 priors box 其实是一回事</p>
@@ -31,26 +31,26 @@
 <p><strong>至于为什么 SSD 选择了(4 , 6) 是因为在识别速度和识别精度之间做了取舍, 默认边界框多了, 识别精度会提高, 但是识别速度会下降, 反之亦然</strong></p>
 <p>关于默认边界框的选取的详细内容可以参考<a href="https://medium.com/@vivek.yadav/part-1-generating-anchor-boxes-for-yolo-like-network-for-vehicle-detection-using-kitti-dataset-b2fe033e5807">Generating Anchor boxes for Yolo-like network for vehicle detection using KITTI dataset</a></p>
 <p>在特征图每个单元(或者也可以简单的理解为矩阵的每个点)上都会生成 4 个或 6 个默认边界框, 所有特征图加起来一共会生成 <strong>8732</strong> 个默认边界框 (注: 8732 是 300x300 分辨率的图像, 512x512 分辨率的图像则是 24564 个默认边界框)</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg" /></p>
 <h2 id="默认边界框匹配策略">默认边界框匹配策略</h2>
 <p>如果在某一个固定的特征单元上, 某个默认边界框和 ground truth 的 IOU 大于 0.5 则把这个默认边界框视为正匹配, 否则就是负匹配. (IoU 即 the intersection over the union, 是两个图像的交集比并集, 又称为 Jaccard 相似系数)</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg" /></p>
 <p>为了简单起见, 我们把特征图看做 8x8 (实际是 38x38 或者其他) 并且只有 3 个默认候选框</p>
 <p>在第 5 行第 4 列这个特征单元上, 蓝色代表 ground truth , 绿色代表默认边界框, 其中 1, 2 两个默认候选框的 IoU 大于 0.5 则 1, 2 两个默认候选框就是正匹配, 这样我们就可以得到目标的大致形状.</p>
 <h2 id="多尺度特征图">多尺度特征图</h2>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg" /></p>
 <p>上图源自 SSD 论文, 论文中也是假设有一个 8x8 特征图一个 4x4 特征图, 以及 3 个默认边界框</p>
 <p>可以看到在 8x8 特征图上, 狗狗的所有默认边界框与 ground truth 的 IoU 小于 0.5, 因此在 8x8 特征图上, 狗狗不会被识别出来, 但是在 8x8 特征图上, 猫的 3 个默认边界框有 2 个 IoU 大于 0.5 (蓝色框框), 因此猫在图片中的的形状被大致确认下来.</p>
 <p>反而在 4x4 特征图上, 狗狗的一个默认边界框与 ground truth 的 IoU 大于 0.5 (红色框框) , 但是猫的 IoU 都小于 0.5, 因此猫在 4x4 特征图上就没有被识别出来</p>
 <p>这就是多尺度特征图, 对于 8x8 特征图我们叫做高分辨率特征图 (higher resolution feature maps) , 反之亦然</p>
 <p><strong>高分辨率特征图非常适合识别小物体, 低分辨率特征图非常适合识别大物体</strong></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg" /></p>
 <p>SSD 总共有 6 个尺度的特征图参与目标识别, 这就保证了对不同尺寸的物体都可以有较好的识别表现.</p>
 <p>值得注意的是输入图像的分辨率是 300x300 , 但是我们第一个特征图是 38x38, 从 300 到 38 是个非常大的比例了, 从而造成 SSD 对小目标的识别效果不是很好</p>
 <h2 id="总结">总结</h2>
 <p>下面用一张图来总结 SSD</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg" /></p>
 <p>在前 3 个特征图上, 由于特征图分辨率高, 并没有识别出汽车, 紧接着最后 3 个特征图都识别出了汽车, 并且一共生成了 4 个边界框, 最后再经过非极大抑制最终确定一个边界框, 至此识别完成.</p>
 <p>ps : 目前刚入门目标检测没多久, 知识储备还较少, 还是只菜狗, 这篇文章就先这样, 等以后知识丰富了回过头来再改</p>
 <h1 id="参考资料">参考资料</h1>
@@ -106,7 +106,7 @@
 </blockquote>
 <p>Eden区执行完垃圾回收后, 被标记为存活的对象会被 <strong>移动! 移动! 移动!</strong> 到 Survivor 区, 之后 Eden 区会被视作为空</p>
 <h3 id="survivor-区的对象是如何到老年代的">Survivor 区的对象是如何到老年代的</h3>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg" /></p>
 <ol type="1">
 <li>每一次 GC 后依然存活的对象年龄会 +1 , Survivor 区年龄到15的对象会直接进入老年代
 <ol type="1">
@@ -141,9 +141,9 @@
 <li>Java 10 - G1 GC</li>
 <li>Java 11 - ZGC</li>
 </ul>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg" /></p>
 <h2 id="基础知识">基础知识</h2>
 <h3 id="常见虚拟机">常见虚拟机</h3>
 <ul>
@@ -214,7 +214,7 @@
 <li>永久代 (Perm Gen 永久代在 JDK8 之后被 MetaSpace 取代)</li>
 </ul>
 <figure>
-<img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory" /><figcaption>Java Heap Memory</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory" /><figcaption>Java Heap Memory</figcaption>
 </figure>
 <p>为什么这么划分, 是根据现实场景中对象的生命周期分布来决定的, 大部分对象都是&quot;朝生夕死&quot;. 一般情况下, 经历过数次 GC 依然存活的对象会被分配到老年代中(有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
 <h3 id="hotspot-虚拟机常见收集器">Hotspot 虚拟机常见收集器</h3>
@@ -236,7 +236,7 @@
 <li>返回地址</li>
 <li>....</li>
 </ul>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg" /></p></li>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg" /></p></li>
 </ul>
 <h4 id="局部变量表">局部变量表</h4>
 <ol type="1">
@@ -428,7 +428,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theta &#x3D; pinv(X&#39; * X) * X&#39; * y;</span><br></pre></td></tr></table></figure>
 <p>完成</p>
 <p>最后,提交作业</p>
-<p><img src="/images/ex1-submit.jpg" /></p>
+<p><img data-src="/images/ex1-submit.jpg" /></p>
 ]]></content>
       <categories>
         <category>ml编程作业</category>
@@ -439,71 +439,6 @@
         <tag>Andrew Ng</tag>
         <tag>编程作业</tag>
         <tag>machine-learning-ex1</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>吴恩达ml课程编程作业 machine-learning-ex2</title>
-    <url>/2019/01/28/ml-ex2/</url>
-    <content><![CDATA[<h2 id="sigmoid.m">sigmoid.m</h2>
-<p>第一题比较简单,让我们实现Sigmoid函数,函数如下: <span class="math display">\[
-    g(z)=\frac{1}{1+e^{-z}}
-\]</span></p>
-<span id="more"></span>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">g &#x3D; 1 .&#x2F; (1 + exp(-z));</span><br></pre></td></tr></table></figure>
-<p>完成</p>
-<h2 id="costfunction.m-逻辑回归的代价函数">costFunction.m (逻辑回归的代价函数)</h2>
-<p>逻辑回归的hypothesis函数如下</p>
-<p><span class="math display">\[
-    h_\theta(x)=g(\theta^Tx)
-\]</span></p>
-<p>其中<span class="math inline">\(g\)</span>就是我们刚才实现的sigmoid函数,逻辑回归的代价函数如下:</p>
-<p><span class="math display">\[
-    J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)})))
-\]</span></p>
-<p>为什么这么复杂呢...因为这个函数可以把我们的代价函数变成非凸函数(non-convex),这样在求导的时候就不会出现local minimum</p>
-<p>有了ex-1的基础,用octave/matlib实现也不是那么困难了,代码如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h));</span><br></pre></td></tr></table></figure>
-<p>逻辑回归的梯度下降与线性回归的梯度下降公式长的一样:</p>
-<p><span class="math display">\[
-    \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
-\]</span></p>
-<p>注:下标<span class="math inline">\(j\)</span>代表第几个特征</p>
-<p>需要注意的是,虽然它们公式长的一样,但是注意<span class="math inline">\(h_\theta(x)\)</span>的实现方式是不同的,代码实现如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y));</span><br></pre></td></tr></table></figure>
-<p>完成</p>
-<h2 id="predict.m">predict.m</h2>
-<p>也是一道简单的题,直接上结果</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">p &#x3D; h &gt;&#x3D; 0.5;</span><br></pre></td></tr></table></figure>
-<h2 id="costfunctionreg.m">costFunctionReg.m</h2>
-<p>这道题主要是代价函数的正则化,用来解决过拟合(over-fitting)的问题,算法如下:</p>
-<p><span class="math display">\[
-    J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))) + \frac{\lambda}{2m}\sum_{j=1}^{n}\theta_j^2
-\]</span></p>
-<p>其中<span class="math inline">\(m\)</span>代表数据的条数,<span class="math inline">\(n\)</span>代表特征个数,需要注意的是,正则化是不包括<span class="math inline">\(\theta_0\)</span>的</p>
-<p>关于向量的平方和已经在上一篇ex-1中介绍过了,因此代码实现如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">theta_temp &#x3D; theta(2:end);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) + lambda &#x2F; (2 * m) * sum(theta_temp .^ 2);</span><br></pre></td></tr></table></figure>
-<p>接下来就要计算梯度值了,跟计算代价函数一样,计算梯度值的时候对<span class="math inline">\(\theta_0\)</span>不做正则化处理</p>
-<p><span class="math display">\[
-    \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
-\]</span></p>
-<p>对于<span class="math inline">\(\theta_0\)</span>之外的参数,需要加上正则化处理</p>
-<p><span class="math display">\[
-\frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac{\lambda}{m}\theta_j
-\]</span></p>
-<p>因此,在计算的时候,我们可以手动的给<span class="math inline">\(\theta_0\)</span>赋值为0,这样就可以用一个公式来计算,不用判断是否为<span class="math inline">\(\theta_0\)</span>,计算梯度的代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theta_temp &#x3D; [0;theta_temp];</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_temp;</span><br></pre></td></tr></table></figure>
-<p>完成</p>
-<p><img src="/images/ex2-submit.png" /></p>
-]]></content>
-      <categories>
-        <category>ml编程作业</category>
-      </categories>
-      <tags>
-        <tag>machine-learning</tag>
-        <tag>吴恩达</tag>
-        <tag>Andrew Ng</tag>
-        <tag>编程作业</tag>
-        <tag>machine-learning-ex2</tag>
       </tags>
   </entry>
   <entry>
@@ -529,11 +464,11 @@
 <h2 id="predict.m">predict.m</h2>
 <p>  之前的题目是用逻辑回归识别手写图片,这道题是用神经网络(Neural Network)识别手写图片</p>
 <p>  相比逻辑回归的线性classifier,NN可以执行更加复杂的任务,在这个练习中,我们要用<strong>Feedforward Propagation</strong>算法实现一个3层神经网络,算法如下图所示:</p>
-<p><img src="/images/nn.png" /></p>
+<p><img data-src="/images/nn.png" /></p>
 <p>  因此,代码如下:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">a_1 &#x3D; [ones(m,1) , X];</span><br><span class="line"></span><br><span class="line">z_2 &#x3D; a_1 * Theta1&#39;;</span><br><span class="line">a_2 &#x3D; [ones(m,1),sigmoid(z_2)];</span><br><span class="line"></span><br><span class="line">z_3 &#x3D; a_2 * Theta2&#39;;</span><br><span class="line">a_3 &#x3D; sigmoid(z_3);</span><br><span class="line"></span><br><span class="line">[max_num,p] &#x3D; max(a_3,[],2);</span><br></pre></td></tr></table></figure>
 <p>完成</p>
-<p><img src="/images/ex3-submit.png" /></p>
+<p><img data-src="/images/ex3-submit.png" /></p>
 ]]></content>
       <categories>
         <category>ml编程作业</category>
@@ -573,7 +508,7 @@
 </blockquote>
 <p>由此可见, 子容器是可以继承父容器的所有 Bean 的.</p>
 <span id="more"></span>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg" /></p>
 <ol type="1">
 <li>在 web.xml 中, ContextLoaderListener 会初始化父容器
 <ol type="1">
@@ -625,7 +560,7 @@
 <h2 id="基础知识">基础知识</h2>
 <h3 id="spring-web-mvc-架构">Spring Web MVC 架构</h3>
 <p><a href="http://www.corej2eepatterns.com/FrontController.htm">前端控制器模式</a></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg" /></p>
 <h3 id="mvc-核心组件">MVC 核心组件</h3>
 <table>
 <colgroup>
@@ -666,7 +601,7 @@
 </tbody>
 </table>
 <h3 id="mvc-交互流程">MVC 交互流程</h3>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg" /></p>
 <h3 id="注解驱动实现-spring-web-mvc">注解驱动实现 Spring Web MVC</h3>
 <ol type="1">
 <li>注解配置: <span class="citation" data-cites="Configuration">@Configuration</span></li>
@@ -747,8 +682,8 @@
 </tbody>
 </table>
 <p>知道了内容协商的核心组件后 , 再来看看 Spring MVC 的 REST 处理流程</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg" /></p>
 <h3 id="spring-异常处理机制">Spring 异常处理机制</h3>
 <p>官方文档中说 <code>DispatcherServlet</code> 会委托给一个 <code>HandlerExceptionResolver</code> 链去处理异常</p>
 <p>Spring MVC 自带的异常处理器有如下几种</p>
@@ -856,6 +791,71 @@
       <tags>
         <tag>spring</tag>
         <tag>spring framework</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>吴恩达ml课程编程作业 machine-learning-ex2</title>
+    <url>/2019/01/28/ml-ex2/</url>
+    <content><![CDATA[<h2 id="sigmoid.m">sigmoid.m</h2>
+<p>第一题比较简单,让我们实现Sigmoid函数,函数如下: <span class="math display">\[
+    g(z)=\frac{1}{1+e^{-z}}
+\]</span></p>
+<span id="more"></span>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">g &#x3D; 1 .&#x2F; (1 + exp(-z));</span><br></pre></td></tr></table></figure>
+<p>完成</p>
+<h2 id="costfunction.m-逻辑回归的代价函数">costFunction.m (逻辑回归的代价函数)</h2>
+<p>逻辑回归的hypothesis函数如下</p>
+<p><span class="math display">\[
+    h_\theta(x)=g(\theta^Tx)
+\]</span></p>
+<p>其中<span class="math inline">\(g\)</span>就是我们刚才实现的sigmoid函数,逻辑回归的代价函数如下:</p>
+<p><span class="math display">\[
+    J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)})))
+\]</span></p>
+<p>为什么这么复杂呢...因为这个函数可以把我们的代价函数变成非凸函数(non-convex),这样在求导的时候就不会出现local minimum</p>
+<p>有了ex-1的基础,用octave/matlib实现也不是那么困难了,代码如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h));</span><br></pre></td></tr></table></figure>
+<p>逻辑回归的梯度下降与线性回归的梯度下降公式长的一样:</p>
+<p><span class="math display">\[
+    \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
+\]</span></p>
+<p>注:下标<span class="math inline">\(j\)</span>代表第几个特征</p>
+<p>需要注意的是,虽然它们公式长的一样,但是注意<span class="math inline">\(h_\theta(x)\)</span>的实现方式是不同的,代码实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y));</span><br></pre></td></tr></table></figure>
+<p>完成</p>
+<h2 id="predict.m">predict.m</h2>
+<p>也是一道简单的题,直接上结果</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">p &#x3D; h &gt;&#x3D; 0.5;</span><br></pre></td></tr></table></figure>
+<h2 id="costfunctionreg.m">costFunctionReg.m</h2>
+<p>这道题主要是代价函数的正则化,用来解决过拟合(over-fitting)的问题,算法如下:</p>
+<p><span class="math display">\[
+    J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))) + \frac{\lambda}{2m}\sum_{j=1}^{n}\theta_j^2
+\]</span></p>
+<p>其中<span class="math inline">\(m\)</span>代表数据的条数,<span class="math inline">\(n\)</span>代表特征个数,需要注意的是,正则化是不包括<span class="math inline">\(\theta_0\)</span>的</p>
+<p>关于向量的平方和已经在上一篇ex-1中介绍过了,因此代码实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">theta_temp &#x3D; theta(2:end);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) + lambda &#x2F; (2 * m) * sum(theta_temp .^ 2);</span><br></pre></td></tr></table></figure>
+<p>接下来就要计算梯度值了,跟计算代价函数一样,计算梯度值的时候对<span class="math inline">\(\theta_0\)</span>不做正则化处理</p>
+<p><span class="math display">\[
+    \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
+\]</span></p>
+<p>对于<span class="math inline">\(\theta_0\)</span>之外的参数,需要加上正则化处理</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac{\lambda}{m}\theta_j
+\]</span></p>
+<p>因此,在计算的时候,我们可以手动的给<span class="math inline">\(\theta_0\)</span>赋值为0,这样就可以用一个公式来计算,不用判断是否为<span class="math inline">\(\theta_0\)</span>,计算梯度的代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theta_temp &#x3D; [0;theta_temp];</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_temp;</span><br></pre></td></tr></table></figure>
+<p>完成</p>
+<p><img data-src="/images/ex2-submit.png" /></p>
+]]></content>
+      <categories>
+        <category>ml编程作业</category>
+      </categories>
+      <tags>
+        <tag>machine-learning</tag>
+        <tag>吴恩达</tag>
+        <tag>Andrew Ng</tag>
+        <tag>编程作业</tag>
+        <tag>machine-learning-ex2</tag>
       </tags>
   </entry>
   <entry>
@@ -1055,7 +1055,7 @@
 <h4 id="开启-spring-aop-支持">开启 Spring Aop 支持</h4>
 <p><span class="citation" data-cites="EnableAspectJAutoProxy">@EnableAspectJAutoProxy</span> 此注解会加载 AnnotationAwareAspectJAutoProxyCreator , 类关系图如下</p>
 <figure>
-<img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5vuernq9kj217s0l274w.jpg" alt="AnnotationAwareAspectJAutoProxyCreator 类图" /><figcaption>AnnotationAwareAspectJAutoProxyCreator 类图</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5vuernq9kj217s0l274w.jpg" alt="AnnotationAwareAspectJAutoProxyCreator 类图" /><figcaption>AnnotationAwareAspectJAutoProxyCreator 类图</figcaption>
 </figure>
 <h4 id="开启步骤-annotationawareaspectjautoproxycreator-创建时机">开启步骤 &amp; AnnotationAwareAspectJAutoProxyCreator 创建时机</h4>
 <ul>
@@ -1138,7 +1138,7 @@
 <li>ReflectiveMethodInvocation.proceed()</li>
 </ul></li>
 </ul>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wwxkrqzzj20kv0m00tc.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wwxkrqzzj20kv0m00tc.jpg" /></p>
 <p><a href="#Advice%20正常执行顺序">Advice 正常执行顺序</a></p>
 <p>为什么先制性 around 的 before 而不是 <span class="citation" data-cites="Before">@Before</span></p>
 <p>​ 答: 因为在执行 around 通知时, 只有调用了 joinPoint 的 proceed() 方法, 才会把 MethodBeforeAdviceInterceptor 加入到调用栈中.</p></li>
@@ -1176,7 +1176,7 @@
 <p>其中,起主要作用的是</p>
 <p><strong>ConfigurationClassPostProcessor</strong></p>
 <figure>
-<img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx6tv7llj212n0dkq34.jpg" alt="ConfigurationClassPostProcessor" /><figcaption>ConfigurationClassPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx6tv7llj212n0dkq34.jpg" alt="ConfigurationClassPostProcessor" /><figcaption>ConfigurationClassPostProcessor</figcaption>
 </figure>
 <ol type="1">
 <li>是<code>BeanFactoryPostProcessor</code> 类型</li>
@@ -1191,7 +1191,7 @@
 </ol>
 <p><strong>AutowiredAnnotationBeanPostProcessor</strong></p>
 <figure>
-<img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx908d5jj212e0el3yt.jpg" alt="AutowiredAnnotationBeanPostProcessor" /><figcaption>AutowiredAnnotationBeanPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx908d5jj212e0el3yt.jpg" alt="AutowiredAnnotationBeanPostProcessor" /><figcaption>AutowiredAnnotationBeanPostProcessor</figcaption>
 </figure>
 <ol type="1">
 <li><p>是 <code>BeanPostProcessor</code> 类型</p>
@@ -1208,7 +1208,7 @@
 </ol>
 <p><strong>CommonAnnotationBeanPostProcessor</strong></p>
 <figure>
-<img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wxapwtyhj213v0c03ys.jpg" alt="CommonAnnotationBeanPostProcessor" /><figcaption>CommonAnnotationBeanPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wxapwtyhj213v0c03ys.jpg" alt="CommonAnnotationBeanPostProcessor" /><figcaption>CommonAnnotationBeanPostProcessor</figcaption>
 </figure>
 <ol type="1">
 <li>是 <code>BeanPostProcessor</code> 类型</li>

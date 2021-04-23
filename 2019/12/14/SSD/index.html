@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta name="description" content="目标检测之SSD SSD 全称 Single Shot MultiBox Detector 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一. 最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析. 我们知道, Faster R-CNN 在当时的目标检测领">
 <meta property="og:type" content="article">
@@ -315,22 +315,20 @@
     </span>
 
   
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
+  
+  <span class="post-meta-item">
+    
       <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
+        <i class="far fa-comment"></i>
       </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2019/12/14/SSD/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/14/SSD/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
 </div>
 
         </div>
@@ -345,7 +343,7 @@
 <p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一.</p>
 <p>最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析.</p>
 <p>我们知道, Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩, 但是受制于模型本身的 two-stage 架构Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片, 我们知道流畅的视频一般都是 24fps 以上, 因此 Faster R-CNN 还远远达不到实时处理视频的要求. <span id="more"></span> 为了满足实时目标识别的要求, SSD/YOLO 横空出世, 下图是当时主流目标检测算法在 VOC2007 数据集上的表现.</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg" /></p>
 <p>可以看出在当时 SSD 力压群雄, 在 300x300 分辨率的图片下 mAP 达到了的 77% , fps 也高达 46 , 在 512x512 分辨率虽然识别速度不及 SSD300 , 但是 mAP 却达到了惊人的 80% , 这样的成绩在当年可是吊打 Faster R-CNN 和 YOLO. 值得一提的是 VOC2007 数据集上大物体较多, 对 SSD 算法比较友好, 但是在小物体识别方面, SSD 还是远远不如 Faster R-CNN 的, 至于为什么这个待会儿再说</p>
 <p>为什么 SSD 在达到如此高的识别率时还能保证非常快的呢, 这与 SSD 的 one-stage 架构模型是分不开的,下面看一段 Faster R-CNN 伪代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">ROIs = region_proposal(feature_maps)</span><br><span class="line"><span class="keyword">for</span> ROI <span class="keyword">in</span> ROIs</span><br><span class="line">    patch = roi_align(feature_maps, ROI)</span><br><span class="line">    results = detector2(patch) <span class="comment"># Reduce the amount of work here!</span></span><br></pre></td></tr></table></figure>
@@ -353,13 +351,13 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">results = detector3(feature_maps) <span class="comment"># No more separate step for ROIs</span></span><br></pre></td></tr></table></figure>
 <h2 id="ssd-架构模型">SSD 架构模型</h2>
 <p>先来看看 SSD 的整体架构</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg" /></p>
 <p>是不是一脸懵逼, 没关系我也是. 我们把整个模型架构可以拆分成两部分来看, 第一部分是用 vgg16 网络来抽取特征得到特征图 (feature maps)</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg" /></p>
 <p>SSD 使用 <strong>Conv4_3</strong> 这一层来抽取特征图, 为什么这么多层偏偏使用 <strong>Conv4_3</strong> 呢, 来看下图就能明白</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg" /></p>
 <p>我们知道不同维度的特征图所抽取得到的图像特征是不同的, 某些特征图可能代表边界, 有些代表纹理, 而 vgg16 的 <strong>Conv4_3</strong> 这一层就代表物体特征, 在使用 <strong>Conv4_3</strong> 后, SSD 又额外添加了 6 层辅助卷积层, 目的是<strong>为了识别不同大小的目标</strong>, 至于为什么稍后再做说明</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg" /></p>
 <p>在使用 vgg16 得到物体特征图后, SSD 额外添加了</p>
 <h2 id="默认边界框-default-boundary-box">默认边界框 <strong>Default boundary box</strong></h2>
 <p>注: default box 跟 priors box 其实是一回事</p>
@@ -368,26 +366,26 @@
 <p><strong>至于为什么 SSD 选择了(4 , 6) 是因为在识别速度和识别精度之间做了取舍, 默认边界框多了, 识别精度会提高, 但是识别速度会下降, 反之亦然</strong></p>
 <p>关于默认边界框的选取的详细内容可以参考<a target="_blank" rel="noopener" href="https://medium.com/@vivek.yadav/part-1-generating-anchor-boxes-for-yolo-like-network-for-vehicle-detection-using-kitti-dataset-b2fe033e5807">Generating Anchor boxes for Yolo-like network for vehicle detection using KITTI dataset</a></p>
 <p>在特征图每个单元(或者也可以简单的理解为矩阵的每个点)上都会生成 4 个或 6 个默认边界框, 所有特征图加起来一共会生成 <strong>8732</strong> 个默认边界框 (注: 8732 是 300x300 分辨率的图像, 512x512 分辨率的图像则是 24564 个默认边界框)</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg" /></p>
 <h2 id="默认边界框匹配策略">默认边界框匹配策略</h2>
 <p>如果在某一个固定的特征单元上, 某个默认边界框和 ground truth 的 IOU 大于 0.5 则把这个默认边界框视为正匹配, 否则就是负匹配. (IoU 即 the intersection over the union, 是两个图像的交集比并集, 又称为 Jaccard 相似系数)</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg" /></p>
 <p>为了简单起见, 我们把特征图看做 8x8 (实际是 38x38 或者其他) 并且只有 3 个默认候选框</p>
 <p>在第 5 行第 4 列这个特征单元上, 蓝色代表 ground truth , 绿色代表默认边界框, 其中 1, 2 两个默认候选框的 IoU 大于 0.5 则 1, 2 两个默认候选框就是正匹配, 这样我们就可以得到目标的大致形状.</p>
 <h2 id="多尺度特征图">多尺度特征图</h2>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg" /></p>
 <p>上图源自 SSD 论文, 论文中也是假设有一个 8x8 特征图一个 4x4 特征图, 以及 3 个默认边界框</p>
 <p>可以看到在 8x8 特征图上, 狗狗的所有默认边界框与 ground truth 的 IoU 小于 0.5, 因此在 8x8 特征图上, 狗狗不会被识别出来, 但是在 8x8 特征图上, 猫的 3 个默认边界框有 2 个 IoU 大于 0.5 (蓝色框框), 因此猫在图片中的的形状被大致确认下来.</p>
 <p>反而在 4x4 特征图上, 狗狗的一个默认边界框与 ground truth 的 IoU 大于 0.5 (红色框框) , 但是猫的 IoU 都小于 0.5, 因此猫在 4x4 特征图上就没有被识别出来</p>
 <p>这就是多尺度特征图, 对于 8x8 特征图我们叫做高分辨率特征图 (higher resolution feature maps) , 反之亦然</p>
 <p><strong>高分辨率特征图非常适合识别小物体, 低分辨率特征图非常适合识别大物体</strong></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg" /></p>
 <p>SSD 总共有 6 个尺度的特征图参与目标识别, 这就保证了对不同尺寸的物体都可以有较好的识别表现.</p>
 <p>值得注意的是输入图像的分辨率是 300x300 , 但是我们第一个特征图是 38x38, 从 300 到 38 是个非常大的比例了, 从而造成 SSD 对小目标的识别效果不是很好</p>
 <h2 id="总结">总结</h2>
 <p>下面用一张图来总结 SSD</p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg" /></p>
 <p>在前 3 个特征图上, 由于特征图分辨率高, 并没有识别出汽车, 紧接着最后 3 个特征图都识别出了汽车, 并且一共生成了 4 个边界框, 最后再经过非极大抑制最终确定一个边界框, 至此识别完成.</p>
 <p>ps : 目前刚入门目标检测没多久, 知识储备还较少, 还是只菜狗, 这篇文章就先这样, 等以后知识丰富了回过头来再改</p>
 <h1 id="参考资料">参考资料</h1>
@@ -434,6 +432,11 @@
 
 
 
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -471,20 +474,6 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
 </div>
-<div class="wordcount">
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-line"></i>
-    </span>
-    <span title="站点总字数">27k</span>
-  </span>
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="站点阅读时长">46 分钟</span>
-  </span>
-</div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
@@ -493,6 +482,7 @@
 
   
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
@@ -542,6 +532,37 @@
 </script>
 
 
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://ricky-wu.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://wucf.me/2019/12/14/SSD/";
+    this.page.identifier = "2019/12/14/SSD/";
+    this.page.title = "浅谈目标检测之SSD";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ricky-wu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
 
 </body>
 </html>

@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta name="description" content="JVM 知识整理 Q &amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老">
 <meta property="og:type" content="article">
@@ -308,22 +308,20 @@
     </span>
 
   
-      </div>
-      <div class="post-meta">
-    <span class="post-meta-item" title="本文字数">
+  
+  <span class="post-meta-item">
+    
       <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
+        <i class="far fa-comment"></i>
       </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2019/08/15/jvm/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/15/jvm/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
 </div>
 
         </div>
@@ -366,7 +364,7 @@
 </blockquote>
 <p>Eden区执行完垃圾回收后, 被标记为存活的对象会被 <strong>移动! 移动! 移动!</strong> 到 Survivor 区, 之后 Eden 区会被视作为空</p>
 <h3 id="survivor-区的对象是如何到老年代的">Survivor 区的对象是如何到老年代的</h3>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg" /></p>
 <ol type="1">
 <li>每一次 GC 后依然存活的对象年龄会 +1 , Survivor 区年龄到15的对象会直接进入老年代
 <ol type="1">
@@ -401,9 +399,9 @@
 <li>Java 10 - G1 GC</li>
 <li>Java 11 - ZGC</li>
 </ul>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg" /></p>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg" /></p>
 <h2 id="基础知识">基础知识</h2>
 <h3 id="常见虚拟机">常见虚拟机</h3>
 <ul>
@@ -474,7 +472,7 @@
 <li>永久代 (Perm Gen 永久代在 JDK8 之后被 MetaSpace 取代)</li>
 </ul>
 <figure>
-<img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory" /><figcaption>Java Heap Memory</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory" /><figcaption>Java Heap Memory</figcaption>
 </figure>
 <p>为什么这么划分, 是根据现实场景中对象的生命周期分布来决定的, 大部分对象都是&quot;朝生夕死&quot;. 一般情况下, 经历过数次 GC 依然存活的对象会被分配到老年代中(有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
 <h3 id="hotspot-虚拟机常见收集器">Hotspot 虚拟机常见收集器</h3>
@@ -496,7 +494,7 @@
 <li>返回地址</li>
 <li>....</li>
 </ul>
-<p><img src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg" /></p></li>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg" /></p></li>
 </ul>
 <h4 id="局部变量表">局部变量表</h4>
 <ol type="1">
@@ -583,6 +581,11 @@
 
 
 
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -620,20 +623,6 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
 </div>
-<div class="wordcount">
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-line"></i>
-    </span>
-    <span title="站点总字数">27k</span>
-  </span>
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="站点阅读时长">46 分钟</span>
-  </span>
-</div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
@@ -642,6 +631,7 @@
 
   
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
@@ -691,6 +681,37 @@
 </script>
 
 
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://ricky-wu.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://wucf.me/2019/08/15/jvm/";
+    this.page.identifier = "2019/08/15/jvm/";
+    this.page.title = "JVM 总结";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ricky-wu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
 
 </body>
 </html>
