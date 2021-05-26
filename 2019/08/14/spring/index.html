@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta name="description" content="Spring Core 个人总结 Q&amp;A Spring Framework BeanFactory 和 ApplicationContext 的区别    Feature BeanFactory ApplicationContext     Bean instantiation&#x2F;wiring Yes Yes   Integrated lifecycle management No Yes">
 <meta property="og:type" content="article">
@@ -195,7 +195,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-core-%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">Spring Core 个人总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-number">1.1.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-framework"><span class="nav-number">1.1.1.</span> <span class="nav-text">Spring Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#beanfactory-%E5%92%8C-applicationcontext-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">BeanFactory 和 ApplicationContext 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#beanfactory-%E5%92%8C-factorybean-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">BeanFactory 和 FactoryBean 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spring-ioc%E5%AE%B9%E5%99%A8%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Spring IOC容器如何解决循环依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E6%98%AF%E4%B8%8D%E8%83%BD%E8%A2%AB%E8%A7%A3%E5%86%B3%E7%9A%84"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">哪些循环依赖是不能被解决的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-getbean-%E7%9A%84%E6%97%B6%E5%80%99%E8%A6%81%E7%94%A8%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98-%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E5%B0%B1%E8%A7%A3%E5%86%B3%E4%B8%8D%E4%BA%86%E5%90%97"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">为什么 getBean 的时候要用三级缓存, 二级缓存就解决不了吗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lazy-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.1.1.6.</span> <span class="nav-text">@Lazy 是如何实现的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#springmvc-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E6%9E%90%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E6%B3%A8%E8%A7%A3%E5%B9%B6%E8%B5%8B%E5%80%BC%E7%9A%84"><span class="nav-number">1.1.1.7.</span> <span class="nav-text">SpringMVC 是如何解析方法中的注解,并赋值的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#postconstruct-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.1.1.8.</span> <span class="nav-text">@PostConstruct 是如何实现的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bean-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%B5%8B%E5%80%BC%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.1.1.9.</span> <span class="nav-text">Bean 的初始化赋值顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%97%B6%E8%A2%AB%E4%BA%8B%E5%8A%A1%E5%92%8C-aop-%E6%A0%87%E8%AE%B0%E7%9A%84%E6%96%B9%E6%B3%95-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E6%98%AF%E6%80%8E%E6%A0%B7"><span class="nav-number">1.1.1.10.</span> <span class="nav-text">同时被事务和 AOP 标记的方法, 执行顺序是怎样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#postconstuct-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.1.1.11.</span> <span class="nav-text">@PostConstuct 是如何实现的</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sourcecode"><span class="nav-number">1.2.</span> <span class="nav-text">SourceCode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-aop"><span class="nav-number">1.2.1.</span> <span class="nav-text">Spring Aop</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#aop-%E7%BB%BC%E8%BF%B0"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">AOP 综述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#advice-%E6%AD%A3%E5%B8%B8%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Advice 正常执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#advice-%E5%BC%82%E5%B8%B8%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">Advice 异常执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-spring-aop-%E6%94%AF%E6%8C%81"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">开启 Spring Aop 支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%AD%A5%E9%AA%A4-annotationawareaspectjautoproxycreator-%E5%88%9B%E5%BB%BA%E6%97%B6%E6%9C%BA"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">开启步骤 &amp; AnnotationAwareAspectJAutoProxyCreator 创建时机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">执行步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E5%88%87%E9%9D%A2%E4%BB%A5%E5%8F%8A%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.2.1.6.1.</span> <span class="nav-text">解析切面以及表达式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%A2%AB%E6%8B%A6%E6%88%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BB%A3%E7%90%86"><span class="nav-number">1.2.1.6.2.</span> <span class="nav-text">创建被拦截对象的代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%8B%A6%E6%88%AA%E9%80%BB%E8%BE%91"><span class="nav-number">1.2.1.6.3.</span> <span class="nav-text">执行拦截逻辑</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dogetbean"><span class="nav-number">1.2.2.</span> <span class="nav-text">doGetBean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E9%A9%B1%E5%8A%A8%E8%A7%A3%E6%9E%90"><span class="nav-number">1.2.3.</span> <span class="nav-text">注解驱动解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#import-%E6%A0%87%E7%AD%BE%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.4.</span> <span class="nav-text">@Import 标签工作原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#concept"><span class="nav-number">1.3.</span> <span class="nav-text">Concept</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#beanpostprocessor"><span class="nav-number">1.3.1.</span> <span class="nav-text">BeanPostProcessor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">定义</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-core-%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">Spring Core 个人总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#qa"><span class="nav-number">1.1.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-framework"><span class="nav-number">1.1.1.</span> <span class="nav-text">Spring Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#beanfactory-%E5%92%8C-applicationcontext-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">BeanFactory 和 ApplicationContext 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#beanfactory-%E5%92%8C-factorybean-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">BeanFactory 和 FactoryBean 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spring-ioc%E5%AE%B9%E5%99%A8%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Spring IOC 容器如何解决循环依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E6%98%AF%E4%B8%8D%E8%83%BD%E8%A2%AB%E8%A7%A3%E5%86%B3%E7%9A%84"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">哪些循环依赖是不能被解决的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-getbean-%E7%9A%84%E6%97%B6%E5%80%99%E8%A6%81%E7%94%A8%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98-%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E5%B0%B1%E8%A7%A3%E5%86%B3%E4%B8%8D%E4%BA%86%E5%90%97"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">为什么 getBean 的时候要用三级缓存，二级缓存就解决不了吗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lazy-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.1.1.6.</span> <span class="nav-text">@Lazy 是如何实现的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#springmvc-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E6%9E%90%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E6%B3%A8%E8%A7%A3%E5%B9%B6%E8%B5%8B%E5%80%BC%E7%9A%84"><span class="nav-number">1.1.1.7.</span> <span class="nav-text">SpringMVC 是如何解析方法中的注解，并赋值的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#postconstruct-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.1.1.8.</span> <span class="nav-text">@PostConstruct 是如何实现的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bean-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%B5%8B%E5%80%BC%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.1.1.9.</span> <span class="nav-text">Bean 的初始化赋值顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%97%B6%E8%A2%AB%E4%BA%8B%E5%8A%A1%E5%92%8C-aop-%E6%A0%87%E8%AE%B0%E7%9A%84%E6%96%B9%E6%B3%95-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E6%98%AF%E6%80%8E%E6%A0%B7"><span class="nav-number">1.1.1.10.</span> <span class="nav-text">同时被事务和 AOP 标记的方法，执行顺序是怎样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#postconstuct-%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">1.1.1.11.</span> <span class="nav-text">@PostConstuct 是如何实现的</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sourcecode"><span class="nav-number">1.2.</span> <span class="nav-text">SourceCode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-aop"><span class="nav-number">1.2.1.</span> <span class="nav-text">Spring Aop</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#aop-%E7%BB%BC%E8%BF%B0"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">AOP 综述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#advice-%E6%AD%A3%E5%B8%B8%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Advice 正常执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#advice-%E5%BC%82%E5%B8%B8%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">Advice 异常执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%90%AF-spring-aop-%E6%94%AF%E6%8C%81"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">开启 Spring Aop 支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%AD%A5%E9%AA%A4-annotationawareaspectjautoproxycreator-%E5%88%9B%E5%BB%BA%E6%97%B6%E6%9C%BA"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">开启步骤 &amp; AnnotationAwareAspectJAutoProxyCreator 创建时机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">执行步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E5%88%87%E9%9D%A2%E4%BB%A5%E5%8F%8A%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.2.1.6.1.</span> <span class="nav-text">解析切面以及表达式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%A2%AB%E6%8B%A6%E6%88%AA%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BB%A3%E7%90%86"><span class="nav-number">1.2.1.6.2.</span> <span class="nav-text">创建被拦截对象的代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%8B%A6%E6%88%AA%E9%80%BB%E8%BE%91"><span class="nav-number">1.2.1.6.3.</span> <span class="nav-text">执行拦截逻辑</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dogetbean"><span class="nav-number">1.2.2.</span> <span class="nav-text">doGetBean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E9%A9%B1%E5%8A%A8%E8%A7%A3%E6%9E%90"><span class="nav-number">1.2.3.</span> <span class="nav-text">注解驱动解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#import-%E6%A0%87%E7%AD%BE%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.4.</span> <span class="nav-text">@Import 标签工作原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#concept"><span class="nav-number">1.3.</span> <span class="nav-text">Concept</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#beanpostprocessor"><span class="nav-number">1.3.1.</span> <span class="nav-text">BeanPostProcessor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">定义</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -211,7 +211,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -224,7 +224,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -316,7 +316,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="no-referrer">
 <h1 id="spring-core-个人总结">Spring Core 个人总结</h1>
 <h2 id="qa">Q&amp;A</h2>
 <h3 id="spring-framework">Spring Framework</h3>
@@ -362,48 +362,48 @@
 </tr>
 </tbody>
 </table>
-<p>简而言之, BeanFactory 只是加载了需要注入的 bean 而已,并没有注册后置处理器以及其他消息和事件管理</p>
+<p>简而言之，BeanFactory 只是加载了需要注入的 bean 而已，并没有注册后置处理器以及其他消息和事件管理</p>
 <span id="more"></span>
 <h4 id="beanfactory-和-factorybean-的区别">BeanFactory 和 FactoryBean 的区别</h4>
-<p>FactoryBean定义 :</p>
+<p>FactoryBean 定义 :</p>
 <blockquote>
 <p>Interface to be implemented by objects used within a BeanFactory which are themselves factories for individual objects. If a bean implements thisinterface, it is used as a factory for an object to expose, not directly as abean instance that will be exposed itself.</p>
 </blockquote>
-<p>BeanFactory定义 :</p>
+<p>BeanFactory 定义 :</p>
 <blockquote>
 <p>The root interface for accessing a Spring bean container.</p>
 <p>This is the basic client view of a bean container;</p>
 </blockquote>
-<p>二者其实没有什么联系,BeanFactory代表的是Spring的IOC容器.</p>
-<p>而FactoryBean则是工厂模式的实现,并且以Spring命名风格命名 ,比如UserFactory,在Spring里就叫做UserFactoryBean.</p>
-<h4 id="spring-ioc容器如何解决循环依赖">Spring IOC容器如何解决循环依赖</h4>
+<p>二者其实没有什么联系，BeanFactory 代表的是 Spring 的 IOC 容器.</p>
+<p>而 FactoryBean 则是工厂模式的实现，并且以 Spring 命名风格命名，比如 UserFactory, 在 Spring 里就叫做 UserFactoryBean.</p>
+<h4 id="spring-ioc容器如何解决循环依赖">Spring IOC 容器如何解决循环依赖</h4>
 <p>使用三级缓存解决循环依赖 (按照存放的先后顺序)</p>
 <ul>
 <li><code>singletonFactories</code></li>
 <li><code>earlySingletonObjects</code></li>
 <li><code>singletonObjects</code></li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> B b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> A a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>{</span><br><span class="line">    <span class="keyword">private</span> B b;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span></span>{</span><br><span class="line">    <span class="keyword">private</span> A a;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 <ul>
-<li>createBeanInstance(beanName, mbd, args) 首先,调用A的构造器初始化A
+<li>createBeanInstance (beanName, mbd, args) 首先，调用 A 的构造器初始化 A
 <ul>
-<li>addSingletonFactory 把还未初始化变量的A放入<code>singletonFactories</code>中</li>
-<li>populateBean(beanName, mbd, instanceWrapper) 给A对象的字段赋值
+<li>addSingletonFactory 把还未初始化变量的 A 放入 <code>singletonFactories</code> 中</li>
+<li> populateBean (beanName, mbd, instanceWrapper) 给 A 对象的字段赋值
 <ul>
-<li>发现A中需要注入B
+<li>发现 A 中需要注入 B
 <ul>
-<li>getBean() 初始化B
+<li>getBean () 初始化 B
 <ul>
-<li>createBeanInstance(beanName, mbd, args) 调用B的构造器初始化B
+<li>createBeanInstance (beanName, mbd, args) 调用 B 的构造器初始化 B
 <ul>
-<li>addSingletonFactory 把B放入<code>singletonFactories</code>中</li>
-<li>populateBean(beanName, mbd, instanceWrapper)
+<li>addSingletonFactory 把 B 放入 <code>singletonFactories</code> 中</li>
+<li> populateBean(beanName, mbd, instanceWrapper)
 <ul>
-<li>发现B中需要注入A
+<li>发现 B 中需要注入 A
 <ul>
-<li>getBean() 去找A
+<li>getBean () 去找 A
 <ul>
-<li>发现A在<code>singletonFactories</code> 中 ,直接返回A</li>
+<li>发现 A 在 <code>singletonFactories</code> 中，直接返回 A</li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -415,19 +415,19 @@
 </ul>
 <h4 id="哪些循环依赖是不能被解决的">哪些循环依赖是不能被解决的</h4>
 <p>构造器中的循环依赖是不能被解决的</p>
-<p>因为 Spring 会调用构造器初始化 Bean, 然后才会把 bean 实例放入解决循环依赖的缓存中. 没有了缓存, 执行创建逻辑就会陷入死循环.</p>
-<h4 id="为什么-getbean-的时候要用三级缓存-二级缓存就解决不了吗">为什么 getBean 的时候要用三级缓存, 二级缓存就解决不了吗</h4>
-<p>实际上 <code>singletonFactories</code> 和 <code>earlySingletonObjects</code> 都是暴露bean的早期引用的缓存, 这两者从宏观角度上是可以合二为一的, 但是 Spring 预留了可扩展性, 在 AbstractAutowireCapableBeanFactory 的doCreateBean 方法中,留意如下代码</p>
+<p>因为 Spring 会调用构造器初始化 Bean, 然后才会把 bean 实例放入解决循环依赖的缓存中。没有了缓存，执行创建逻辑就会陷入死循环.</p>
+<h4 id="为什么-getbean-的时候要用三级缓存-二级缓存就解决不了吗">为什么 getBean 的时候要用三级缓存，二级缓存就解决不了吗</h4>
+<p>实际上 <code>singletonFactories</code> 和 <code>earlySingletonObjects</code> 都是暴露 bean 的早期引用的缓存，这两者从宏观角度上是可以合二为一的，但是 Spring 预留了可扩展性，在 AbstractAutowireCapableBeanFactory 的 doCreateBean 方法中，留意如下代码</p>
 <blockquote>
 <p>addSingletonFactory(beanName, () -&gt; getEarlyBeanReference(beanName, mbd, bean));</p>
 </blockquote>
-<p>进入 getEarlyBeanReference 方法中,我们发现对于实现了 SmartInstantiationAwareBeanPostProcessor 接口的 Bean, 会进一步的对bean进行封装处理(比如返回 bean 的代理对象)</p>
-<p>又根据单一职责的设计原则, 早期引用缓存这才被划分为了<code>singletonFactories</code> 和 <code>earlySingletonObjects</code></p>
+<p>进入 getEarlyBeanReference 方法中，我们发现对于实现了 SmartInstantiationAwareBeanPostProcessor 接口的 Bean, 会进一步的对 bean 进行封装处理 (比如返回 bean 的代理对象)</p>
+<p>又根据单一职责的设计原则，早期引用缓存这才被划分为了 <code>singletonFactories</code> 和 <code>earlySingletonObjects</code></p>
 <h4 id="lazy-是如何实现的"><span class="citation" data-cites="Lazy">@Lazy</span> 是如何实现的</h4>
-<p>​ 在解析被 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 时, 会给相应的 BeanDefinition 对象里 lazy 属性设置为 true , 因而在执行初始化单例对象时, 会忽略掉被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean.</p>
-<p>​ 在真正的用到被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean 时, 会直接调用 getBean 执行创建逻辑.</p>
-<p>​ 当 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 被其他组件引用时, <span class="citation" data-cites="Lazy">@Lazy</span> 失效</p>
-<h4 id="springmvc-是如何解析方法中的注解并赋值的">SpringMVC 是如何解析方法中的注解,并赋值的</h4>
+<p>​ 在解析被 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 时，会给相应的 BeanDefinition 对象里 lazy 属性设置为 true , 因而在执行初始化单例对象时，会忽略掉被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean.</p>
+<p>​ 在真正的用到被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean 时，会直接调用 getBean 执行创建逻辑.</p>
+<p>​ 当 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 被其他组件引用时，<span class="citation" data-cites="Lazy">@Lazy</span> 失效</p>
+<h4 id="springmvc-是如何解析方法中的注解并赋值的">SpringMVC 是如何解析方法中的注解，并赋值的</h4>
 <p>实现 HandlerMethodArgumentResolver</p>
 <h4 id="postconstruct-是如何实现的"><span class="citation" data-cites="PostConstruct">@PostConstruct</span> 是如何实现的</h4>
 <p>CommonAnnotationBeanPostProcessor 是 InitDestroyAnnotationBeanPostProcessor 的子类</p>
@@ -448,14 +448,14 @@
 <li>doCreateBean
 <ul>
 <li>createBeanInstance 调用构造函数 执行实例化</li>
-<li>populateBean
+<li> populateBean
 <ul>
 <li>执行依赖注入</li>
 </ul></li>
-<li>initializeBean
+<li> initializeBean
 <ul>
 <li>invokeAwareMethods 执行实现了 Aware 接口的方法</li>
-<li>applyBeanPostProcessorsBeforeInitialization 执行 <span class="citation" data-cites="PostConstruct">@PostConstruct</span></li>
+<li> applyBeanPostProcessorsBeforeInitialization 执行 <span class="citation" data-cites="PostConstruct">@PostConstruct</span></li>
 <li>invokeInitMethods
 <ul>
 <li>afterPropertiesSet</li>
@@ -470,47 +470,47 @@
 <li>执行依赖注入</li>
 <li>执行 Aware 方法</li>
 <li>执行 <span class="citation" data-cites="PostConstruct">@PostConstruct</span></li>
-<li>执行实现 InitializingBean 的 afterPropertiesSet</li>
-<li>执行自定义的 init 方法</li>
+<li> 执行实现 InitializingBean 的 afterPropertiesSet</li>
+<li> 执行自定义的 init 方法</li>
 </ol>
-<h4 id="同时被事务和-aop-标记的方法-执行顺序是怎样">同时被事务和 AOP 标记的方法, 执行顺序是怎样</h4>
-<p>如果 AOP 的 Aespct 不实现 Order 接口指定顺序, 那么在执行链中是在事务执行链之后, 反之亦然</p>
+<h4 id="同时被事务和-aop-标记的方法-执行顺序是怎样">同时被事务和 AOP 标记的方法，执行顺序是怎样</h4>
+<p>如果 AOP 的 Aespct 不实现 Order 接口指定顺序，那么在执行链中是在事务执行链之后，反之亦然</p>
 <h4 id="postconstuct-是如何实现的"><span class="citation" data-cites="PostConstuct">@PostConstuct</span> 是如何实现的</h4>
 <ul>
 <li>在 populateBean 之后 initializeBean 时</li>
 <li>在 invokeAwareMethods 之后 invokeInitMethods 之前</li>
 <li>执行 beforeInitialization</li>
-<li>由 CommonAnnotationBeanPostProcessor 解析 <span class="citation" data-cites="PostConstuct">@PostConstuct</span> 注解, 找到被标记的方法</li>
+<li> 由 CommonAnnotationBeanPostProcessor 解析 <span class="citation" data-cites="PostConstuct">@PostConstuct</span> 注解，找到被标记的方法</li>
 <li>反射调用</li>
 </ul>
 <h2 id="sourcecode">SourceCode</h2>
 <h3 id="spring-aop">Spring Aop</h3>
 <h4 id="aop-综述">AOP 综述</h4>
 <ul>
-<li>Join Point : 在 Spring Aop 中, Join Point 始终代表一个方法的执行</li>
-<li>Advice : 在 Join point 处执行的动作, before after around 等等</li>
-<li>Pointcut : 匹配 Join point 的表达式</li>
-<li>Weaving : 织入</li>
+<li>Join Point : 在 Spring Aop 中，Join Point 始终代表一个方法的执行</li>
+<li> Advice : 在 Join point 处执行的动作，before after around 等等</li>
+<li> Pointcut : 匹配 Join point 的表达式</li>
+<li> Weaving : 织入</li>
 </ul>
 <h4 id="advice-正常执行顺序">Advice 正常执行顺序</h4>
 <ol type="1">
 <li><span class="citation" data-cites="Around">@Around</span> 的 before</li>
 <li><span class="citation" data-cites="Before">@Before</span></li>
 <li><span class="citation" data-cites="Around">@Around</span> 的 after</li>
-<li><span class="citation" data-cites="After">@After</span> (相当于finally) 用来执行释放资源等操作</li>
-<li><span class="citation" data-cites="AfterReturning">@AfterReturning</span></li>
+<li><span class="citation" data-cites="After">@After</span> (相当于 finally) 用来执行释放资源等操作</li>
+<li><span class="citation" data-cites="AfterReturning"> @AfterReturning</span></li>
 </ol>
 <h4 id="advice-异常执行顺序">Advice 异常执行顺序</h4>
 <ol type="1">
 <li><span class="citation" data-cites="Around">@Around</span> 的 before</li>
 <li><span class="citation" data-cites="Before">@Before</span></li>
-<li><span class="citation" data-cites="After">@After</span> (相当于finally) 用来执行释放资源等操作</li>
-<li><span class="citation" data-cites="AfterThrowing">@AfterThrowing</span></li>
+<li><span class="citation" data-cites="After">@After</span> (相当于 finally) 用来执行释放资源等操作</li>
+<li><span class="citation" data-cites="AfterThrowing"> @AfterThrowing</span></li>
 </ol>
 <h4 id="开启-spring-aop-支持">开启 Spring Aop 支持</h4>
 <p><span class="citation" data-cites="EnableAspectJAutoProxy">@EnableAspectJAutoProxy</span> 此注解会加载 AnnotationAwareAspectJAutoProxyCreator , 类关系图如下</p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5vuernq9kj217s0l274w.jpg" alt="AnnotationAwareAspectJAutoProxyCreator 类图" /><figcaption>AnnotationAwareAspectJAutoProxyCreator 类图</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5vuernq9kj217s0l274w.jpg" alt="AnnotationAwareAspectJAutoProxyCreator 类图"><figcaption>AnnotationAwareAspectJAutoProxyCreator 类图</figcaption>
 </figure>
 <h4 id="开启步骤-annotationawareaspectjautoproxycreator-创建时机">开启步骤 &amp; AnnotationAwareAspectJAutoProxyCreator 创建时机</h4>
 <ul>
@@ -537,7 +537,7 @@
 <ul>
 <li>beanFactory.preInstantiateSingletons()
 <ul>
-<li>当容器中<strong>第一个</strong> Bean ( 非BeanPostProcessor 非 BeanFactoryPostProcessor) 被初始化时, 解析 Pointcut 表达式以及切面
+<li>当容器中<strong>第一个</strong> Bean (非 BeanPostProcessor 非 BeanFactoryPostProcessor) 被初始化时，解析 Pointcut 表达式以及切面
 <ul>
 <li>getBean
 <ul>
@@ -545,15 +545,15 @@
 <ul>
 <li>AbstractAutoProxyCreator.shouldSkip
 <ul>
-<li>findCandidateAdvisors() 寻找候选通知
+<li>findCandidateAdvisors () 寻找候选通知
 <ul>
 <li>this.aspectJAdvisorsBuilder.buildAspectJAdvisors()
 <ul>
-<li>BeanFactoryUtils.beanNamesForTypeIncludingAncestors() 找出所有的 BeanName</li>
-<li>isEligibleBean<br />
+<li>BeanFactoryUtils.beanNamesForTypeIncludingAncestors () 找出所有的 BeanName</li>
+<li>isEligibleBean<br>
 </li>
 <li>isAspect 类是否被 <span class="citation" data-cites="Aspect">@Aspect</span> 标注</li>
-<li>this.advisorFactory.getAdvisors(factory); 获取此类中所有的 Advisor (已经排序好)
+<li> this.advisorFactory.getAdvisors (factory); 获取此类中所有的 Advisor (已经排序好)
 <ul>
 <li>解析 Pointcut 或者 Advisor 表达式</li>
 </ul></li>
@@ -569,35 +569,35 @@
 </ul>
 <h5 id="创建被拦截对象的代理">创建被拦截对象的代理</h5>
 <ul>
-<li>getBean 创建符合 Pointcut 表达式的, 我们自己声明的对象
+<li>getBean 创建符合 Pointcut 表达式的，我们自己声明的对象
 <ul>
 <li>doCreateBean
 <ul>
-<li>populateBean 给bean的属性赋值, 注入依赖的对象等等</li>
-<li>initializeBean 创建目标对象的代理并返回
+<li>populateBean 给 bean 的属性赋值，注入依赖的对象等等</li>
+<li> initializeBean 创建目标对象的代理并返回
 <ul>
-<li>如果目标对象没有实现接口, 返回 cglib 代理对象</li>
-<li>如果目标对象实现接口, 返回 jdk 动态代理对象</li>
+<li>如果目标对象没有实现接口，返回 cglib 代理对象</li>
+<li>如果目标对象实现接口，返回 jdk 动态代理对象</li>
 </ul></li>
 </ul></li>
 </ul></li>
 </ul>
 <h5 id="执行拦截逻辑">执行拦截逻辑</h5>
 <ul>
-<li><p>在调用 applicationContext.getBean 获取我们的业务对象之后 , 返回的是业务对象的代理</p></li>
-<li><p>如果是 cglib 代理对象 , 则执行 DynamicAdvisedInterceptor.intercept 方法</p></li>
-<li><p>如果是 jdk 动态代理, 则执行 JdkDynamicAopProxy.invoke 方法</p>
+<li><p>在调用 applicationContext.getBean 获取我们的业务对象之后，返回的是业务对象的代理</p></li>
+<li><p>如果是 cglib 代理对象，则执行 DynamicAdvisedInterceptor.intercept 方法</p></li>
+<li><p>如果是 jdk 动态代理，则执行 JdkDynamicAopProxy.invoke 方法</p>
 <ul>
-<li>List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass) 获取 aop 将要执行的拦截链(责任链设计模式)
+<li>List<object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice (method, targetClass) 获取 aop 将要执行的拦截链 (责任链设计模式)
 <ul>
 <li>ReflectiveMethodInvocation.proceed()</li>
-</ul></li>
 </ul>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wwxkrqzzj20kv0m00tc.jpg" /></p>
+
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wwxkrqzzj20kv0m00tc.jpg"></p>
 <p><a href="#Advice%20正常执行顺序">Advice 正常执行顺序</a></p>
 <p>为什么先制性 around 的 before 而不是 <span class="citation" data-cites="Before">@Before</span></p>
-<p>​ 答: 因为在执行 around 通知时, 只有调用了 joinPoint 的 proceed() 方法, 才会把 MethodBeforeAdviceInterceptor 加入到调用栈中.</p></li>
-</ul>
+<p>​ 答：因为在执行 around 通知时，只有调用了 joinPoint 的 proceed () 方法，才会把 MethodBeforeAdviceInterceptor 加入到调用栈中.</p>
+
 <h3 id="dogetbean">doGetBean</h3>
 <ul>
 <li>getMergedLocalBeanDefinition(beanName)</li>
@@ -607,20 +607,20 @@
 <li>beforeSingletonCreation(beanName)</li>
 <li>singletonFactory.getObject()
 <ul>
-<li>resolveBeforeInstantiation(beanName, mbdToUse) 初始化AOP代理,寻找切面</li>
-<li>doCreateBean(beanName, mbdToUse, args)
+<li>resolveBeforeInstantiation (beanName, mbdToUse) 初始化 AOP 代理，寻找切面</li>
+<li> doCreateBean(beanName, mbdToUse, args)
 <ul>
-<li>addSingletonFactory() 添加到三级缓存 此时还未给属性赋值</li>
-<li>populateBean(beanName, mbd, instanceWrapper) 给属性赋值</li>
-<li>initializeBean(beanName, exposedObject, mbd) 如果是AOP 这里返回代理对象</li>
+<li>addSingletonFactory () 添加到三级缓存 此时还未给属性赋值</li>
+<li> populateBean (beanName, mbd, instanceWrapper) 给属性赋值</li>
+<li> initializeBean (beanName, exposedObject, mbd) 如果是 AOP 这里返回代理对象</li>
 </ul></li>
 </ul></li>
-<li>afterSingletonCreation(beanName)</li>
-<li>addSingleton(beanName, singletonObject) 移除二级缓存 添加到一级缓存</li>
+<li> afterSingletonCreation(beanName)</li>
+<li>addSingleton (beanName, singletonObject) 移除二级缓存 添加到一级缓存</li>
 </ul></li>
 </ul>
 <h3 id="注解驱动解析">注解驱动解析</h3>
-<p>在使用注解驱动AnnotationConfigApplicationContext时,会加载以下 Bean</p>
+<p>在使用注解驱动 AnnotationConfigApplicationContext 时，会加载以下 Bean</p>
 <ul>
 <li><p>ConfigurationClassPostProcessor <code>BeanFactoryPostProcessor</code></p></li>
 <li><p>DefaultEventListenerFactory</p></li>
@@ -628,14 +628,14 @@
 <li><p>AutowiredAnnotationBeanPostProcessor <code>BeanPostProcessor</code></p></li>
 <li><p>CommonAnnotationBeanPostProcessor <code>BeanPostProcessor</code></p></li>
 </ul>
-<p>其中,起主要作用的是</p>
+<p>其中，起主要作用的是</p>
 <p><strong>ConfigurationClassPostProcessor</strong></p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx6tv7llj212n0dkq34.jpg" alt="ConfigurationClassPostProcessor" /><figcaption>ConfigurationClassPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx6tv7llj212n0dkq34.jpg" alt="ConfigurationClassPostProcessor"><figcaption>ConfigurationClassPostProcessor</figcaption>
 </figure>
 <ol type="1">
-<li>是<code>BeanFactoryPostProcessor</code> 类型</li>
-<li>负责解析每一个被 <span class="citation" data-cites="Configuration">@Configuration</span> 注解标注的类, 解析的注解如下
+<li> 是 <code>BeanFactoryPostProcessor</code> 类型</li>
+<li>负责解析每一个被 <span class="citation" data-cites="Configuration">@Configuration</span> 注解标注的类，解析的注解如下
 <ul>
 <li><span class="citation" data-cites="PropertySource">@PropertySource</span></li>
 <li><span class="citation" data-cites="ComponentScan">@ComponentScan</span></li>
@@ -646,27 +646,27 @@
 </ol>
 <p><strong>AutowiredAnnotationBeanPostProcessor</strong></p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx908d5jj212e0el3yt.jpg" alt="AutowiredAnnotationBeanPostProcessor" /><figcaption>AutowiredAnnotationBeanPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx908d5jj212e0el3yt.jpg" alt="AutowiredAnnotationBeanPostProcessor"><figcaption>AutowiredAnnotationBeanPostProcessor</figcaption>
 </figure>
 <ol type="1">
-<li><p>是 <code>BeanPostProcessor</code> 类型</p>
+<li><p> 是 <code>BeanPostProcessor</code> 类型</p>
 <ol start="2" type="1">
 <li>负责处理自动装配</li>
 </ol>
 <ul>
-<li><span class="citation" data-cites="Autowired">@Autowired</span></li>
+<li><span class="citation" data-cites="Autowired"> @Autowired</span></li>
 <li><span class="citation" data-cites="Value">@Value</span></li>
 </ul>
 <ol start="3" type="1">
-<li>在 populate 方法执行时被调用</li>
+<li> 在 populate 方法执行时被调用</li>
 </ol></li>
 </ol>
 <p><strong>CommonAnnotationBeanPostProcessor</strong></p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wxapwtyhj213v0c03ys.jpg" alt="CommonAnnotationBeanPostProcessor" /><figcaption>CommonAnnotationBeanPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wxapwtyhj213v0c03ys.jpg" alt="CommonAnnotationBeanPostProcessor"><figcaption>CommonAnnotationBeanPostProcessor</figcaption>
 </figure>
 <ol type="1">
-<li>是 <code>BeanPostProcessor</code> 类型</li>
+<li> 是 <code>BeanPostProcessor</code> 类型</li>
 <li>负责处理一些通用自动装配
 <ul>
 <li><span class="citation" data-cites="WebServiceRef">@WebServiceRef</span></li>
@@ -685,12 +685,12 @@
 <p>If you want to implement some custom logic after the Spring container finishes instantiating, configuring, and initializing a bean, you can plug in one or more custom BeanPostProcessor implementations.</p>
 </blockquote>
 <ul>
-<li>如果想改变 Bean 的属性, 则使用 <code>BeanPostProcessor</code></li>
+<li>如果想改变 Bean 的属性，则使用 <code>BeanPostProcessor</code></li>
 <li>如果想改变 BeanDefinition, 则使用 <code>BeanFactoryPostProcessor</code></li>
-<li>比如解析${}表达式并给对象赋值 (典型: 解析配置文件)</li>
-<li>Bean 先被初始化, 然后才执行 <code>PostProcessor</code> 的逻辑</li>
+<li>比如解析 ${} 表达式并给对象赋值 (典型：解析配置文件)</li>
+<li>Bean 先被初始化，然后才执行 <code>PostProcessor</code> 的逻辑</li>
 </ul>
-
+</object></li></ul></li></ul>
     </div>
 
     
@@ -707,8 +707,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2019/01/29/ml-ex3/" rel="prev" title="吴恩达ml课程编程作业 machine-learning-ex3">
-                  <i class="fa fa-chevron-left"></i> 吴恩达ml课程编程作业 machine-learning-ex3
+                <a href="/2019/01/29/ml-ex3/" rel="prev" title="吴恩达 ml 课程编程作业 machine-learning-ex3">
+                  <i class="fa fa-chevron-left"></i> 吴恩达 ml 课程编程作业 machine-learning-ex3
                 </a>
             </div>
             <div class="post-nav-item">
@@ -778,6 +778,7 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   

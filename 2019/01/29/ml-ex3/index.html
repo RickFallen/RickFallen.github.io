@@ -21,14 +21,14 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-<meta name="description" content="lrCostFunction.m   这道题在上一个练习里已经做过,不再赘述: 123456h &#x3D; sigmoid(X * theta);J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);theta_t">
+<meta name="description" content="lrCostFunction.m   这道题在上一个练习里已经做过，不再赘述: 123456h &#x3D; sigmoid(X * theta);J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);theta_tmp &#x3D; theta;theta_tmp(1) &#x3D; 0;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="吴恩达ml课程编程作业 machine-learning-ex3">
+<meta property="og:title" content="吴恩达 ml 课程编程作业 machine-learning-ex3">
 <meta property="og:url" content="http://wucf.me/2019/01/29/ml-ex3/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="lrCostFunction.m   这道题在上一个练习里已经做过,不再赘述: 123456h &#x3D; sigmoid(X * theta);J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);theta_t">
+<meta property="og:description" content="lrCostFunction.m   这道题在上一个练习里已经做过，不再赘述: 123456h &#x3D; sigmoid(X * theta);J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);theta_tmp &#x3D; theta;theta_tmp(1) &#x3D; 0;">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://wucf.me/images/nn.png">
 <meta property="og:image" content="http://wucf.me/images/ex3-submit.png">
@@ -56,7 +56,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<title>吴恩达ml课程编程作业 machine-learning-ex3 | Ricky Wu</title>
+<title>吴恩达 ml 课程编程作业 machine-learning-ex3 | Ricky Wu</title>
   
 
 
@@ -211,7 +211,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -224,7 +224,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -276,7 +276,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          吴恩达ml课程编程作业 machine-learning-ex3
+          吴恩达 ml 课程编程作业 machine-learning-ex3
         </h1>
 
         <div class="post-meta-container">
@@ -311,30 +311,30 @@
     
     <div class="post-body" itemprop="articleBody">
         <h2 id="lrcostfunction.m">lrCostFunction.m</h2>
-<p>  这道题在上一个练习里已经做过,不再赘述:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);</span><br><span class="line"></span><br><span class="line">theta_tmp &#x3D; theta;</span><br><span class="line">theta_tmp(1) &#x3D; 0;</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_tmp;</span><br></pre></td></tr></table></figure>
+<p>  这道题在上一个练习里已经做过，不再赘述:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h)) +  lambda / (2 * m) * sum(theta(2:end) .^ 2);</span><br><span class="line"></span><br><span class="line">theta_tmp = theta;</span><br><span class="line">theta_tmp(1) = 0;</span><br><span class="line">grad = 1 / m * (X' * (h - y)) + lambda / m * theta_tmp;</span><br></pre></td></tr></tbody></table></figure>
 <span id="more"></span>
 <p>完成</p>
 <h2 id="onevsall.m">oneVsAll.m</h2>
-<p>  这道题的目的是通过fmincg算法训练出针对每一个分类(这里是1-10)所对应的<span class="math inline">\(\theta_0\)</span>到<span class="math inline">\(\theta_n\)</span>值,然后用这些<span class="math inline">\(\theta\)</span>值去识别新的图片</p>
-<p>  我们的特征矩阵是5000x400,每一行代表一个图片,加上一列<span class="math inline">\(x_0\)</span>就是5000x401,针对10个分类,我们最后要返回的all_theta是10x401的矩阵,所以我们要对所有分类(1-10)进行循环并组合成all_theta.</p>
-<p>  all_theta第一行代表数字1经过训练后所对应的所有<span class="math inline">\(\theta\)</span>值,第二行代表数字2经过训练后所对应的所有<span class="math inline">\(\theta\)</span>值 ... 第10行代表数字0经过训练后所对应的所有<span class="math inline">\(\theta\)</span>值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">for c &#x3D; 1:num_labels</span><br><span class="line">  initial_theta &#x3D; zeros(n + 1, 1);</span><br><span class="line">  options &#x3D; optimset(&#39;GradObj&#39;, &#39;on&#39;, &#39;MaxIter&#39;, 50);</span><br><span class="line">  [theta] &#x3D; ...</span><br><span class="line">         fmincg (@(t)(lrCostFunction(t, X, (y &#x3D;&#x3D; c), lambda)), ...</span><br><span class="line">                 initial_theta, options);</span><br><span class="line">   all_theta(c,:) &#x3D; theta&#39;; </span><br><span class="line">endfor</span><br></pre></td></tr></table></figure>
+<p>  这道题的目的是通过 fmincg 算法训练出针对每一个分类 (这里是 1-10) 所对应的<span class="math inline"> \(\theta_0\)</span> 到<span class="math inline"> \(\theta_n\)</span> 值，然后用这些<span class="math inline"> \(\theta\)</span> 值去识别新的图片</p>
+<p>  我们的特征矩阵是 5000x400, 每一行代表一个图片，加上一列<span class="math inline"> \(x_0\)</span> 就是 5000x401, 针对 10 个分类，我们最后要返回的 all_theta 是 10x401 的矩阵，所以我们要对所有分类 (1-10) 进行循环并组合成 all_theta.</p>
+<p>  all_theta 第一行代表数字 1 经过训练后所对应的所有<span class="math inline"> \(\theta\)</span> 值，第二行代表数字 2 经过训练后所对应的所有<span class="math inline"> \(\theta\)</span> 值 ... 第 10 行代表数字 0 经过训练后所对应的所有<span class="math inline"> \(\theta\)</span> 值</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">for c = 1:num_labels</span><br><span class="line">  initial_theta = zeros(n + 1, 1);</span><br><span class="line">  options = optimset('GradObj', 'on', 'MaxIter', 50);</span><br><span class="line">  [theta] = ...</span><br><span class="line">         fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ...</span><br><span class="line">                 initial_theta, options);</span><br><span class="line">   all_theta(c,:) = theta'; </span><br><span class="line">endfor</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="predictonevsall.m">predictOneVsAll.m</h2>
-<p>  得到了所有分类(对应1-10的数字)的<span class="math inline">\(\theta\)</span>值后,接下来就要利用这些值去识别新的图片了</p>
-<p>  我们的<span class="math inline">\(X\)</span>矩阵是5000x401,all_theta矩阵是10x401.很显然我们要用矩阵<span class="math inline">\(X\)</span>与all_theta矩阵的转置相乘,再代入sigmoid函数,得到的是5000 x 10的矩阵,行数就是图片张数,第一列代表的是图片为1时的概率,第二列代表的是图片为2的概率...第十列代表的是图片为0概率</p>
+<p>  得到了所有分类 (对应 1-10 的数字) 的<span class="math inline"> \(\theta\)</span> 值后，接下来就要利用这些值去识别新的图片了</p>
+<p>  我们的<span class="math inline"> \(X\)</span> 矩阵是 5000x401,all_theta 矩阵是 10x401. 很显然我们要用矩阵<span class="math inline"> \(X\)</span> 与 all_theta 矩阵的转置相乘，再代入 sigmoid 函数，得到的是 5000 x 10 的矩阵，行数就是图片张数，第一列代表的是图片为 1 时的概率，第二列代表的是图片为 2 的概率... 第十列代表的是图片为 0 概率</p>
 <p>  最后要做的是取每一行中概率最大的那一列就是图片最终识别结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * all_theta&#39;);</span><br><span class="line">[max_num,p] &#x3D; max(h , [] , 2);</span><br></pre></td></tr></table></figure>
-<p>注:max函数第3个参数传1代表求每一列的最大值,最后返回的是行向量.第3个参数传2代表求每一行的最大值,最后返回的是列向量.max函数第一个返回值代表最大的数是几,第二个参数代表这个最大数的下标</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = sigmoid(X * all_theta');</span><br><span class="line">[max_num,p] = max(h , [] , 2);</span><br></pre></td></tr></tbody></table></figure>
+<p>注:max 函数第 3 个参数传 1 代表求每一列的最大值，最后返回的是行向量。第 3 个参数传 2 代表求每一行的最大值，最后返回的是列向量.max 函数第一个返回值代表最大的数是几，第二个参数代表这个最大数的下标</p>
 <h2 id="predict.m">predict.m</h2>
-<p>  之前的题目是用逻辑回归识别手写图片,这道题是用神经网络(Neural Network)识别手写图片</p>
-<p>  相比逻辑回归的线性classifier,NN可以执行更加复杂的任务,在这个练习中,我们要用<strong>Feedforward Propagation</strong>算法实现一个3层神经网络,算法如下图所示:</p>
-<p><img data-src="/images/nn.png" /></p>
-<p>  因此,代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a_1 &#x3D; [ones(m,1) , X];</span><br><span class="line"></span><br><span class="line">z_2 &#x3D; a_1 * Theta1&#39;;</span><br><span class="line">a_2 &#x3D; [ones(m,1),sigmoid(z_2)];</span><br><span class="line"></span><br><span class="line">z_3 &#x3D; a_2 * Theta2&#39;;</span><br><span class="line">a_3 &#x3D; sigmoid(z_3);</span><br><span class="line"></span><br><span class="line">[max_num,p] &#x3D; max(a_3,[],2);</span><br></pre></td></tr></table></figure>
+<p>  之前的题目是用逻辑回归识别手写图片，这道题是用神经网络 (Neural Network) 识别手写图片</p>
+<p>  相比逻辑回归的线性 classifier,NN 可以执行更加复杂的任务，在这个练习中，我们要用 <strong>Feedforward Propagation</strong> 算法实现一个 3 层神经网络，算法如下图所示:</p>
+<p><img data-src="/images/nn.png"></p>
+<p>  因此，代码如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a_1 = [ones(m,1) , X];</span><br><span class="line"></span><br><span class="line">z_2 = a_1 * Theta1';</span><br><span class="line">a_2 = [ones(m,1),sigmoid(z_2)];</span><br><span class="line"></span><br><span class="line">z_3 = a_2 * Theta2';</span><br><span class="line">a_3 = sigmoid(z_3);</span><br><span class="line"></span><br><span class="line">[max_num,p] = max(a_3,[],2);</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
-<p><img data-src="/images/ex3-submit.png" /></p>
+<p><img data-src="/images/ex3-submit.png"></p>
 
     </div>
 
@@ -355,8 +355,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2019/01/28/ml-ex2/" rel="prev" title="吴恩达ml课程编程作业 machine-learning-ex2">
-                  <i class="fa fa-chevron-left"></i> 吴恩达ml课程编程作业 machine-learning-ex2
+                <a href="/2019/01/28/ml-ex2/" rel="prev" title="吴恩达 ml 课程编程作业 machine-learning-ex2">
+                  <i class="fa fa-chevron-left"></i> 吴恩达 ml 课程编程作业 machine-learning-ex2
                 </a>
             </div>
             <div class="post-nav-item">
@@ -426,6 +426,7 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -479,7 +480,7 @@
   var disqus_config = function() {
     this.page.url = "http://wucf.me/2019/01/29/ml-ex3/";
     this.page.identifier = "2019/01/29/ml-ex3/";
-    this.page.title = "吴恩达ml课程编程作业 machine-learning-ex3";
+    this.page.title = "吴恩达 ml 课程编程作业 machine-learning-ex3";
     };
   NexT.utils.loadComments('#disqus_thread', () => {
     if (window.DISQUS) {

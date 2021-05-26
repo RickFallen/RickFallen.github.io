@@ -1,61 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>浅谈目标检测之SSD</title>
+    <title>数据库连接池到底该怎么配</title>
+    <url>/2020/08/14/database_thread_pool/</url>
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
+<h1 id="数据库连接池到底该配多大">数据库连接池到底该配多大？</h1>
+<h2 id="前言">前言</h2>
+<p>在我们平时开发中，很少会去改动数据库连接池的配置。偶尔也会看到些文章说线程池不是设置越大越好，比如说：“数据库连接池不要设置的过大”、“设置 100 就够了”。那 100 到底是不是最优解呢，数据库连接设置多少才够用呢？</p>
+<h2 id="少即是多">少即是多</h2>
+<p>10 年前，Oracle Real-World Performance 做了一项数据库连接池与查询响应的压力测试，整理成表格如下：</p>
+<span id="more"></span>
+<table>
+<thead>
+<tr class="header">
+<th>压测线程数</th>
+<th>线程池大小</th>
+<th>队列平均等待时间（单位 ms）</th>
+<th>平均响应时间（单位 ms）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9600</td>
+<td>2048</td>
+<td>33</td>
+<td>77</td>
+</tr>
+<tr class="even">
+<td>9600</td>
+<td>1024</td>
+<td>38</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>9600</td>
+<td>96</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，在硬件条件、软件条件等都不变的情况下，仅仅是减少线程池大小，便获得了数十倍的性能提升。可是为什么呢？原因就在于线程上下文的切换耗费了太多的时间（跟 Java 中 AtomicInteger 乐观锁实现一样，用 CAS 原理进行原子性操作，如果自增、自减操作更新失败则线程自旋，自旋一定次数后会休眠等待。因此当并发量特别大时，自旋的乐观锁反而性能会不好）</p>
+<figure>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw7yfhmrkg20je063jr9.gif" alt="多线程模型"><figcaption>多线程模型</figcaption>
+</figure>
+<p>如图所示，在单核 CPU 下，CPU 通过切换多个线程来执行任务让我们直观感觉任务是在同时进行，实际上同一时间只能有一个线程获得 CPU 资源。因此，单核 CPU 下多个任务按顺序执行一定比多线程 “同时” 执行要快。</p>
+<h2 id="无法避免的io">无法避免的 I/O</h2>
+<p>除了 CPU 线程切换之外，数据库吞吐量还受制于其他资源的限制：</p>
+<ul>
+<li>硬盘</li>
+<li>网络</li>
+</ul>
+<p>如果我们忽略掉 I/O，那么连接池的设置将会非常简单：CPU 几个核心，那么就设置多少线程池数量。8 个核心，线程池数量就设置为 8，16 个核心，线程池数量就设置为 16，以此类推。但是只要是涉及通信，I/O 的影响就不得不考虑在内。数据一般都存放在硬盘上，一般的机械硬盘通过一个读取头在高速旋转的金属碟片寻址、写入，这都要花费一定的时间，在此期间线程只能等待。此时 CPU 可以将那个空闲的核心服务于其他线程。因此，我们可以将线程池的数量设置成比 CPU 数量多一些。</p>
+<p>至于固态硬盘，没有寻址和旋转使其相比机械硬盘有更少的 I/O 时间，所以<strong>对于使用固态硬盘的系统来说线程池数量要小于使用机械硬盘的系统</strong>。</p>
+<p>网络和磁盘类似，通过以太网读取数据时也会形成阻塞，不过相比 CPU 和磁盘，网络并不是首先要考虑的因素。</p>
+<figure>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw92rr68wj20go09gq3m.jpg" alt="数据库连接池"><figcaption>数据库连接池</figcaption>
+</figure>
+<h2 id="最优计算公式">最优计算公式</h2>
+<p><strong>连接数 = （核心数 * 2）+ 有效磁盘数</strong></p>
+<p>按这个公式，你的 4 核 i7 数据库服务器的连接池大小应该为 ((4 * 2) + 1) = 9，取个整就算是是 10 吧。是不是觉得太小了？跑个性能测试试一下，它能轻松搞定 3000 用户以 6000TPS 的速率并发执行简单查询的场景。如果连接池大小超过 10，你会看到响应时长开始增加，TPS 开始下降。</p>
+<p>很多小规模的 web 应用，通常只有几十个并发用户，却使用着一个 100 连接数的连接池，这样会给应用带来不必要的负担。</p>
+<h2 id="避免死锁的计算公式">避免死锁的计算公式</h2>
+<p>为了避免死锁，池大小的计算是一个相当简单的资源分配公式：</p>
+<p><strong>池大小 = 最大线程数 * （单线程所服务的最大连接数 - 1）+ 1</strong></p>
+<p>比如最多有八个线程，每个线程服务 3 个连接才能执行某些任务，则确保永不发生死锁所需的池大小为：8 * (3 - 1) + 1 = 17</p>
+<p>这个数量不是最优连接池计数量，但是却是避免死锁的最小连接池数量。</p>
+<p>在 HikariCP 中，默认的连接池数量为 10。</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_POOL_SIZE = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> maxPoolSize = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (maxPoolSize &lt; <span class="number">1</span>) {</span><br><span class="line">  maxPoolSize = DEFAULT_POOL_SIZE;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="总结">总结</h2>
+<p>线程池的数量不是设置的越多越好，而且遵循着一定的规范，但是又不能太死板，需要根据应用场景（I/O 密集型、CPU 密集型）来把线程池数量调整到某一个适当的范围，如果非要找到一个最优配置，则需要通过压测来一点点的调整了。</p>
+<h1 id="参考资料">参考资料</h1>
+<p>[1] <a href="https://kwahome.medium.com/database-connections-less-is-more-86c406b6fad">Database Connections: Less is More</a></p>
+<p>[2] <a href="https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing">About Pool Sizing</a></p>
+<p>[3] <a href="https://www.youtube.com/watch?v=xNDnVOCdvQ0">OLTP Performance - Concurrent Mid-Tier Connections</a></p>
+]]></content>
+      <categories>
+        <category>复习</category>
+      </categories>
+      <tags>
+        <tag>database</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浅谈目标检测之 SSD</title>
     <url>/2019/12/14/SSD/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer" />
-<h1 id="目标检测之ssd">目标检测之SSD</h1>
-<p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一.</p>
-<p>最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析.</p>
-<p>我们知道, Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩, 但是受制于模型本身的 two-stage 架构Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片, 我们知道流畅的视频一般都是 24fps 以上, 因此 Faster R-CNN 还远远达不到实时处理视频的要求. <span id="more"></span> 为了满足实时目标识别的要求, SSD/YOLO 横空出世, 下图是当时主流目标检测算法在 VOC2007 数据集上的表现.</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg" /></p>
-<p>可以看出在当时 SSD 力压群雄, 在 300x300 分辨率的图片下 mAP 达到了的 77% , fps 也高达 46 , 在 512x512 分辨率虽然识别速度不及 SSD300 , 但是 mAP 却达到了惊人的 80% , 这样的成绩在当年可是吊打 Faster R-CNN 和 YOLO. 值得一提的是 VOC2007 数据集上大物体较多, 对 SSD 算法比较友好, 但是在小物体识别方面, SSD 还是远远不如 Faster R-CNN 的, 至于为什么这个待会儿再说</p>
-<p>为什么 SSD 在达到如此高的识别率时还能保证非常快的呢, 这与 SSD 的 one-stage 架构模型是分不开的,下面看一段 Faster R-CNN 伪代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">ROIs = region_proposal(feature_maps)</span><br><span class="line"><span class="keyword">for</span> ROI <span class="keyword">in</span> ROIs</span><br><span class="line">    patch = roi_align(feature_maps, ROI)</span><br><span class="line">    results = detector2(patch) <span class="comment"># Reduce the amount of work here!</span></span><br></pre></td></tr></table></figure>
-<p>上面代码是典型的 two-stage , 先找到大约 2000 个候选区, 再对每个候选区的物体分别进行识别, 这是最耗时的地方. SSD 等 one-stage 算法的伪代码如下</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">results = detector3(feature_maps) <span class="comment"># No more separate step for ROIs</span></span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
+<h1 id="目标检测之ssd">目标检测之 SSD</h1>
+<p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是 ECCV2016 年的一篇文章，是 one-stage 目标检测模型的代表作之一.</p>
+<p>最近看了很多关于 SSD 的资料，对 SSD 的来龙去脉也算是有点头绪，遂打算记录下来，另外本篇文章不涉及到具体算法，只是从全局角度上对主要概念做下分析.</p>
+<p>我们知道，Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩，但是受制于模型本身的 two-stage 架构 Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片，我们知道流畅的视频一般都是 24fps 以上，因此 Faster R-CNN 还远远达不到实时处理视频的要求. <span id="more"></span> 为了满足实时目标识别的要求，SSD/YOLO 横空出世，下图是当时主流目标检测算法在 VOC2007 数据集上的表现.</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6q8td6gnj20j80ep0vo.jpg"></p>
+<p>可以看出在当时 SSD 力压群雄，在 300x300 分辨率的图片下 mAP 达到了的 77% , fps 也高达 46 , 在 512x512 分辨率虽然识别速度不及 SSD300 , 但是 mAP 却达到了惊人的 80% , 这样的成绩在当年可是吊打 Faster R-CNN 和 YOLO. 值得一提的是 VOC2007 数据集上大物体较多，对 SSD 算法比较友好，但是在小物体识别方面，SSD 还是远远不如 Faster R-CNN 的，至于为什么这个待会儿再说</p>
+<p>为什么 SSD 在达到如此高的识别率时还能保证非常快的呢，这与 SSD 的 one-stage 架构模型是分不开的，下面看一段 Faster R-CNN 伪代码</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">ROIs = region_proposal(feature_maps)</span><br><span class="line"><span class="keyword">for</span> ROI <span class="keyword">in</span> ROIs</span><br><span class="line">    patch = roi_align(feature_maps, ROI)</span><br><span class="line">    results = detector2(patch) <span class="comment"># Reduce the amount of work here!</span></span><br></pre></td></tr></tbody></table></figure>
+<p>上面代码是典型的 two-stage , 先找到大约 2000 个候选区，再对每个候选区的物体分别进行识别，这是最耗时的地方. SSD 等 one-stage 算法的伪代码如下</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">feature_maps = process(image)</span><br><span class="line">results = detector3(feature_maps) <span class="comment"># No more separate step for ROIs</span></span><br></pre></td></tr></tbody></table></figure>
 <h2 id="ssd-架构模型">SSD 架构模型</h2>
 <p>先来看看 SSD 的整体架构</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg" /></p>
-<p>是不是一脸懵逼, 没关系我也是. 我们把整个模型架构可以拆分成两部分来看, 第一部分是用 vgg16 网络来抽取特征得到特征图 (feature maps)</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg" /></p>
-<p>SSD 使用 <strong>Conv4_3</strong> 这一层来抽取特征图, 为什么这么多层偏偏使用 <strong>Conv4_3</strong> 呢, 来看下图就能明白</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg" /></p>
-<p>我们知道不同维度的特征图所抽取得到的图像特征是不同的, 某些特征图可能代表边界, 有些代表纹理, 而 vgg16 的 <strong>Conv4_3</strong> 这一层就代表物体特征, 在使用 <strong>Conv4_3</strong> 后, SSD 又额外添加了 6 层辅助卷积层, 目的是<strong>为了识别不同大小的目标</strong>, 至于为什么稍后再做说明</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg" /></p>
-<p>在使用 vgg16 得到物体特征图后, SSD 额外添加了</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rksd237j213v0df0vl.jpg"></p>
+<p>是不是一脸懵逼，没关系我也是。我们把整个模型架构可以拆分成两部分来看，第一部分是用 vgg16 网络来抽取特征得到特征图 (feature maps)</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rp8pa7hj20rh0dfwfd.jpg"></p>
+<p>SSD 使用 <strong>Conv4_3</strong> 这一层来抽取特征图，为什么这么多层偏偏使用 <strong>Conv4_3</strong> 呢，来看下图就能明白</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6rvwqja2j23341f8npf.jpg"></p>
+<p>我们知道不同维度的特征图所抽取得到的图像特征是不同的，某些特征图可能代表边界，有些代表纹理，而 vgg16 的 <strong>Conv4_3</strong> 这一层就代表物体特征，在使用 <strong>Conv4_3</strong> 后，SSD 又额外添加了 6 层辅助卷积层，目的是<strong>为了识别不同大小的目标</strong> , 至于为什么稍后再做说明</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6scy9rynj20n408ijsv.jpg"></p>
+<p>在使用 vgg16 得到物体特征图后，SSD 额外添加了</p>
 <h2 id="默认边界框-default-boundary-box">默认边界框 <strong>Default boundary box</strong></h2>
 <p>注: default box 跟 priors box 其实是一回事</p>
-<p>默认边界框的概念与 Faster R-CNN 中的<strong>锚点</strong>概念相似, 就是预设一些目标预选框和 ground truth 进行对比, 而且默认边界框是人为设定的, 也就意味着程序不用经过复杂的算法去生成默认边界框, 这大大减少了计算量, 而且默认边界框的大小的选择非常有讲究.</p>
-<p>为什么说是有讲究, <strong>因为 SSD 选择的 4 个或 6 个默认边界框的长宽比例几乎囊括了生活中上常见物体的形状</strong>, SSD 在不同的特征图上有不同个数的默认边界框, 但也只可能是 4 个或 6 个.</p>
-<p><strong>至于为什么 SSD 选择了(4 , 6) 是因为在识别速度和识别精度之间做了取舍, 默认边界框多了, 识别精度会提高, 但是识别速度会下降, 反之亦然</strong></p>
-<p>关于默认边界框的选取的详细内容可以参考<a href="https://medium.com/@vivek.yadav/part-1-generating-anchor-boxes-for-yolo-like-network-for-vehicle-detection-using-kitti-dataset-b2fe033e5807">Generating Anchor boxes for Yolo-like network for vehicle detection using KITTI dataset</a></p>
-<p>在特征图每个单元(或者也可以简单的理解为矩阵的每个点)上都会生成 4 个或 6 个默认边界框, 所有特征图加起来一共会生成 <strong>8732</strong> 个默认边界框 (注: 8732 是 300x300 分辨率的图像, 512x512 分辨率的图像则是 24564 个默认边界框)</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg" /></p>
+<p>默认边界框的概念与 Faster R-CNN 中的<strong>锚点</strong>概念相似，就是预设一些目标预选框和 ground truth 进行对比，而且默认边界框是人为设定的，也就意味着程序不用经过复杂的算法去生成默认边界框，这大大减少了计算量，而且默认边界框的大小的选择非常有讲究.</p>
+<p>为什么说是有讲究，<strong>因为 SSD 选择的 4 个或 6 个默认边界框的长宽比例几乎囊括了生活中上常见物体的形状</strong> , SSD 在不同的特征图上有不同个数的默认边界框，但也只可能是 4 个或 6 个.</p>
+<p><strong>至于为什么 SSD 选择了 (4 , 6) 是因为在识别速度和识别精度之间做了取舍，默认边界框多了，识别精度会提高，但是识别速度会下降，反之亦然</strong></p>
+<p>关于默认边界框的选取的详细内容可以参考 <a href="https://medium.com/@vivek.yadav/part-1-generating-anchor-boxes-for-yolo-like-network-for-vehicle-detection-using-kitti-dataset-b2fe033e5807">Generating Anchor boxes for Yolo-like network for vehicle detection using KITTI dataset</a></p>
+<p>在特征图每个单元 (或者也可以简单的理解为矩阵的每个点) 上都会生成 4 个或 6 个默认边界框，所有特征图加起来一共会生成 <strong>8732</strong> 个默认边界框 (注: 8732 是 300x300 分辨率的图像，512x512 分辨率的图像则是 24564 个默认边界框)</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6t99h7t7j21db1cwtim.jpg"></p>
 <h2 id="默认边界框匹配策略">默认边界框匹配策略</h2>
-<p>如果在某一个固定的特征单元上, 某个默认边界框和 ground truth 的 IOU 大于 0.5 则把这个默认边界框视为正匹配, 否则就是负匹配. (IoU 即 the intersection over the union, 是两个图像的交集比并集, 又称为 Jaccard 相似系数)</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg" /></p>
-<p>为了简单起见, 我们把特征图看做 8x8 (实际是 38x38 或者其他) 并且只有 3 个默认候选框</p>
-<p>在第 5 行第 4 列这个特征单元上, 蓝色代表 ground truth , 绿色代表默认边界框, 其中 1, 2 两个默认候选框的 IoU 大于 0.5 则 1, 2 两个默认候选框就是正匹配, 这样我们就可以得到目标的大致形状.</p>
+<p>如果在某一个固定的特征单元上，某个默认边界框和 ground truth 的 IOU 大于 0.5 则把这个默认边界框视为正匹配，否则就是负匹配. (IoU 即 the intersection over the union, 是两个图像的交集比并集，又称为 Jaccard 相似系数)</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6totg0j0j20v70fl0w9.jpg"></p>
+<p>为了简单起见，我们把特征图看做 8x8 (实际是 38x38 或者其他) 并且只有 3 个默认候选框</p>
+<p>在第 5 行第 4 列这个特征单元上，蓝色代表 ground truth , 绿色代表默认边界框，其中 1, 2 两个默认候选框的 IoU 大于 0.5 则 1, 2 两个默认候选框就是正匹配，这样我们就可以得到目标的大致形状.</p>
 <h2 id="多尺度特征图">多尺度特征图</h2>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg" /></p>
-<p>上图源自 SSD 论文, 论文中也是假设有一个 8x8 特征图一个 4x4 特征图, 以及 3 个默认边界框</p>
-<p>可以看到在 8x8 特征图上, 狗狗的所有默认边界框与 ground truth 的 IoU 小于 0.5, 因此在 8x8 特征图上, 狗狗不会被识别出来, 但是在 8x8 特征图上, 猫的 3 个默认边界框有 2 个 IoU 大于 0.5 (蓝色框框), 因此猫在图片中的的形状被大致确认下来.</p>
-<p>反而在 4x4 特征图上, 狗狗的一个默认边界框与 ground truth 的 IoU 大于 0.5 (红色框框) , 但是猫的 IoU 都小于 0.5, 因此猫在 4x4 特征图上就没有被识别出来</p>
-<p>这就是多尺度特征图, 对于 8x8 特征图我们叫做高分辨率特征图 (higher resolution feature maps) , 反之亦然</p>
-<p><strong>高分辨率特征图非常适合识别小物体, 低分辨率特征图非常适合识别大物体</strong></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg" /></p>
-<p>SSD 总共有 6 个尺度的特征图参与目标识别, 这就保证了对不同尺寸的物体都可以有较好的识别表现.</p>
-<p>值得注意的是输入图像的分辨率是 300x300 , 但是我们第一个特征图是 38x38, 从 300 到 38 是个非常大的比例了, 从而造成 SSD 对小目标的识别效果不是很好</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ucwsapmj20kj088gop.jpg"></p>
+<p>上图源自 SSD 论文，论文中也是假设有一个 8x8 特征图一个 4x4 特征图，以及 3 个默认边界框</p>
+<p>可以看到在 8x8 特征图上，狗狗的所有默认边界框与 ground truth 的 IoU 小于 0.5, 因此在 8x8 特征图上，狗狗不会被识别出来，但是在 8x8 特征图上，猫的 3 个默认边界框有 2 个 IoU 大于 0.5 (蓝色框框), 因此猫在图片中的的形状被大致确认下来.</p>
+<p>反而在 4x4 特征图上，狗狗的一个默认边界框与 ground truth 的 IoU 大于 0.5 (红色框框) , 但是猫的 IoU 都小于 0.5, 因此猫在 4x4 特征图上就没有被识别出来</p>
+<p>这就是多尺度特征图，对于 8x8 特征图我们叫做高分辨率特征图 (higher resolution feature maps) , 反之亦然</p>
+<p><strong>高分辨率特征图非常适合识别小物体，低分辨率特征图非常适合识别大物体</strong></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6ur67pqdj21320rmq3f.jpg"></p>
+<p>SSD 总共有 6 个尺度的特征图参与目标识别，这就保证了对不同尺寸的物体都可以有较好的识别表现.</p>
+<p>值得注意的是输入图像的分辨率是 300x300 , 但是我们第一个特征图是 38x38, 从 300 到 38 是个非常大的比例了，从而造成 SSD 对小目标的识别效果不是很好</p>
 <h2 id="总结">总结</h2>
 <p>下面用一张图来总结 SSD</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg" /></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg" /></p>
-<p>在前 3 个特征图上, 由于特征图分辨率高, 并没有识别出汽车, 紧接着最后 3 个特征图都识别出了汽车, 并且一共生成了 4 个边界框, 最后再经过非极大抑制最终确定一个边界框, 至此识别完成.</p>
-<p>ps : 目前刚入门目标检测没多久, 知识储备还较少, 还是只菜狗, 这篇文章就先这样, 等以后知识丰富了回过头来再改</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6uwx7oyuj214r0htjtw.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1ga6vgf75oij20dw0dvgn8.jpg"></p>
+<p>在前 3 个特征图上，由于特征图分辨率高，并没有识别出汽车，紧接着最后 3 个特征图都识别出了汽车，并且一共生成了 4 个边界框，最后再经过非极大抑制最终确定一个边界框，至此识别完成.</p>
+<p>ps : 目前刚入门目标检测没多久，知识储备还较少，还是只菜狗，这篇文章就先这样，等以后知识丰富了回过头来再改</p>
 <h1 id="参考资料">参考资料</h1>
 <p>[1] <a href="https://docs.google.com/presentation/d/1rtfeV_VmdGdZD5ObVVpPDPIODSDxKnFSU0bsN_rgZXc/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.g179f601b72_0_51">SSD PPT</a></p>
-<p>[2] <a href="https://blog.csdn.net/WZZ18191171661/article/details/79444217">SSD详解</a></p>
+<p>[2] <a href="https://blog.csdn.net/WZZ18191171661/article/details/79444217">SSD 详解</a></p>
 <p>[3] <a href="https://towardsdatascience.com/understanding-ssd-multibox-real-time-object-detection-in-deep-learning-495ef744fab">Understanding SSD MultiBox — Real-Time Object Detection In Deep Learning</a></p>
 <p>[4] <a href="https://medium.com/@jonathan_hui/ssd-object-detection-single-shot-multibox-detector-for-real-time-processing-9bd8deac0e06">SSD object detection: Single Shot MultiBox Detector for real-time processing</a></p>
 <p>[5] <a href="https://medium.com/@jonathan_hui/what-do-we-learn-from-single-shot-object-detectors-ssd-yolo-fpn-focal-loss-3888677c5f4d">What do we learn from single shot object detectors (SSD, YOLOv3), FPN &amp; Focal loss (RetinaNet)?</a></p>
@@ -73,29 +156,29 @@
   <entry>
     <title>JVM 总结</title>
     <url>/2019/08/15/jvm/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer" />
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
 <h1 id="jvm-知识整理">JVM 知识整理</h1>
 <h2 id="q-a">Q &amp; A</h2>
 <h3 id="为什么会-stw">为什么会 STW</h3>
-<p>根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种</p>
+<p>根据不同的垃圾收集器 STW 的时机也不同，大体上可以分为 3 种</p>
 <ol type="1">
-<li>MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用.</li>
-<li>SWEEP - 清除阶段, 扫描没有被标记的内存</li>
-<li>COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片</li>
+<li>MARK - 标记阶段必须要暂停用户线程，防止用户线程改变对象的引用.</li>
+<li>SWEEP - 清除阶段，扫描没有被标记的内存</li>
+<li> COMPACT - 整理阶段，给对象重新分配内存来减少内存碎片</li>
 </ol>
-<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max{内存碎片}时, Serial Old GC 会进行碎片整理, 当然这需要花费很多时间.</p>
+<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max {内存碎片} 时，Serial Old GC 会进行碎片整理，当然这需要花费很多时间.</p>
 <span id="more"></span>
-<p>参考<a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-惨嚎world">why STW</a></p>
+<p>参考 <a href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-惨嚎world">why STW</a></p>
 <h3 id="cms-收集器什么时候可能触发-stw-的-full-gc">CMS 收集器什么时候可能触发 STW 的 FULL GC</h3>
 <ol type="1">
 <li>Perm 空间不足</li>
-<li>CMS GC 时出现 promotion failed 和 concurrent mode failure（concurrent mode failure 发生的原因一般是CMS正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止 CMS，直接进行Serial Old GC）</li>
+<li> CMS GC 时出现 promotion failed 和 concurrent mode failure（concurrent mode failure 发生的原因一般是 CMS 正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止 CMS，直接进行 Serial Old GC）</li>
 <li>统计得到的 Young GC 晋升到老年代的平均大小大于老年代的剩余空间</li>
-<li>主动触发Full GC（执行jmap -histo:live [pid]）来避免碎片问题</li>
+<li>主动触发 Full GC（执行 jmap -histo:live [pid]）来避免碎片问题</li>
 </ol>
-<h3 id="如果新生代内存不够-会出现什么情况">如果新生代内存不够, 会出现什么情况</h3>
+<h3 id="如果新生代内存不够-会出现什么情况">如果新生代内存不够，会出现什么情况</h3>
 <p>会触发一次 Minor GC</p>
-<h3 id="如果新生代-gc-后内存依然不够-会出现什么情况">如果新生代 GC 后内存依然不够, 会出现什么情况</h3>
+<h3 id="如果新生代-gc-后内存依然不够-会出现什么情况">如果新生代 GC 后内存依然不够，会出现什么情况</h3>
 <blockquote>
 <p>When allocation inside a TLAB is not possible (typically because there’s not enough room there), the allocation moves on to a shared Eden space. If there’s not enough room in there either, a garbage collection process in Young Generation is triggered to free up more space. If the garbage collection also does not result in sufficient free memory inside Eden, then the object is allocated in the Old Generation.</p>
 </blockquote>
@@ -104,28 +187,28 @@
 <blockquote>
 <p>After the marking phase is completed, all the live objects in Eden are copied to one of the Survivor spaces. The whole Eden is now considered to be empty and can be reused to allocate more objects. Such an approach is called “<strong>Mark and Copy</strong>”: the live objects are marked, and then copied (<strong>not moved</strong>) to a survivor space.</p>
 </blockquote>
-<p>Eden区执行完垃圾回收后, 被标记为存活的对象会被 <strong>移动! 移动! 移动!</strong> 到 Survivor 区, 之后 Eden 区会被视作为空</p>
+<p>Eden 区执行完垃圾回收后，被标记为存活的对象会被 <strong>移动！移动！移动！</strong> 到 Survivor 区，之后 Eden 区会被视作为空</p>
 <h3 id="survivor-区的对象是如何到老年代的">Survivor 区的对象是如何到老年代的</h3>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg"></p>
 <ol type="1">
-<li>每一次 GC 后依然存活的对象年龄会 +1 , Survivor 区年龄到15的对象会直接进入老年代
+<li>每一次 GC 后依然存活的对象年龄会 +1 , Survivor 区年龄到 15 的对象会直接进入老年代
 <ol type="1">
 <li>-XX:+MaxTenuringThreshold 来设置年龄</li>
 </ol></li>
-<li>一些特殊情况下, 会让对象被视作足够老, 从而被移动到老年代
+<li>一些特殊情况下，会让对象被视作足够老，从而被移动到老年代
 <ol type="1">
 <li>Survivor 区没有足够的空间去容纳所有年轻代的存活对象</li>
-<li>动态年龄调整, 当 Survivor 区中相同年龄的对象大小总和 &gt; Survivor 内存的一半时, 将直接进入老年代, 并且年龄阈值也会随之更改</li>
+<li>动态年龄调整，当 Survivor 区中相同年龄的对象大小总和 &gt; Survivor 内存的一半时，将直接进入老年代，并且年龄阈值也会随之更改</li>
 </ol></li>
 </ol>
 <h3 id="cms-收集器的标记清除过程">CMS 收集器的标记清除过程</h3>
 <ol type="1">
 <li>初始标记 (Init-mark)</li>
-<li>并发标记 (Concurrent-mark)</li>
-<li>重新标记 (Remark)</li>
+<li> 并发标记 (Concurrent-mark)</li>
+<li> 重新标记 (Remark)</li>
 </ol>
 <h3 id="常见的垃圾收集器有哪些">常见的垃圾收集器有哪些</h3>
-<p>Java 有4种垃圾收集器(jdk10 之前), JDK11 采用 ZGC</p>
+<p>Java 有 4 种垃圾收集器 (jdk10 之前), JDK11 采用 ZGC</p>
 <ol type="1">
 <li>Serial Garbage Collector S GC</li>
 <li>Parallel Garbage Collector P GC</li>
@@ -141,9 +224,9 @@
 <li>Java 10 - G1 GC</li>
 <li>Java 11 - ZGC</li>
 </ul>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg" /></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg" /></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg"></p>
 <h2 id="基础知识">基础知识</h2>
 <h3 id="常见虚拟机">常见虚拟机</h3>
 <ul>
@@ -156,46 +239,46 @@
 <li>找到所有存活对象</li>
 <li>清理没有被使用的对象</li>
 </ul>
-<p><strong>如何找到存活对象呢?</strong></p>
+<p><strong>如何找到存活对象呢？</strong></p>
 <ul>
 <li><p>引用计数器</p>
 <p>难以解决对象循环引用问题</p></li>
 <li><p>对象可达性分析</p>
-<p>要实现可达性分析, 必须要规定一些起始点, 这些起始点叫做 GC Roots</p>
-<p><strong>4种 GC Roots</strong></p>
+<p>要实现可达性分析，必须要规定一些起始点，这些起始点叫做 GC Roots</p>
+<p><strong>4 种 GC Roots</strong></p>
 <ol type="1">
 <li>局部变量</li>
 <li>活跃线程</li>
-<li>java 本地方法</li>
+<li> java 本地方法</li>
 <li>静态变量</li>
 </ol></li>
 </ul>
-<p>通过 GC Roots 找到存活对象之后, 给对象标记为存活, 则堆中剩余其他对象则被视为垃圾</p>
+<p>通过 GC Roots 找到存活对象之后，给对象标记为存活，则堆中剩余其他对象则被视为垃圾</p>
 <p>需要额外注意的点有</p>
 <ol type="1">
-<li>标记阶段为了防止引用被应用所改变, 需要暂停所有用户线程, 也叫作 Stop The World</li>
-<li>标记阶段 STW 所消耗的时间既跟堆大小没关系, 又跟堆中的对象数量没关系. 唯一决定 STW 时间的是堆中存活对象的多少</li>
+<li>标记阶段为了防止引用被应用所改变，需要暂停所有用户线程，也叫作 Stop The World</li>
+<li> 标记阶段 STW 所消耗的时间既跟堆大小没关系，又跟堆中的对象数量没关系。唯一决定 STW 时间的是堆中存活对象的多少</li>
 </ol>
-<p>存活对象标记完成后, 进入清理阶段, 几种常见的清理算法有</p>
+<p>存活对象标记完成后，进入清理阶段，几种常见的清理算法有</p>
 <ol type="1">
 <li>标记 - 复制 (Mark - Copy)
 <ul>
-<li>优点 : 不存在内存碎片</li>
-<li>缺点 : 需要双倍内存用于复制存活对象</li>
+<li>优点：不存在内存碎片</li>
+<li>缺点：需要双倍内存用于复制存活对象</li>
 </ul></li>
 <li>标记 - 删除 (Mark - Sweep)
 <ul>
-<li>优点 : 占用内存较小</li>
-<li>缺点 : 存在大量内存碎片</li>
+<li>优点：占用内存较小</li>
+<li>缺点：存在大量内存碎片</li>
 </ul></li>
 <li>标记 - 整理 (Mark - Sweep - Compact)
 <ul>
-<li>优点 : 占用内存小, 不存在内存碎片</li>
-<li>缺点 : 整理时需要重新分配内存, 消耗大量时间</li>
+<li>优点：占用内存小，不存在内存碎片</li>
+<li>缺点：整理时需要重新分配内存，消耗大量时间</li>
 </ul></li>
 </ol>
 <h3 id="hotspot-虚拟机内存">Hotspot 虚拟机内存</h3>
-<p>在 Hotspot 虚拟机中, 堆内存被划分为了3大部分</p>
+<p>在 Hotspot 虚拟机中，堆内存被划分为了 3 大部分</p>
 <ul>
 <li>新生代 (Young Gen)
 <ul>
@@ -203,31 +286,31 @@
 <ul>
 <li>所有新生成的对象都会被分配到这个区域中</li>
 </ul></li>
-<li>Survivor
+<li> Survivor
 <ul>
 <li>两个区内存空间一样</li>
 <li>同一时间内两个区一定有一个为空</li>
-<li>当 Young Gen 触发 GC 时, Eden 区的存活对象和 Survivor from 中的存活对象都会被复制到 Survivor to 区当中</li>
+<li>当 Young Gen 触发 GC 时，Eden 区的存活对象和 Survivor from 中的存活对象都会被复制到 Survivor to 区当中</li>
 </ul></li>
 </ul></li>
 <li>老年代 (Old / Tenured Gen)</li>
-<li>永久代 (Perm Gen 永久代在 JDK8 之后被 MetaSpace 取代)</li>
+<li> 永久代 (Perm Gen 永久代在 JDK8 之后被 MetaSpace 取代)</li>
 </ul>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory" /><figcaption>Java Heap Memory</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory"><figcaption>Java Heap Memory</figcaption>
 </figure>
-<p>为什么这么划分, 是根据现实场景中对象的生命周期分布来决定的, 大部分对象都是&quot;朝生夕死&quot;. 一般情况下, 经历过数次 GC 依然存活的对象会被分配到老年代中(有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
+<p>为什么这么划分，是根据现实场景中对象的生命周期分布来决定的，大部分对象都是 "朝生夕死". 一般情况下，经历过数次 GC 依然存活的对象会被分配到老年代中 (有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
 <h3 id="hotspot-虚拟机常见收集器">Hotspot 虚拟机常见收集器</h3>
 <ul>
 <li>Serial</li>
 <li>G1</li>
 <li>Parallel</li>
-<li>CMS(只用于老年代垃圾回收)</li>
+<li>CMS (只用于老年代垃圾回收)</li>
 </ul>
 <h3 id="关于栈帧">关于栈帧</h3>
 <ul>
 <li><p>每个栈帧入栈出站都代表一次方法从开始到结束的过程</p></li>
-<li><p>只有位于栈顶的栈帧才是有效的, 这个栈帧叫做当前方法</p></li>
+<li><p>只有位于栈顶的栈帧才是有效的，这个栈帧叫做当前方法</p></li>
 <li><p>栈帧由以下元素组成</p>
 <ul>
 <li>局部变量表</li>
@@ -236,20 +319,20 @@
 <li>返回地址</li>
 <li>....</li>
 </ul>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg" /></p></li>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg"></p></li>
 </ul>
 <h4 id="局部变量表">局部变量表</h4>
 <ol type="1">
-<li>基本单位为 Slot ,虚拟机规范并没有明确规定 Slot 大小</li>
+<li>基本单位为 Slot , 虚拟机规范并没有明确规定 Slot 大小</li>
 <li>必须能存的下 boolean byte char short int float reference returnAddress 类型的数据</li>
-<li>long 与 double 类型被分割存储</li>
+<li> long 与 double 类型被分割存储</li>
 <li>局部变量表的大小在编译时就被完全确定</li>
-<li>对于非静态方法, Slot 的第0位指向的是对象本身, 也就是 this</li>
+<li>对于非静态方法，Slot 的第 0 位指向的是对象本身，也就是 this</li>
 </ol>
 <h4 id="操作数栈">操作数栈</h4>
 <ol type="1">
 <li>编译时确定最大深度</li>
-<li>算术运算是取操作数栈的前两位, 运算结果再入栈</li>
+<li>算术运算是取操作数栈的前两位，运算结果再入栈</li>
 <li>也可以用来调用其他方法时传递参数</li>
 </ol>
 <h4 id="动态连接">动态连接</h4>
@@ -260,7 +343,7 @@
 <table>
 <thead>
 <tr class="header">
-<th>引用</th>
+<th>引用 </th>
 </tr>
 </thead>
 <tbody>
@@ -280,7 +363,7 @@
 <td><a href="http://psy-lob-saw.blogspot.com/2014/10/the-jvm-write-barrier-card-marking.html">Card Marking 解决老年代引用新生代对象</a></td>
 </tr>
 <tr class="even">
-<td><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html">从实际案例聊聊Java应用的GC优化</a></td>
+<td><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html">从实际案例聊聊 Java 应用的 GC 优化</a></td>
 </tr>
 <tr class="odd">
 <td><a href="https://www.ibm.com/developerworks/library/it-haggar_bytecode/index.html">Java bytecode</a></td>
@@ -297,19 +380,19 @@
       </tags>
   </entry>
   <entry>
-    <title>吴恩达ml课程编程作业 machine-learning-ex1</title>
+    <title>吴恩达 ml 课程编程作业 machine-learning-ex1</title>
     <url>/2019/01/22/ml-ex1/</url>
     <content><![CDATA[<h2 id="warmupexercise.m">warmUpExercise.m</h2>
-<p>第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">A &#x3D; eye(5);</span><br></pre></td></tr></table></figure>
+<p>第一题很简单，跟标题一样，是个热身题。要求生成一个 5x5 的单位矩阵</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">A = eye(5);</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="computecost.m-计算单变量代价函数">computeCost.m (计算单变量代价函数)</h2>
-<p>回想一下我们的单变量hypothesis公式 <span id="more"></span></p>
+<p>回想一下我们的单变量 hypothesis 公式 <span id="more"></span></p>
 <p><span class="math display">\[
     h(\theta) = \theta_0 + \theta_1x
 \]</span></p>
-<p>在这个公式中<span class="math inline">\(x\)</span>指的是变量(variable),<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>是参数(parameter),之后的工作就是对代价函数(cost function)求导,找出使得代价函数最小(收敛时)<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>的值 <br> <del>刚开始学的时候有一段时间变量(variable)和参数(parameter)傻傻分不清</del> <br/></p>
-<p><span class="math inline">\(X\)</span>是我们的数据矩阵,如下</p>
+<p>在这个公式中<span class="math inline"> \(x\)</span> 指的是变量 (variable),<span class="math inline">\(\theta_0\)</span> 和<span class="math inline"> \(\theta_1\)</span> 是参数 (parameter), 之后的工作就是对代价函数 (cost function) 求导，找出使得代价函数最小 (收敛时)<span class="math inline">\(\theta_0\)</span> 和<span class="math inline"> \(\theta_1\)</span> 的值 <br> <del>刚开始学的时候有一段时间变量 (variable) 和参数 (parameter) 傻傻分不清</del> <br></p>
+<p><span class="math inline">\(X\)</span> 是我们的数据矩阵，如下</p>
 <p><span class="math display">\[
 \left[
     \begin{matrix}
@@ -318,11 +401,11 @@
          8
     \end{matrix}  
 \right]
-\]</span> 每一列代表一个特征,由于我们是单变量代价函数,所有X只有一列,为了不失一般性,可以改写我们的hypothesis公式</p>
+\]</span> 每一列代表一个特征，由于我们是单变量代价函数，所有 X 只有一列，为了不失一般性，可以改写我们的 hypothesis 公式</p>
 <p><span class="math display">\[
     h(\theta) = \theta_0x_0+ \theta_1x_1
 \]</span></p>
-<p>其中<span class="math inline">\(x_0\)</span>的值始终为1,在我们的编程作业中<span class="math inline">\(\theta\)</span>是一个向量代表<span class="math inline">\(\theta_1\)</span>和<span class="math inline">\(\theta_2\)</span>,如下</p>
+<p>其中<span class="math inline"> \(x_0\)</span> 的值始终为 1, 在我们的编程作业中<span class="math inline"> \(\theta\)</span> 是一个向量代表<span class="math inline"> \(\theta_1\)</span> 和<span class="math inline"> \(\theta_2\)</span>, 如下</p>
 <p><span class="math display">\[
     \left[
     \begin{matrix}
@@ -331,7 +414,7 @@
     \end{matrix}  
 \right]
 \]</span></p>
-<p>为了用矩阵的乘法表示hypothesis公式,我们需要手动给<span class="math inline">\(X\)</span>加上一列,如下(<strong>在ml编程作业中,已经帮我们添加了第一列1,所以无需我们再手动添加</strong>) <span class="math display">\[
+<p>为了用矩阵的乘法表示 hypothesis 公式，我们需要手动给<span class="math inline"> \(X\)</span> 加上一列，如下 (<strong>在 ml 编程作业中，已经帮我们添加了第一列 1, 所以无需我们再手动添加</strong>) <span class="math display">\[
 \left[
     \begin{matrix}
          1 &amp; 3\\
@@ -362,20 +445,20 @@
 <p>代价函数</p>
 <p><span class="math display">\[
     J(\theta) = \frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^{(i)}) - y^{(i)}))^2
-\]</span> hypothesis计算完成后得到的是个<strong>m x 1</strong>的向量,代表的是我们通过h公式计算出的预测结果,m代表数据的行数,也就是<span class="math inline">\(X\)</span>矩阵的行数.<span class="math inline">\(y\)</span>向量代表的是真实的结果,所以<span class="math inline">\((h_\theta(x^{(i)}) - y^{(i)}))\)</span>可以直接用两矩阵相减得出,即<span class="math inline">\(h - y\)</span> <br/></p>
-<p>下面要做的就是计算平方和了,计算平方和有两种方法:</p>
+\]</span> hypothesis 计算完成后得到的是个 <strong>m x 1</strong> 的向量，代表的是我们通过 h 公式计算出的预测结果，m 代表数据的行数，也就是<span class="math inline"> \(X\)</span> 矩阵的行数.<span class="math inline">\(y\)</span> 向量代表的是真实的结果，所以<span class="math inline"> \((h_\theta(x^{(i)}) - y^{(i)}))\)</span> 可以直接用两矩阵相减得出，即<span class="math inline"> \(h - y\)</span> <br></p>
+<p>下面要做的就是计算平方和了，计算平方和有两种方法:</p>
 <ul>
-<li><span class="math inline">\(\alpha^T * \alpha\)</span> <del>永乐大帝在上,受小弟一拜</del></li>
-<li>利用octave/matlib内置矩阵运算方法,先同时给所有数平方,再sum</li>
+<li><span class="math inline">\(\alpha^T * \alpha\) </span> <del>永乐大帝在上，受小弟一拜</del></li>
+<li>利用 octave/matlib 内置矩阵运算方法，先同时给所有数平方，再 sum</li>
 </ul>
-<p>于是,我们就可以得出我们的代价函数 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">J &#x3D; 1 &#x2F; (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></table></figure> 完成.</p>
+<p>于是，我们就可以得出我们的代价函数 </p><figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">J = 1 / (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></tbody></table></figure> 完成.<p></p>
 <h2 id="gradientdescent.m-梯度下降">gradientDescent.m (梯度下降)</h2>
-<p>为了使我们的线性方程方程<span class="math inline">\(h\)</span>更贴近我们的数据集,因此我们要不断的去改变<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span>这两个参数的值,使得代价函数<span class="math inline">\(J(\theta)\)</span>取得最小值,如何取得最小值,我们用的是<strong>批量梯度下降算法(batch gradient descent algorithm)</strong> <br/></p>
-<p>回顾我们的批量梯度下降算法,即同时对每一个<span class="math inline">\(\theta\)</span>求偏导,如下 <span class="math display">\[
+<p>为了使我们的线性方程方程<span class="math inline"> \(h\)</span> 更贴近我们的数据集，因此我们要不断的去改变<span class="math inline"> \(\theta_0\)</span> 和<span class="math inline"> \(\theta_1\)</span> 这两个参数的值，使得代价函数<span class="math inline"> \(J(\theta)\)</span> 取得最小值，如何取得最小值，我们用的是<strong>批量梯度下降算法 (batch gradient descent algorithm)</strong> <br></p>
+<p>回顾我们的批量梯度下降算法，即同时对每一个<span class="math inline"> \(\theta\)</span> 求偏导，如下 <span class="math display">\[
     \theta = \theta - \alpha\cdot\frac{\partial}{\partial\theta}J(\theta)
 \]</span> 即 <span class="math display">\[
     \theta_j = \theta_j - \alpha \cdot \frac{1}{m} \sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})\cdot x_j
-\]</span> 由于我们是单变量,所以j只能取0,1,而且每次迭代我们必须要同时更新<span class="math inline">\(\theta_0\)</span>和<span class="math inline">\(\theta_1\)</span> <strong>(simultaneously update <span class="math inline">\(\theta_j\)</span> for all j)</strong><br/> 要计算 <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span>的和,我们可以使用矩阵的乘法,由上文知<span class="math inline">\(X\)</span>矩阵为m x 2 , <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span> 为m维向量,则</p>
+\]</span> 由于我们是单变量，所以 j 只能取 0,1, 而且每次迭代我们必须要同时更新<span class="math inline"> \(\theta_0\)</span> 和<span class="math inline"> \(\theta_1\)</span> <strong>(simultaneously update <span class="math inline">\(\theta_j\)</span> for all j)</strong><br> 要计算 <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span> 的和，我们可以使用矩阵的乘法，由上文知<span class="math inline"> \(X\)</span> 矩阵为 m x 2 , <span class="math inline">\((h_\theta(x^{(i)})-y^{(i)})\)</span> 为 m 维向量，则</p>
 <p><span class="math display">\[
     \sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})\cdot x_j = X^T*(h_\theta(x^{(i)})-y^{(i)}) =    
     \left[
@@ -391,9 +474,9 @@
     \end{matrix}  
 \right]
 \]</span></p>
-<p>可以简单的理解为<span class="math inline">\(X^T\)</span>矩阵的第一行就是计算<span class="math inline">\(\theta_0\)</span>,第二行就是计算<span class="math inline">\(\theta_1\)</span>,第n行就是计算<span class="math inline">\(\theta_n\)</span>(n &gt; 1就是多变量线性回归了,在这里我们的n = 1,也就是单变量线性回归)<br/> 因此,我们的代码可以这么写 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">theta &#x3D; theta - alpha &#x2F; m * (X&#39; * (h - y));</span><br></pre></td></tr></table></figure> 完成</p>
-<p>至此,我们的必修部分的编程作业都已做完,下面来看选修部分的作业</p>
-<hr />
+<p>可以简单的理解为<span class="math inline"> \(X^T\)</span> 矩阵的第一行就是计算<span class="math inline"> \(\theta_0\)</span>, 第二行就是计算<span class="math inline"> \(\theta_1\)</span>, 第 n 行就是计算<span class="math inline"> \(\theta_n\)</span>(n&gt; 1 就是多变量线性回归了，在这里我们的 n = 1, 也就是单变量线性回归)<br> 因此，我们的代码可以这么写 </p><figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">theta = theta - alpha / m * (X' * (h - y));</span><br></pre></td></tr></tbody></table></figure> 完成<p></p>
+<p>至此，我们的必修部分的编程作业都已做完，下面来看选修部分的作业</p>
+<hr>
 <h2 id="featurenormalize.m-特征标准化">featureNormalize.m (特征标准化)</h2>
 <p>特征标准化的目的就是为了提升梯度下降的计算速度.</p>
 <p>特征标准化包含两个方面:</p>
@@ -401,34 +484,34 @@
 <li>Feature Scaling</li>
 <li>Mean Normalize</li>
 </ul>
-<p>它们将尝试使所有的特征都尽量放缩到-1到1之间(不严格,可有误差)</p>
-<p>最简单的实现方式是<span class="math inline">\(x_n=\frac{x_n-\mu_n}{s_n}\)</span>,其中<span class="math inline">\(u_n\)</span>是平均值,<span class="math inline">\(s_n\)</span>是标准差</p>
-<p>在octave中,一个mxn矩阵是可以和另一个m行的列向量或者n列的行向量相加减的,所以答案如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mu &#x3D; mean(X);</span><br><span class="line">sigma &#x3D; std(X);</span><br><span class="line">X_norm &#x3D; (X_norm - mu) .&#x2F; sigma;</span><br></pre></td></tr></table></figure>
+<p>它们将尝试使所有的特征都尽量放缩到 - 1 到 1 之间 (不严格，可有误差)</p>
+<p>最简单的实现方式是<span class="math inline"> \(x_n=\frac{x_n-\mu_n}{s_n}\)</span>, 其中<span class="math inline"> \(u_n\)</span> 是平均值，<span class="math inline">\(s_n\)</span> 是标准差</p>
+<p>在 octave 中，一个 mxn 矩阵是可以和另一个 m 行的列向量或者 n 列的行向量相加减的，所以答案如下</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">mu = mean(X);</span><br><span class="line">sigma = std(X);</span><br><span class="line">X_norm = (X_norm - mu) ./ sigma;</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="computecostmulti.m">computeCostMulti.m</h2>
-<p>由于矩阵乘法的原因,多变量线性回归的代价函数代码和单变量线性回归的代价函数代码一模一样,不再赘述</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">J &#x3D; 1 &#x2F; (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></table></figure>
+<p>由于矩阵乘法的原因，多变量线性回归的代价函数代码和单变量线性回归的代价函数代码一模一样，不再赘述</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">J = 1 / (2 * m) * sum((h - y) .^ 2);</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="gradientdescentmulti.m">gradientDescentMulti.m</h2>
-<p>同理,多变量梯度下降的代码和单变量梯度下降的代码一样,不再赘述</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; X * theta;</span><br><span class="line">theta &#x3D; theta - alpha &#x2F; m * (X&#39; * (h - y)) ;</span><br></pre></td></tr></table></figure>
+<p>同理，多变量梯度下降的代码和单变量梯度下降的代码一样，不再赘述</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = X * theta;</span><br><span class="line">theta = theta - alpha / m * (X' * (h - y)) ;</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
-<h2 id="normaleqn.m正规方程">normalEqn.m(正规方程)</h2>
-<p>正规方程适用于特征个数不是特别多的场景(<span class="math inline">\(x&lt;10,000\)</span>) , 优点:</p>
+<h2 id="normaleqn.m正规方程">normalEqn.m (正规方程)</h2>
+<p>正规方程适用于特征个数不是特别多的场景 (<span class="math inline">\(x&lt;10,000\)</span>) , 优点:</p>
 <ul>
-<li>不用迭代,一次即可计算出结果</li>
-<li>不用选取学习率<span class="math inline">\(\alpha\)</span>(learning rate)</li>
-<li>不需要特征放缩</li>
+<li>不用迭代，一次即可计算出结果</li>
+<li>不用选取学习率<span class="math inline"> \(\alpha\)</span>(learning rate)</li>
+<li> 不需要特征放缩</li>
 </ul>
-<p>缺点: - 对于特征值个数<span class="math inline">\(x&gt;10,000\)</span>时计算速度缓慢 - 只适用于线性回归模型,不适用于逻辑回归模型 - 可能出现矩阵不可逆的情况</p>
+<p>缺点: - 对于特征值个数<span class="math inline"> \(x&gt;10,000\)</span> 时计算速度缓慢 - 只适用于线性回归模型，不适用于逻辑回归模型 - 可能出现矩阵不可逆的情况</p>
 <p>公式: <span class="math display">\[
     (X*X^T)^{-1}X^Ty
 \]</span></p>
-<p>由于公式本来就是用矩阵表示,所以用octave/matlib实现起来一点都不难,代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theta &#x3D; pinv(X&#39; * X) * X&#39; * y;</span><br></pre></td></tr></table></figure>
+<p>由于公式本来就是用矩阵表示，所以用 octave/matlib 实现起来一点都不难，代码如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">theta = pinv(X' * X) * X' * y;</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
-<p>最后,提交作业</p>
-<p><img data-src="/images/ex1-submit.jpg" /></p>
+<p>最后，提交作业</p>
+<p><img data-src="/images/ex1-submit.jpg"></p>
 ]]></content>
       <categories>
         <category>ml编程作业</category>
@@ -442,58 +525,58 @@
       </tags>
   </entry>
   <entry>
-    <title>吴恩达ml课程编程作业 machine-learning-ex2</title>
+    <title>吴恩达 ml 课程编程作业 machine-learning-ex2</title>
     <url>/2019/01/28/ml-ex2/</url>
     <content><![CDATA[<h2 id="sigmoid.m">sigmoid.m</h2>
-<p>第一题比较简单,让我们实现Sigmoid函数,函数如下: <span class="math display">\[
+<p>第一题比较简单，让我们实现 Sigmoid 函数，函数如下: <span class="math display">\[
     g(z)=\frac{1}{1+e^{-z}}
 \]</span></p>
 <span id="more"></span>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">g &#x3D; 1 .&#x2F; (1 + exp(-z));</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">g = 1 ./ (1 + exp(-z));</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="costfunction.m-逻辑回归的代价函数">costFunction.m (逻辑回归的代价函数)</h2>
-<p>逻辑回归的hypothesis函数如下</p>
+<p>逻辑回归的 hypothesis 函数如下</p>
 <p><span class="math display">\[
     h_\theta(x)=g(\theta^Tx)
 \]</span></p>
-<p>其中<span class="math inline">\(g\)</span>就是我们刚才实现的sigmoid函数,逻辑回归的代价函数如下:</p>
+<p>其中<span class="math inline"> \(g\)</span> 就是我们刚才实现的 sigmoid 函数，逻辑回归的代价函数如下:</p>
 <p><span class="math display">\[
     J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)})))
 \]</span></p>
-<p>为什么这么复杂呢...因为这个函数可以把我们的代价函数变成非凸函数(non-convex),这样在求导的时候就不会出现local minimum</p>
-<p>有了ex-1的基础,用octave/matlib实现也不是那么困难了,代码如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h));</span><br></pre></td></tr></table></figure>
+<p>为什么这么复杂呢... 因为这个函数可以把我们的代价函数变成非凸函数 (non-convex), 这样在求导的时候就不会出现 local minimum</p>
+<p>有了 ex-1 的基础，用 octave/matlib 实现也不是那么困难了，代码如下</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h));</span><br></pre></td></tr></tbody></table></figure>
 <p>逻辑回归的梯度下降与线性回归的梯度下降公式长的一样:</p>
 <p><span class="math display">\[
     \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
 \]</span></p>
-<p>注:下标<span class="math inline">\(j\)</span>代表第几个特征</p>
-<p>需要注意的是,虽然它们公式长的一样,但是注意<span class="math inline">\(h_\theta(x)\)</span>的实现方式是不同的,代码实现如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y));</span><br></pre></td></tr></table></figure>
+<p>注：下标<span class="math inline"> \(j\)</span> 代表第几个特征</p>
+<p>需要注意的是，虽然它们公式长的一样，但是注意<span class="math inline"> \(h_\theta(x)\)</span> 的实现方式是不同的，代码实现如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">grad = 1 / m * (X' * (h - y));</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="predict.m">predict.m</h2>
-<p>也是一道简单的题,直接上结果</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">p &#x3D; h &gt;&#x3D; 0.5;</span><br></pre></td></tr></table></figure>
+<p>也是一道简单的题，直接上结果</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">p = h &gt;= 0.5;</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="costfunctionreg.m">costFunctionReg.m</h2>
-<p>这道题主要是代价函数的正则化,用来解决过拟合(over-fitting)的问题,算法如下:</p>
+<p>这道题主要是代价函数的正则化，用来解决过拟合 (over-fitting) 的问题，算法如下:</p>
 <p><span class="math display">\[
     J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))) + \frac{\lambda}{2m}\sum_{j=1}^{n}\theta_j^2
 \]</span></p>
-<p>其中<span class="math inline">\(m\)</span>代表数据的条数,<span class="math inline">\(n\)</span>代表特征个数,需要注意的是,正则化是不包括<span class="math inline">\(\theta_0\)</span>的</p>
-<p>关于向量的平方和已经在上一篇ex-1中介绍过了,因此代码实现如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">theta_temp &#x3D; theta(2:end);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) + lambda &#x2F; (2 * m) * sum(theta_temp .^ 2);</span><br></pre></td></tr></table></figure>
-<p>接下来就要计算梯度值了,跟计算代价函数一样,计算梯度值的时候对<span class="math inline">\(\theta_0\)</span>不做正则化处理</p>
+<p>其中<span class="math inline"> \(m\)</span> 代表数据的条数，<span class="math inline">\(n\)</span> 代表特征个数，需要注意的是，正则化是不包括<span class="math inline"> \(\theta_0\)</span> 的</p>
+<p>关于向量的平方和已经在上一篇 ex-1 中介绍过了，因此代码实现如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">theta_temp = theta(2:end);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h)) + lambda / (2 * m) * sum(theta_temp .^ 2);</span><br></pre></td></tr></tbody></table></figure>
+<p>接下来就要计算梯度值了，跟计算代价函数一样，计算梯度值的时候对<span class="math inline"> \(\theta_0\)</span> 不做正则化处理</p>
 <p><span class="math display">\[
     \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
 \]</span></p>
-<p>对于<span class="math inline">\(\theta_0\)</span>之外的参数,需要加上正则化处理</p>
+<p>对于<span class="math inline"> \(\theta_0\)</span> 之外的参数，需要加上正则化处理</p>
 <p><span class="math display">\[
 \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac{\lambda}{m}\theta_j
 \]</span></p>
-<p>因此,在计算的时候,我们可以手动的给<span class="math inline">\(\theta_0\)</span>赋值为0,这样就可以用一个公式来计算,不用判断是否为<span class="math inline">\(\theta_0\)</span>,计算梯度的代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theta_temp &#x3D; [0;theta_temp];</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_temp;</span><br></pre></td></tr></table></figure>
+<p>因此，在计算的时候，我们可以手动的给<span class="math inline"> \(\theta_0\)</span> 赋值为 0, 这样就可以用一个公式来计算，不用判断是否为<span class="math inline"> \(\theta_0\)</span>, 计算梯度的代码如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">theta_temp = [0;theta_temp];</span><br><span class="line">grad = 1 / m * (X' * (h - y)) + lambda / m * theta_temp;</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
-<p><img data-src="/images/ex2-submit.png" /></p>
+<p><img data-src="/images/ex2-submit.png"></p>
 ]]></content>
       <categories>
         <category>ml编程作业</category>
@@ -507,33 +590,33 @@
       </tags>
   </entry>
   <entry>
-    <title>吴恩达ml课程编程作业 machine-learning-ex3</title>
+    <title>吴恩达 ml 课程编程作业 machine-learning-ex3</title>
     <url>/2019/01/29/ml-ex3/</url>
     <content><![CDATA[<h2 id="lrcostfunction.m">lrCostFunction.m</h2>
-<p>  这道题在上一个练习里已经做过,不再赘述:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);</span><br><span class="line"></span><br><span class="line">theta_tmp &#x3D; theta;</span><br><span class="line">theta_tmp(1) &#x3D; 0;</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_tmp;</span><br></pre></td></tr></table></figure>
+<p>  这道题在上一个练习里已经做过，不再赘述:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h)) +  lambda / (2 * m) * sum(theta(2:end) .^ 2);</span><br><span class="line"></span><br><span class="line">theta_tmp = theta;</span><br><span class="line">theta_tmp(1) = 0;</span><br><span class="line">grad = 1 / m * (X' * (h - y)) + lambda / m * theta_tmp;</span><br></pre></td></tr></tbody></table></figure>
 <span id="more"></span>
 <p>完成</p>
 <h2 id="onevsall.m">oneVsAll.m</h2>
-<p>  这道题的目的是通过fmincg算法训练出针对每一个分类(这里是1-10)所对应的<span class="math inline">\(\theta_0\)</span>到<span class="math inline">\(\theta_n\)</span>值,然后用这些<span class="math inline">\(\theta\)</span>值去识别新的图片</p>
-<p>  我们的特征矩阵是5000x400,每一行代表一个图片,加上一列<span class="math inline">\(x_0\)</span>就是5000x401,针对10个分类,我们最后要返回的all_theta是10x401的矩阵,所以我们要对所有分类(1-10)进行循环并组合成all_theta.</p>
-<p>  all_theta第一行代表数字1经过训练后所对应的所有<span class="math inline">\(\theta\)</span>值,第二行代表数字2经过训练后所对应的所有<span class="math inline">\(\theta\)</span>值 ... 第10行代表数字0经过训练后所对应的所有<span class="math inline">\(\theta\)</span>值</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for c &#x3D; 1:num_labels</span><br><span class="line">  initial_theta &#x3D; zeros(n + 1, 1);</span><br><span class="line">  options &#x3D; optimset(&#39;GradObj&#39;, &#39;on&#39;, &#39;MaxIter&#39;, 50);</span><br><span class="line">  [theta] &#x3D; ...</span><br><span class="line">         fmincg (@(t)(lrCostFunction(t, X, (y &#x3D;&#x3D; c), lambda)), ...</span><br><span class="line">                 initial_theta, options);</span><br><span class="line">   all_theta(c,:) &#x3D; theta&#39;; </span><br><span class="line">endfor</span><br></pre></td></tr></table></figure>
+<p>  这道题的目的是通过 fmincg 算法训练出针对每一个分类 (这里是 1-10) 所对应的<span class="math inline"> \(\theta_0\)</span> 到<span class="math inline"> \(\theta_n\)</span> 值，然后用这些<span class="math inline"> \(\theta\)</span> 值去识别新的图片</p>
+<p>  我们的特征矩阵是 5000x400, 每一行代表一个图片，加上一列<span class="math inline"> \(x_0\)</span> 就是 5000x401, 针对 10 个分类，我们最后要返回的 all_theta 是 10x401 的矩阵，所以我们要对所有分类 (1-10) 进行循环并组合成 all_theta.</p>
+<p>  all_theta 第一行代表数字 1 经过训练后所对应的所有<span class="math inline"> \(\theta\)</span> 值，第二行代表数字 2 经过训练后所对应的所有<span class="math inline"> \(\theta\)</span> 值 ... 第 10 行代表数字 0 经过训练后所对应的所有<span class="math inline"> \(\theta\)</span> 值</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">for c = 1:num_labels</span><br><span class="line">  initial_theta = zeros(n + 1, 1);</span><br><span class="line">  options = optimset('GradObj', 'on', 'MaxIter', 50);</span><br><span class="line">  [theta] = ...</span><br><span class="line">         fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ...</span><br><span class="line">                 initial_theta, options);</span><br><span class="line">   all_theta(c,:) = theta'; </span><br><span class="line">endfor</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="predictonevsall.m">predictOneVsAll.m</h2>
-<p>  得到了所有分类(对应1-10的数字)的<span class="math inline">\(\theta\)</span>值后,接下来就要利用这些值去识别新的图片了</p>
-<p>  我们的<span class="math inline">\(X\)</span>矩阵是5000x401,all_theta矩阵是10x401.很显然我们要用矩阵<span class="math inline">\(X\)</span>与all_theta矩阵的转置相乘,再代入sigmoid函数,得到的是5000 x 10的矩阵,行数就是图片张数,第一列代表的是图片为1时的概率,第二列代表的是图片为2的概率...第十列代表的是图片为0概率</p>
+<p>  得到了所有分类 (对应 1-10 的数字) 的<span class="math inline"> \(\theta\)</span> 值后，接下来就要利用这些值去识别新的图片了</p>
+<p>  我们的<span class="math inline"> \(X\)</span> 矩阵是 5000x401,all_theta 矩阵是 10x401. 很显然我们要用矩阵<span class="math inline"> \(X\)</span> 与 all_theta 矩阵的转置相乘，再代入 sigmoid 函数，得到的是 5000 x 10 的矩阵，行数就是图片张数，第一列代表的是图片为 1 时的概率，第二列代表的是图片为 2 的概率... 第十列代表的是图片为 0 概率</p>
 <p>  最后要做的是取每一行中概率最大的那一列就是图片最终识别结果</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * all_theta&#39;);</span><br><span class="line">[max_num,p] &#x3D; max(h , [] , 2);</span><br></pre></td></tr></table></figure>
-<p>注:max函数第3个参数传1代表求每一列的最大值,最后返回的是行向量.第3个参数传2代表求每一行的最大值,最后返回的是列向量.max函数第一个返回值代表最大的数是几,第二个参数代表这个最大数的下标</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">h = sigmoid(X * all_theta');</span><br><span class="line">[max_num,p] = max(h , [] , 2);</span><br></pre></td></tr></tbody></table></figure>
+<p>注:max 函数第 3 个参数传 1 代表求每一列的最大值，最后返回的是行向量。第 3 个参数传 2 代表求每一行的最大值，最后返回的是列向量.max 函数第一个返回值代表最大的数是几，第二个参数代表这个最大数的下标</p>
 <h2 id="predict.m">predict.m</h2>
-<p>  之前的题目是用逻辑回归识别手写图片,这道题是用神经网络(Neural Network)识别手写图片</p>
-<p>  相比逻辑回归的线性classifier,NN可以执行更加复杂的任务,在这个练习中,我们要用<strong>Feedforward Propagation</strong>算法实现一个3层神经网络,算法如下图所示:</p>
-<p><img data-src="/images/nn.png" /></p>
-<p>  因此,代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">a_1 &#x3D; [ones(m,1) , X];</span><br><span class="line"></span><br><span class="line">z_2 &#x3D; a_1 * Theta1&#39;;</span><br><span class="line">a_2 &#x3D; [ones(m,1),sigmoid(z_2)];</span><br><span class="line"></span><br><span class="line">z_3 &#x3D; a_2 * Theta2&#39;;</span><br><span class="line">a_3 &#x3D; sigmoid(z_3);</span><br><span class="line"></span><br><span class="line">[max_num,p] &#x3D; max(a_3,[],2);</span><br></pre></td></tr></table></figure>
+<p>  之前的题目是用逻辑回归识别手写图片，这道题是用神经网络 (Neural Network) 识别手写图片</p>
+<p>  相比逻辑回归的线性 classifier,NN 可以执行更加复杂的任务，在这个练习中，我们要用 <strong>Feedforward Propagation</strong> 算法实现一个 3 层神经网络，算法如下图所示:</p>
+<p><img data-src="/images/nn.png"></p>
+<p>  因此，代码如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">a_1 = [ones(m,1) , X];</span><br><span class="line"></span><br><span class="line">z_2 = a_1 * Theta1';</span><br><span class="line">a_2 = [ones(m,1),sigmoid(z_2)];</span><br><span class="line"></span><br><span class="line">z_3 = a_2 * Theta2';</span><br><span class="line">a_3 = sigmoid(z_3);</span><br><span class="line"></span><br><span class="line">[max_num,p] = max(a_3,[],2);</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
-<p><img data-src="/images/ex3-submit.png" /></p>
+<p><img data-src="/images/ex3-submit.png"></p>
 ]]></content>
       <categories>
         <category>ml编程作业</category>
@@ -551,7 +634,7 @@
     <url>/2019/01/28/of_study/</url>
     <content><![CDATA[<h2 id="读书足以怡情足以傅彩足以长才其怡情也最见于独处幽居之时其傅彩也最见于高谈阔论之中其长才也最见于处世判事之际练达之士虽能分别处理细事或一一判别枝节然纵观统筹全局策划则舍好学深思者莫属读书费时过多易惰文采藻饰太盛则矫全凭条文断事乃学究故态读书补天然之不足经验又补读书之不足盖天生才干犹如自然花草读书然后知如何修剪移接而书中所示如不以经验范之则又大而无当有一技之长者鄙读书无知者羡读书唯明智之士用读书然书并不以用处告人用书之智不在书中而在书外全凭观察得之读书时不可存心诘难作者不可尽信书上所言亦不可只为寻章摘句而应推敲细思书有可浅尝者有可吞食者少数则须咀嚼消化换言之有只须读其部分者有只须大体涉猎者少数则须全读读时须全神贯注孜孜不倦书亦可请人代读取其所作摘要但只限题材较次或价值不高者否则书经提炼犹如水经蒸馏淡而无味矣">  读书足以怡情，足以傅彩，足以长才。其怡情也，最见于独处幽居之时；其傅彩也，最见于高谈阔论之中；其长才也，最见于处世判事之际。练达之士虽能分别处理细事或一一判别枝节，然纵观统筹、全局策划，则舍好学深思者莫属。读书费时过多易惰，文采藻饰太盛则矫，全凭条文断事乃学究故态。读书补天然之不足，经验又补读书之不足，<span id="more"></span>盖天生才干犹如自然花草，读书然后知如何修剪移接；而书中所示，如不以经验范之，则又大而无当。有一技之长者鄙读书，无知者羡读书，唯明智之士用读书，然书并不以用处告人，用书之智不在书中，而在书外，全凭观察得之。读书时不可存心诘难作者，不可尽信书上所言，亦不可只为寻章摘句，而应推敲细思。书有可浅尝者，有可吞食者，少数则须咀嚼消化。换言之，有只须读其部分者，有只须大体涉猎者，少数则须全读，读时须全神贯注，孜孜不倦。书亦可请人代读，取其所作摘要，但只限题材较次或价值不高者，否则书经提炼犹如水经蒸馏、淡而无味矣。</h2>
 <h2 id="读书使人充实讨论使人机智笔记使人准确因此不常作笔记者须记忆特强不常讨论者须天生聪颖不常读书者须欺世有术始能无知而显有知读史使人明智读诗使人灵秀数学使人周密科学使人深刻伦理学使人庄重逻辑修辞之学使人善辩凡有所学皆成性格人之才智但有滞碍无不可读适当之书使之顺畅一如身体百病皆可借相宜之运动除之滚球利睾肾射箭利胸肺慢步利肠胃骑术利头脑诸如此类如智力不集中可令读数学盖演题须全神贯注稍有分散即须重演如不能辨异可令读经院哲学盖是辈皆吹毛求疵之人如不善求同不善以一物阐证另一物可令读律师之案卷如此头脑中凡有缺陷皆有特药可医">  读书使人充实，讨论使人机智，笔记使人准确。因此不常作笔记者须记忆特强，不常讨论者须天生聪颖，不常读书者须欺世有术，始能无知而显有知。读史使人明智，读诗使人灵秀，数学使人周密，科学使人深刻，伦理学使人庄重，逻辑修辞之学使人善辩：凡有所学，皆成性格。人之才智但有滞碍，无不可读适当之书使之顺畅，一如身体百病，皆可借相宜之运动除之。滚球利睾肾，射箭利胸肺，慢步利肠胃，骑术利头脑，诸如此类。如智力不集中，可令读数学，盖演题须全神贯注，稍有分散即须重演；如不能辨异，可令读经院哲学，盖是辈皆吹毛求疵之人；如不善求同，不善以一物阐证另一物，可令读律师之案卷。如此头脑中凡有缺陷，皆有特药可医。</h2>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">注:中学时背的滚瓜烂熟的课文,过了N多年之后再来看这些又有了新解.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">注:中学时背的滚瓜烂熟的课文,过了N多年之后再来看这些又有了新解.</span><br></pre></td></tr></tbody></table></figure>
 ]]></content>
       <categories>
         <category>生活</category>
@@ -563,7 +646,7 @@
   <entry>
     <title>Spring MVC 总结</title>
     <url>/2019/08/14/spring-mvc/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer" />
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
 <h1 id="spring-mvc-总结">Spring MVC 总结</h1>
 <h2 id="qa">Q&amp;A</h2>
 <h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
@@ -571,66 +654,66 @@
 <blockquote>
 <p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
 </blockquote>
-<p>由此可见, 子容器是可以继承父容器的所有 Bean 的.</p>
+<p>由此可见，子容器是可以继承父容器的所有 Bean 的.</p>
 <span id="more"></span>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg"></p>
 <ol type="1">
-<li>在 web.xml 中, ContextLoaderListener 会初始化父容器
+<li>在 web.xml 中，ContextLoaderListener 会初始化父容器
 <ol type="1">
 <li>创建 ConfigurableWebApplicationContext
 <ul>
 <li>configureAndRefreshWebApplicationContext</li>
-<li>喜闻乐见的 refresh 方法, 开始创建IOC容器</li>
+<li> 喜闻乐见的 refresh 方法，开始创建 IOC 容器</li>
 </ul></li>
-<li>父容器创建完成之后, 创建 DispatcherServlet
+<li>父容器创建完成之后，创建 DispatcherServlet
 <ul>
-<li>执行Servlet的 init</li>
-<li>执行 initServletBean</li>
+<li>执行 Servlet 的 init</li>
+<li> 执行 initServletBean</li>
 <li>initWebApplicationContext</li>
 <li>setParent</li>
 <li>configureAndRefreshWebApplicationContext</li>
-<li>喜闻乐见的 refresh 方法, 开始创建IOC容器</li>
+<li> 喜闻乐见的 refresh 方法，开始创建 IOC 容器</li>
 </ul></li>
 </ol></li>
 </ol>
-<h3 id="只有子容器-没有父容器可以吗">只有子容器, 没有父容器可以吗</h3>
+<h3 id="只有子容器-没有父容器可以吗">只有子容器，没有父容器可以吗</h3>
 <p>当然可以</p>
 <h3 id="spring-mvc-如何实现注解自动装配">Spring MVC 如何实现注解自动装配</h3>
 <ol type="1">
-<li>要实现自动装配, 必须借助于 Servlet 的 SPI
+<li>要实现自动装配，必须借助于 Servlet 的 SPI
 <ol type="1">
 <li>SPI 要求我们必须在 META-INF.services 包下指定实现 ServletContainerInitializer 接口的类</li>
-<li>spring-web 包就已经提供了这个实现叫做 SpringServletContainerInitializer</li>
+<li> spring-web 包就已经提供了这个实现叫做 SpringServletContainerInitializer</li>
 </ol></li>
-<li>阅读 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span> 源码可知, Spring 已经给我们默认提供了几个 <code>WebApplicationInitialize</code> 实现
+<li> 阅读 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span> 源码可知，Spring 已经给我们默认提供了几个 <code>WebApplicationInitialize</code> 实现
 <ul>
 <li>AbstractContextLoaderInitializer</li>
 <li>AbstractDispatcherServletInitializer</li>
 <li>AbstractAnnotationConfigDispatcherServletInitializer</li>
 </ul></li>
-<li>我们只需要实现 AbstractAnnotationConfigDispatcherServletInitializer 即可
+<li> 我们只需要实现 AbstractAnnotationConfigDispatcherServletInitializer 即可
 <ol type="1">
-<li>指定 RootConfigClass 也就是父容器(可不指定)</li>
-<li>指定 ServletConfigClass</li>
-<li>指定拦截路径</li>
+<li>指定 RootConfigClass 也就是父容器 (可不指定)</li>
+<li> 指定 ServletConfigClass</li>
+<li> 指定拦截路径</li>
 </ol></li>
 </ol>
-<p>有了自动装配, 我们就可以使用 java 编程的方式实现 web 开发, 不需要任何的 xml 文件(包括 web.xml)</p>
+<p>有了自动装配，我们就可以使用 java 编程的方式实现 web 开发，不需要任何的 xml 文件 (包括 web.xml)</p>
 <h3 id="spring-boot-如何实现自动装配">Spring Boot 如何实现自动装配</h3>
 <ol type="1">
 <li>前端控制器装配 : DispatcherServletAutoConfiguration</li>
-<li>配置装配 : WebMvcAutoConfiguration 替换 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span></li>
+<li> 配置装配 : WebMvcAutoConfiguration 替换 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span></li>
 <li>Servlet 容器装配 : ServletWebServerFactoryAutoConfiguration</li>
 </ol>
 <h2 id="基础知识">基础知识</h2>
 <h3 id="spring-web-mvc-架构">Spring Web MVC 架构</h3>
 <p><a href="http://www.corej2eepatterns.com/FrontController.htm">前端控制器模式</a></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg"></p>
 <h3 id="mvc-核心组件">MVC 核心组件</h3>
 <table>
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 50%">
+<col style="width: 50%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -640,42 +723,42 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">HandlerMapping</td>
-<td style="text-align: left;">映射请求（Request）到处理器（Handler）加上其关联的拦截器（HandlerInterceptor）列表，其映射关系基于不同的 HandlerMapping 实现的一些标准细节。其中两种主要 HandlerMapping 实现， RequestMappingHandlerMapping支持标注 <span class="citation" data-cites="RequestMapping">@RequestMapping</span> 的方法， SimpleUrlHandlerMapping 维护精确的URI路径与处理器的映射</td>
+<td style="text-align: left;"> HandlerMapping</td>
+<td style="text-align: left;"> 映射请求（Request）到处理器（Handler）加上其关联的拦截器（HandlerInterceptor）列表，其映射关系基于不同的 HandlerMapping 实现的一些标准细节。其中两种主要 HandlerMapping 实现， RequestMappingHandlerMapping 支持标注 <span class="citation" data-cites="RequestMapping">@RequestMapping</span> 的方法， SimpleUrlHandlerMapping 维护精确的 URI 路径与处理器的映射</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">HandlerAdapter</td>
-<td style="text-align: left;">帮助 DispatcherServlet 调用请求处理器（Handler），无需关注其中实际的调用细节。比如，调用注解实现的 Controller 需要解析其关联的注解. HandlerAdapter的主要目的是为了屏蔽与 DispatcherServlet 之间的诸多细节。</td>
+<td style="text-align: left;"> HandlerAdapter</td>
+<td style="text-align: left;"> 帮助 DispatcherServlet 调用请求处理器（Handler），无需关注其中实际的调用细节。比如，调用注解实现的 Controller 需要解析其关联的注解. HandlerAdapter 的主要目的是为了屏蔽与 DispatcherServlet 之间的诸多细节。</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-exceptionhandlers">HandlerExceptionResolver</a></td>
-<td style="text-align: left;">解析异常，可能策略是将异常处理映射到其他处理器（Handlers） 、或到某个 HTML错误页面，或者其他。</td>
+<td style="text-align: left;"> 解析异常，可能策略是将异常处理映射到其他处理器（Handlers） 、或到某个 HTML 错误页面，或者其他。</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-viewresolver">ViewResolver</a></td>
-<td style="text-align: left;">从处理器（Handler）返回字符类型的逻辑视图名称解析出实际的 View 对象，该对象将渲染后的内容输出到HTTP 响应中。</td>
+<td style="text-align: left;"> 从处理器（Handler）返回字符类型的逻辑视图名称解析出实际的 View 对象，该对象将渲染后的内容输出到 HTTP 响应中。</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-localeresolver">LocaleResolver</a>, <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-timezone">LocaleContextResolver</a></td>
-<td style="text-align: left;">从客户端解析出 Locale ，为其实现国际化视图。</td>
+<td style="text-align: left;"> 从客户端解析出 Locale ，为其实现国际化视图。</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart">MultipartResolver</a></td>
-<td style="text-align: left;">解析多部分请求（如 Web 浏览器文件上传）的抽象实现</td>
+<td style="text-align: left;"> 解析多部分请求（如 Web 浏览器文件上传）的抽象实现</td>
 </tr>
 </tbody>
 </table>
 <h3 id="mvc-交互流程">MVC 交互流程</h3>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg"></p>
 <h3 id="注解驱动实现-spring-web-mvc">注解驱动实现 Spring Web MVC</h3>
 <ol type="1">
 <li>注解配置: <span class="citation" data-cites="Configuration">@Configuration</span></li>
-<li>组件激活: <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span>
+<li> 组件激活: <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span>
 <ul>
-<li>注册 RequestMappingHandlerMapping</li>
-<li>注册 RequestMappingHandlerAdapter</li>
+<li> 注册 RequestMappingHandlerMapping</li>
+<li> 注册 RequestMappingHandlerAdapter</li>
 </ul></li>
-<li>自定义组件: WebMvcConfigurer
+<li> 自定义组件: WebMvcConfigurer
 <ul>
 <li>添加拦截器</li>
 <li>配置内容协商器</li>
@@ -684,12 +767,12 @@
 </ul></li>
 </ol>
 <h3 id="rest-内容协商">REST 内容协商</h3>
-<p>内容协商其实不仅仅包含 REST , 还有视图协商 , 由于工作中已经不再使用视图解析器, 所以主要来研究 REST 内容协商.</p>
+<p>内容协商其实不仅仅包含 REST , 还有视图协商，由于工作中已经不再使用视图解析器，所以主要来研究 REST 内容协商.</p>
 <table>
 <colgroup>
-<col style="width: 18%" />
-<col style="width: 27%" />
-<col style="width: 54%" />
+<col style="width: 18%">
+<col style="width: 27%">
+<col style="width: 54%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -701,61 +784,61 @@
 <tbody>
 <tr class="odd">
 <td>内容协商管理器</td>
-<td>ContentNegotiationManager</td>
+<td> ContentNegotiationManager</td>
 <td>ContentNegotiationStrategy 控制策略</td>
 </tr>
 <tr class="even">
 <td>媒体类型</td>
-<td>MediaType</td>
-<td>HTTP 消息媒体类型, 如 text/html</td>
+<td> MediaType</td>
+<td>HTTP 消息媒体类型，如 text/html</td>
 </tr>
 <tr class="odd">
-<td>消费媒体类型</td>
-<td><span class="citation" data-cites="RequestMapping#consumes">@RequestMapping#consumes</span></td>
-<td>请求头 Content-type 媒体类型映射</td>
+<td> 消费媒体类型</td>
+<td><span class="citation" data-cites="RequestMapping#consumes"> @RequestMapping#consumes</span></td>
+<td> 请求头 Content-type 媒体类型映射</td>
 </tr>
 <tr class="even">
 <td>生产媒体类型</td>
-<td><span class="citation" data-cites="RequestMapping#produces">@RequestMapping#produces</span></td>
-<td>响应头 Content-type 媒体类型映射</td>
+<td><span class="citation" data-cites="RequestMapping#produces"> @RequestMapping#produces</span></td>
+<td> 响应头 Content-type 媒体类型映射</td>
 </tr>
 <tr class="odd">
-<td>HTTP 消息转换器</td>
-<td>HttpMessageConverter</td>
-<td>HTTP 消息转换器, 用于反序列化 HTTP 请求或序列化响应配置 REST 相关的组件</td>
+<td> HTTP 消息转换器</td>
+<td> HttpMessageConverter</td>
+<td>HTTP 消息转换器，用于反序列化 HTTP 请求或序列化响应配置 REST 相关的组件</td>
 </tr>
 <tr class="even">
-<td>Web MVC 配置器</td>
-<td>WebMvcConfigurer</td>
-<td>配置 REST 的相关组件</td>
+<td> Web MVC 配置器</td>
+<td> WebMvcConfigurer</td>
+<td> 配置 REST 的相关组件</td>
 </tr>
 <tr class="odd">
 <td>处理方法</td>
-<td>HandlerMethod</td>
+<td> HandlerMethod</td>
 <td><span class="citation" data-cites="RequestMapping">@RequestMapping</span> 标注的方法</td>
 </tr>
 <tr class="even">
 <td>处理方法参数解析器</td>
-<td>HandlerMethodArgumentResolver</td>
-<td>用于 HTTP 请求中解析 HandlerMethod 参数内容</td>
+<td> HandlerMethodArgumentResolver</td>
+<td> 用于 HTTP 请求中解析 HandlerMethod 参数内容</td>
 </tr>
 <tr class="odd">
 <td>处理方法返回值解析器</td>
-<td>HandlerMethodReturnValueHandler</td>
-<td>用于 HandlerMethod 返回值解析为 HTTP 相应内容</td>
+<td> HandlerMethodReturnValueHandler</td>
+<td> 用于 HandlerMethod 返回值解析为 HTTP 相应内容</td>
 </tr>
 </tbody>
 </table>
-<p>知道了内容协商的核心组件后 , 再来看看 Spring MVC 的 REST 处理流程</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg" /></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg" /></p>
+<p>知道了内容协商的核心组件后，再来看看 Spring MVC 的 REST 处理流程</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg"></p>
 <h3 id="spring-异常处理机制">Spring 异常处理机制</h3>
 <p>官方文档中说 <code>DispatcherServlet</code> 会委托给一个 <code>HandlerExceptionResolver</code> 链去处理异常</p>
 <p>Spring MVC 自带的异常处理器有如下几种</p>
 <table>
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 50%">
+<col style="width: 50%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -784,17 +867,17 @@
 </table>
 <p>需要注意的点:</p>
 <ul>
-<li><p>只需声明我们自定义的 HandlerExceptionResolver 实现为 Spring 组件, 就会被 Spring 添加到异常处理链中</p></li>
-<li><p>HandlerExceptionResolver 返回的 ModelAndView 即为错误页面</p></li>
-<li><p>如果异常处理完成且不希望中断异常执行链, 则返回 null</p></li>
-<li><p>如果异常处理完成且希望中断异常执行链, 则返回空的 ModelAndView 即可</p></li>
+<li><p>只需声明我们自定义的 HandlerExceptionResolver 实现为 Spring 组件，就会被 Spring 添加到异常处理链中</p></li>
+<li><p> HandlerExceptionResolver 返回的 ModelAndView 即为错误页面</p></li>
+<li><p>如果异常处理完成且不希望中断异常执行链，则返回 null</p></li>
+<li><p> 如果异常处理完成且希望中断异常执行链，则返回空的 ModelAndView 即可</p></li>
 <li><p>可以实现 Ordered 接口来指定 HandlerExceptionResolver 的调用顺序</p></li>
 </ul>
 <h3 id="spring-mvc-常用注解">Spring MVC 常用注解</h3>
 <table>
 <colgroup>
-<col style="width: 22%" />
-<col style="width: 77%" />
+<col style="width: 22%">
+<col style="width: 77%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -804,48 +887,48 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="citation" data-cites="RequestParam">@RequestParam</span></td>
-<td>从请求中获取参数值</td>
+<td><span class="citation" data-cites="RequestParam"> @RequestParam</span></td>
+<td> 从请求中获取参数值</td>
 </tr>
 <tr class="even">
-<td><span class="citation" data-cites="RequestHeader">@RequestHeader</span></td>
-<td>获取请求头 <br /><span class="citation" data-cites="RequestHeader">@RequestHeader</span>(&quot;Accept-Encoding&quot;)<br /><span class="citation" data-cites="RequestHeader">@RequestHeader</span>(&quot;Keep-Alive&quot;)</td>
+<td><span class="citation" data-cites="RequestHeader"> @RequestHeader</span></td>
+<td> 获取请求头 <br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Accept-Encoding")<br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Keep-Alive")</td>
 </tr>
 <tr class="odd">
 <td><span class="citation" data-cites="CookieValue">@CookieValue</span></td>
-<td>获取 Cookie 中的值 <br /><span class="citation" data-cites="CookieValue">@CookieValue</span>(&quot;JSESSIONID&quot;)</td>
+<td> 获取 Cookie 中的值 <br><span class="citation" data-cites="CookieValue">@CookieValue</span>("JSESSIONID")</td>
 </tr>
 <tr class="even">
 <td><span class="citation" data-cites="ModelAttribute">@ModelAttribute</span></td>
-<td>从 request 中获取参数值, 并赋值到对应的对象中</td>
+<td> 从 request 中获取参数值，并赋值到对应的对象中</td>
 </tr>
 <tr class="odd">
-<td><span class="citation" data-cites="RequestBody">@RequestBody</span></td>
-<td>从 request 中通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 反序列化到对象中</td>
+<td><span class="citation" data-cites="RequestBody"> @RequestBody</span></td>
+<td> 从 request 中通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 反序列化到对象中</td>
 </tr>
 <tr class="even">
-<td><span class="citation" data-cites="ResponseBody">@ResponseBody</span></td>
-<td>把返回对象通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 序列化到 response 中</td>
+<td><span class="citation" data-cites="ResponseBody"> @ResponseBody</span></td>
+<td> 把返回对象通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 序列化到 response 中</td>
 </tr>
 <tr class="odd">
-<td><span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span></td>
-<td>处理自定义异常<br />写在 Controller 里则只处理本 Controller 里的异常<br />如果想要处理全局异常, 则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br />注意全局异常在本地异常方法执行后才执行</td>
+<td><span class="citation" data-cites="ExceptionHandler"> @ExceptionHandler</span></td>
+<td> 处理自定义异常<br>写在 Controller 里则只处理本 Controller 里的异常<br>如果想要处理全局异常，则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br>注意全局异常在本地异常方法执行后才执行</td>
 </tr>
 <tr class="even">
-<td><span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span></td>
-<td>支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br />官方不建议随意使用, 会显著的影响性能</td>
+<td><span class="citation" data-cites="ControllerAdvice"> @ControllerAdvice</span></td>
+<td> 支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br>官方不建议随意使用，会显著的影响性能</td>
 </tr>
 <tr class="odd">
-<td><span class="citation" data-cites="InitBinder">@InitBinder</span></td>
-<td>需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br />目的是为了自定义类型转换</td>
+<td><span class="citation" data-cites="InitBinder"> @InitBinder</span></td>
+<td> 需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br>目的是为了自定义类型转换</td>
 </tr>
 <tr class="even">
-<td><span class="citation" data-cites="PathVariable">@PathVariable</span></td>
-<td>用来解析 REST 请求中的变量</td>
+<td><span class="citation" data-cites="PathVariable"> @PathVariable</span></td>
+<td> 用来解析 REST 请求中的变量</td>
 </tr>
 <tr class="odd">
-<td><span class="citation" data-cites="CrossOrigin">@CrossOrigin</span></td>
-<td>跨域支持<br />可以标注在 Controller 方法和类上<br />如果想实现更加精细的配置, 在 WebMvcConfigurer 中重写 addCorsMappings</td>
+<td><span class="citation" data-cites="CrossOrigin"> @CrossOrigin</span></td>
+<td> 跨域支持<br>可以标注在 Controller 方法和类上<br>如果想实现更加精细的配置，在 WebMvcConfigurer 中重写 addCorsMappings</td>
 </tr>
 </tbody>
 </table>
@@ -861,7 +944,7 @@
   <entry>
     <title>Spring Core 总结</title>
     <url>/2019/08/14/spring/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer" />
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
 <h1 id="spring-core-个人总结">Spring Core 个人总结</h1>
 <h2 id="qa">Q&amp;A</h2>
 <h3 id="spring-framework">Spring Framework</h3>
@@ -907,48 +990,48 @@
 </tr>
 </tbody>
 </table>
-<p>简而言之, BeanFactory 只是加载了需要注入的 bean 而已,并没有注册后置处理器以及其他消息和事件管理</p>
+<p>简而言之，BeanFactory 只是加载了需要注入的 bean 而已，并没有注册后置处理器以及其他消息和事件管理</p>
 <span id="more"></span>
 <h4 id="beanfactory-和-factorybean-的区别">BeanFactory 和 FactoryBean 的区别</h4>
-<p>FactoryBean定义 :</p>
+<p>FactoryBean 定义 :</p>
 <blockquote>
 <p>Interface to be implemented by objects used within a BeanFactory which are themselves factories for individual objects. If a bean implements thisinterface, it is used as a factory for an object to expose, not directly as abean instance that will be exposed itself.</p>
 </blockquote>
-<p>BeanFactory定义 :</p>
+<p>BeanFactory 定义 :</p>
 <blockquote>
 <p>The root interface for accessing a Spring bean container.</p>
 <p>This is the basic client view of a bean container;</p>
 </blockquote>
-<p>二者其实没有什么联系,BeanFactory代表的是Spring的IOC容器.</p>
-<p>而FactoryBean则是工厂模式的实现,并且以Spring命名风格命名 ,比如UserFactory,在Spring里就叫做UserFactoryBean.</p>
-<h4 id="spring-ioc容器如何解决循环依赖">Spring IOC容器如何解决循环依赖</h4>
+<p>二者其实没有什么联系，BeanFactory 代表的是 Spring 的 IOC 容器.</p>
+<p>而 FactoryBean 则是工厂模式的实现，并且以 Spring 命名风格命名，比如 UserFactory, 在 Spring 里就叫做 UserFactoryBean.</p>
+<h4 id="spring-ioc容器如何解决循环依赖">Spring IOC 容器如何解决循环依赖</h4>
 <p>使用三级缓存解决循环依赖 (按照存放的先后顺序)</p>
 <ul>
 <li><code>singletonFactories</code></li>
 <li><code>earlySingletonObjects</code></li>
 <li><code>singletonObjects</code></li>
 </ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> B b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> A a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>{</span><br><span class="line">    <span class="keyword">private</span> B b;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span></span>{</span><br><span class="line">    <span class="keyword">private</span> A a;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 <ul>
-<li>createBeanInstance(beanName, mbd, args) 首先,调用A的构造器初始化A
+<li>createBeanInstance (beanName, mbd, args) 首先，调用 A 的构造器初始化 A
 <ul>
-<li>addSingletonFactory 把还未初始化变量的A放入<code>singletonFactories</code>中</li>
-<li>populateBean(beanName, mbd, instanceWrapper) 给A对象的字段赋值
+<li>addSingletonFactory 把还未初始化变量的 A 放入 <code>singletonFactories</code> 中</li>
+<li> populateBean (beanName, mbd, instanceWrapper) 给 A 对象的字段赋值
 <ul>
-<li>发现A中需要注入B
+<li>发现 A 中需要注入 B
 <ul>
-<li>getBean() 初始化B
+<li>getBean () 初始化 B
 <ul>
-<li>createBeanInstance(beanName, mbd, args) 调用B的构造器初始化B
+<li>createBeanInstance (beanName, mbd, args) 调用 B 的构造器初始化 B
 <ul>
-<li>addSingletonFactory 把B放入<code>singletonFactories</code>中</li>
-<li>populateBean(beanName, mbd, instanceWrapper)
+<li>addSingletonFactory 把 B 放入 <code>singletonFactories</code> 中</li>
+<li> populateBean(beanName, mbd, instanceWrapper)
 <ul>
-<li>发现B中需要注入A
+<li>发现 B 中需要注入 A
 <ul>
-<li>getBean() 去找A
+<li>getBean () 去找 A
 <ul>
-<li>发现A在<code>singletonFactories</code> 中 ,直接返回A</li>
+<li>发现 A 在 <code>singletonFactories</code> 中，直接返回 A</li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -960,19 +1043,19 @@
 </ul>
 <h4 id="哪些循环依赖是不能被解决的">哪些循环依赖是不能被解决的</h4>
 <p>构造器中的循环依赖是不能被解决的</p>
-<p>因为 Spring 会调用构造器初始化 Bean, 然后才会把 bean 实例放入解决循环依赖的缓存中. 没有了缓存, 执行创建逻辑就会陷入死循环.</p>
-<h4 id="为什么-getbean-的时候要用三级缓存-二级缓存就解决不了吗">为什么 getBean 的时候要用三级缓存, 二级缓存就解决不了吗</h4>
-<p>实际上 <code>singletonFactories</code> 和 <code>earlySingletonObjects</code> 都是暴露bean的早期引用的缓存, 这两者从宏观角度上是可以合二为一的, 但是 Spring 预留了可扩展性, 在 AbstractAutowireCapableBeanFactory 的doCreateBean 方法中,留意如下代码</p>
+<p>因为 Spring 会调用构造器初始化 Bean, 然后才会把 bean 实例放入解决循环依赖的缓存中。没有了缓存，执行创建逻辑就会陷入死循环.</p>
+<h4 id="为什么-getbean-的时候要用三级缓存-二级缓存就解决不了吗">为什么 getBean 的时候要用三级缓存，二级缓存就解决不了吗</h4>
+<p>实际上 <code>singletonFactories</code> 和 <code>earlySingletonObjects</code> 都是暴露 bean 的早期引用的缓存，这两者从宏观角度上是可以合二为一的，但是 Spring 预留了可扩展性，在 AbstractAutowireCapableBeanFactory 的 doCreateBean 方法中，留意如下代码</p>
 <blockquote>
 <p>addSingletonFactory(beanName, () -&gt; getEarlyBeanReference(beanName, mbd, bean));</p>
 </blockquote>
-<p>进入 getEarlyBeanReference 方法中,我们发现对于实现了 SmartInstantiationAwareBeanPostProcessor 接口的 Bean, 会进一步的对bean进行封装处理(比如返回 bean 的代理对象)</p>
-<p>又根据单一职责的设计原则, 早期引用缓存这才被划分为了<code>singletonFactories</code> 和 <code>earlySingletonObjects</code></p>
+<p>进入 getEarlyBeanReference 方法中，我们发现对于实现了 SmartInstantiationAwareBeanPostProcessor 接口的 Bean, 会进一步的对 bean 进行封装处理 (比如返回 bean 的代理对象)</p>
+<p>又根据单一职责的设计原则，早期引用缓存这才被划分为了 <code>singletonFactories</code> 和 <code>earlySingletonObjects</code></p>
 <h4 id="lazy-是如何实现的"><span class="citation" data-cites="Lazy">@Lazy</span> 是如何实现的</h4>
-<p>​ 在解析被 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 时, 会给相应的 BeanDefinition 对象里 lazy 属性设置为 true , 因而在执行初始化单例对象时, 会忽略掉被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean.</p>
-<p>​ 在真正的用到被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean 时, 会直接调用 getBean 执行创建逻辑.</p>
-<p>​ 当 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 被其他组件引用时, <span class="citation" data-cites="Lazy">@Lazy</span> 失效</p>
-<h4 id="springmvc-是如何解析方法中的注解并赋值的">SpringMVC 是如何解析方法中的注解,并赋值的</h4>
+<p>​ 在解析被 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 时，会给相应的 BeanDefinition 对象里 lazy 属性设置为 true , 因而在执行初始化单例对象时，会忽略掉被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean.</p>
+<p>​ 在真正的用到被 <span class="citation" data-cites="Lazy">@Lazy</span> 标注的 Bean 时，会直接调用 getBean 执行创建逻辑.</p>
+<p>​ 当 <span class="citation" data-cites="Lazy">@Lazy</span> 标记的 Bean 被其他组件引用时，<span class="citation" data-cites="Lazy">@Lazy</span> 失效</p>
+<h4 id="springmvc-是如何解析方法中的注解并赋值的">SpringMVC 是如何解析方法中的注解，并赋值的</h4>
 <p>实现 HandlerMethodArgumentResolver</p>
 <h4 id="postconstruct-是如何实现的"><span class="citation" data-cites="PostConstruct">@PostConstruct</span> 是如何实现的</h4>
 <p>CommonAnnotationBeanPostProcessor 是 InitDestroyAnnotationBeanPostProcessor 的子类</p>
@@ -993,14 +1076,14 @@
 <li>doCreateBean
 <ul>
 <li>createBeanInstance 调用构造函数 执行实例化</li>
-<li>populateBean
+<li> populateBean
 <ul>
 <li>执行依赖注入</li>
 </ul></li>
-<li>initializeBean
+<li> initializeBean
 <ul>
 <li>invokeAwareMethods 执行实现了 Aware 接口的方法</li>
-<li>applyBeanPostProcessorsBeforeInitialization 执行 <span class="citation" data-cites="PostConstruct">@PostConstruct</span></li>
+<li> applyBeanPostProcessorsBeforeInitialization 执行 <span class="citation" data-cites="PostConstruct">@PostConstruct</span></li>
 <li>invokeInitMethods
 <ul>
 <li>afterPropertiesSet</li>
@@ -1015,47 +1098,47 @@
 <li>执行依赖注入</li>
 <li>执行 Aware 方法</li>
 <li>执行 <span class="citation" data-cites="PostConstruct">@PostConstruct</span></li>
-<li>执行实现 InitializingBean 的 afterPropertiesSet</li>
-<li>执行自定义的 init 方法</li>
+<li> 执行实现 InitializingBean 的 afterPropertiesSet</li>
+<li> 执行自定义的 init 方法</li>
 </ol>
-<h4 id="同时被事务和-aop-标记的方法-执行顺序是怎样">同时被事务和 AOP 标记的方法, 执行顺序是怎样</h4>
-<p>如果 AOP 的 Aespct 不实现 Order 接口指定顺序, 那么在执行链中是在事务执行链之后, 反之亦然</p>
+<h4 id="同时被事务和-aop-标记的方法-执行顺序是怎样">同时被事务和 AOP 标记的方法，执行顺序是怎样</h4>
+<p>如果 AOP 的 Aespct 不实现 Order 接口指定顺序，那么在执行链中是在事务执行链之后，反之亦然</p>
 <h4 id="postconstuct-是如何实现的"><span class="citation" data-cites="PostConstuct">@PostConstuct</span> 是如何实现的</h4>
 <ul>
 <li>在 populateBean 之后 initializeBean 时</li>
 <li>在 invokeAwareMethods 之后 invokeInitMethods 之前</li>
 <li>执行 beforeInitialization</li>
-<li>由 CommonAnnotationBeanPostProcessor 解析 <span class="citation" data-cites="PostConstuct">@PostConstuct</span> 注解, 找到被标记的方法</li>
+<li> 由 CommonAnnotationBeanPostProcessor 解析 <span class="citation" data-cites="PostConstuct">@PostConstuct</span> 注解，找到被标记的方法</li>
 <li>反射调用</li>
 </ul>
 <h2 id="sourcecode">SourceCode</h2>
 <h3 id="spring-aop">Spring Aop</h3>
 <h4 id="aop-综述">AOP 综述</h4>
 <ul>
-<li>Join Point : 在 Spring Aop 中, Join Point 始终代表一个方法的执行</li>
-<li>Advice : 在 Join point 处执行的动作, before after around 等等</li>
-<li>Pointcut : 匹配 Join point 的表达式</li>
-<li>Weaving : 织入</li>
+<li>Join Point : 在 Spring Aop 中，Join Point 始终代表一个方法的执行</li>
+<li> Advice : 在 Join point 处执行的动作，before after around 等等</li>
+<li> Pointcut : 匹配 Join point 的表达式</li>
+<li> Weaving : 织入</li>
 </ul>
 <h4 id="advice-正常执行顺序">Advice 正常执行顺序</h4>
 <ol type="1">
 <li><span class="citation" data-cites="Around">@Around</span> 的 before</li>
 <li><span class="citation" data-cites="Before">@Before</span></li>
 <li><span class="citation" data-cites="Around">@Around</span> 的 after</li>
-<li><span class="citation" data-cites="After">@After</span> (相当于finally) 用来执行释放资源等操作</li>
-<li><span class="citation" data-cites="AfterReturning">@AfterReturning</span></li>
+<li><span class="citation" data-cites="After">@After</span> (相当于 finally) 用来执行释放资源等操作</li>
+<li><span class="citation" data-cites="AfterReturning"> @AfterReturning</span></li>
 </ol>
 <h4 id="advice-异常执行顺序">Advice 异常执行顺序</h4>
 <ol type="1">
 <li><span class="citation" data-cites="Around">@Around</span> 的 before</li>
 <li><span class="citation" data-cites="Before">@Before</span></li>
-<li><span class="citation" data-cites="After">@After</span> (相当于finally) 用来执行释放资源等操作</li>
-<li><span class="citation" data-cites="AfterThrowing">@AfterThrowing</span></li>
+<li><span class="citation" data-cites="After">@After</span> (相当于 finally) 用来执行释放资源等操作</li>
+<li><span class="citation" data-cites="AfterThrowing"> @AfterThrowing</span></li>
 </ol>
 <h4 id="开启-spring-aop-支持">开启 Spring Aop 支持</h4>
 <p><span class="citation" data-cites="EnableAspectJAutoProxy">@EnableAspectJAutoProxy</span> 此注解会加载 AnnotationAwareAspectJAutoProxyCreator , 类关系图如下</p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5vuernq9kj217s0l274w.jpg" alt="AnnotationAwareAspectJAutoProxyCreator 类图" /><figcaption>AnnotationAwareAspectJAutoProxyCreator 类图</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5vuernq9kj217s0l274w.jpg" alt="AnnotationAwareAspectJAutoProxyCreator 类图"><figcaption>AnnotationAwareAspectJAutoProxyCreator 类图</figcaption>
 </figure>
 <h4 id="开启步骤-annotationawareaspectjautoproxycreator-创建时机">开启步骤 &amp; AnnotationAwareAspectJAutoProxyCreator 创建时机</h4>
 <ul>
@@ -1082,7 +1165,7 @@
 <ul>
 <li>beanFactory.preInstantiateSingletons()
 <ul>
-<li>当容器中<strong>第一个</strong> Bean ( 非BeanPostProcessor 非 BeanFactoryPostProcessor) 被初始化时, 解析 Pointcut 表达式以及切面
+<li>当容器中<strong>第一个</strong> Bean (非 BeanPostProcessor 非 BeanFactoryPostProcessor) 被初始化时，解析 Pointcut 表达式以及切面
 <ul>
 <li>getBean
 <ul>
@@ -1090,15 +1173,15 @@
 <ul>
 <li>AbstractAutoProxyCreator.shouldSkip
 <ul>
-<li>findCandidateAdvisors() 寻找候选通知
+<li>findCandidateAdvisors () 寻找候选通知
 <ul>
 <li>this.aspectJAdvisorsBuilder.buildAspectJAdvisors()
 <ul>
-<li>BeanFactoryUtils.beanNamesForTypeIncludingAncestors() 找出所有的 BeanName</li>
-<li>isEligibleBean<br />
+<li>BeanFactoryUtils.beanNamesForTypeIncludingAncestors () 找出所有的 BeanName</li>
+<li>isEligibleBean<br>
 </li>
 <li>isAspect 类是否被 <span class="citation" data-cites="Aspect">@Aspect</span> 标注</li>
-<li>this.advisorFactory.getAdvisors(factory); 获取此类中所有的 Advisor (已经排序好)
+<li> this.advisorFactory.getAdvisors (factory); 获取此类中所有的 Advisor (已经排序好)
 <ul>
 <li>解析 Pointcut 或者 Advisor 表达式</li>
 </ul></li>
@@ -1114,35 +1197,35 @@
 </ul>
 <h5 id="创建被拦截对象的代理">创建被拦截对象的代理</h5>
 <ul>
-<li>getBean 创建符合 Pointcut 表达式的, 我们自己声明的对象
+<li>getBean 创建符合 Pointcut 表达式的，我们自己声明的对象
 <ul>
 <li>doCreateBean
 <ul>
-<li>populateBean 给bean的属性赋值, 注入依赖的对象等等</li>
-<li>initializeBean 创建目标对象的代理并返回
+<li>populateBean 给 bean 的属性赋值，注入依赖的对象等等</li>
+<li> initializeBean 创建目标对象的代理并返回
 <ul>
-<li>如果目标对象没有实现接口, 返回 cglib 代理对象</li>
-<li>如果目标对象实现接口, 返回 jdk 动态代理对象</li>
+<li>如果目标对象没有实现接口，返回 cglib 代理对象</li>
+<li>如果目标对象实现接口，返回 jdk 动态代理对象</li>
 </ul></li>
 </ul></li>
 </ul></li>
 </ul>
 <h5 id="执行拦截逻辑">执行拦截逻辑</h5>
 <ul>
-<li><p>在调用 applicationContext.getBean 获取我们的业务对象之后 , 返回的是业务对象的代理</p></li>
-<li><p>如果是 cglib 代理对象 , 则执行 DynamicAdvisedInterceptor.intercept 方法</p></li>
-<li><p>如果是 jdk 动态代理, 则执行 JdkDynamicAopProxy.invoke 方法</p>
+<li><p>在调用 applicationContext.getBean 获取我们的业务对象之后，返回的是业务对象的代理</p></li>
+<li><p>如果是 cglib 代理对象，则执行 DynamicAdvisedInterceptor.intercept 方法</p></li>
+<li><p>如果是 jdk 动态代理，则执行 JdkDynamicAopProxy.invoke 方法</p>
 <ul>
-<li>List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass) 获取 aop 将要执行的拦截链(责任链设计模式)
+<li>List<object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice (method, targetClass) 获取 aop 将要执行的拦截链 (责任链设计模式)
 <ul>
 <li>ReflectiveMethodInvocation.proceed()</li>
-</ul></li>
 </ul>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wwxkrqzzj20kv0m00tc.jpg" /></p>
+
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wwxkrqzzj20kv0m00tc.jpg"></p>
 <p><a href="#Advice%20正常执行顺序">Advice 正常执行顺序</a></p>
 <p>为什么先制性 around 的 before 而不是 <span class="citation" data-cites="Before">@Before</span></p>
-<p>​ 答: 因为在执行 around 通知时, 只有调用了 joinPoint 的 proceed() 方法, 才会把 MethodBeforeAdviceInterceptor 加入到调用栈中.</p></li>
-</ul>
+<p>​ 答：因为在执行 around 通知时，只有调用了 joinPoint 的 proceed () 方法，才会把 MethodBeforeAdviceInterceptor 加入到调用栈中.</p>
+
 <h3 id="dogetbean">doGetBean</h3>
 <ul>
 <li>getMergedLocalBeanDefinition(beanName)</li>
@@ -1152,20 +1235,20 @@
 <li>beforeSingletonCreation(beanName)</li>
 <li>singletonFactory.getObject()
 <ul>
-<li>resolveBeforeInstantiation(beanName, mbdToUse) 初始化AOP代理,寻找切面</li>
-<li>doCreateBean(beanName, mbdToUse, args)
+<li>resolveBeforeInstantiation (beanName, mbdToUse) 初始化 AOP 代理，寻找切面</li>
+<li> doCreateBean(beanName, mbdToUse, args)
 <ul>
-<li>addSingletonFactory() 添加到三级缓存 此时还未给属性赋值</li>
-<li>populateBean(beanName, mbd, instanceWrapper) 给属性赋值</li>
-<li>initializeBean(beanName, exposedObject, mbd) 如果是AOP 这里返回代理对象</li>
+<li>addSingletonFactory () 添加到三级缓存 此时还未给属性赋值</li>
+<li> populateBean (beanName, mbd, instanceWrapper) 给属性赋值</li>
+<li> initializeBean (beanName, exposedObject, mbd) 如果是 AOP 这里返回代理对象</li>
 </ul></li>
 </ul></li>
-<li>afterSingletonCreation(beanName)</li>
-<li>addSingleton(beanName, singletonObject) 移除二级缓存 添加到一级缓存</li>
+<li> afterSingletonCreation(beanName)</li>
+<li>addSingleton (beanName, singletonObject) 移除二级缓存 添加到一级缓存</li>
 </ul></li>
 </ul>
 <h3 id="注解驱动解析">注解驱动解析</h3>
-<p>在使用注解驱动AnnotationConfigApplicationContext时,会加载以下 Bean</p>
+<p>在使用注解驱动 AnnotationConfigApplicationContext 时，会加载以下 Bean</p>
 <ul>
 <li><p>ConfigurationClassPostProcessor <code>BeanFactoryPostProcessor</code></p></li>
 <li><p>DefaultEventListenerFactory</p></li>
@@ -1173,14 +1256,14 @@
 <li><p>AutowiredAnnotationBeanPostProcessor <code>BeanPostProcessor</code></p></li>
 <li><p>CommonAnnotationBeanPostProcessor <code>BeanPostProcessor</code></p></li>
 </ul>
-<p>其中,起主要作用的是</p>
+<p>其中，起主要作用的是</p>
 <p><strong>ConfigurationClassPostProcessor</strong></p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx6tv7llj212n0dkq34.jpg" alt="ConfigurationClassPostProcessor" /><figcaption>ConfigurationClassPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx6tv7llj212n0dkq34.jpg" alt="ConfigurationClassPostProcessor"><figcaption>ConfigurationClassPostProcessor</figcaption>
 </figure>
 <ol type="1">
-<li>是<code>BeanFactoryPostProcessor</code> 类型</li>
-<li>负责解析每一个被 <span class="citation" data-cites="Configuration">@Configuration</span> 注解标注的类, 解析的注解如下
+<li> 是 <code>BeanFactoryPostProcessor</code> 类型</li>
+<li>负责解析每一个被 <span class="citation" data-cites="Configuration">@Configuration</span> 注解标注的类，解析的注解如下
 <ul>
 <li><span class="citation" data-cites="PropertySource">@PropertySource</span></li>
 <li><span class="citation" data-cites="ComponentScan">@ComponentScan</span></li>
@@ -1191,27 +1274,27 @@
 </ol>
 <p><strong>AutowiredAnnotationBeanPostProcessor</strong></p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx908d5jj212e0el3yt.jpg" alt="AutowiredAnnotationBeanPostProcessor" /><figcaption>AutowiredAnnotationBeanPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wx908d5jj212e0el3yt.jpg" alt="AutowiredAnnotationBeanPostProcessor"><figcaption>AutowiredAnnotationBeanPostProcessor</figcaption>
 </figure>
 <ol type="1">
-<li><p>是 <code>BeanPostProcessor</code> 类型</p>
+<li><p> 是 <code>BeanPostProcessor</code> 类型</p>
 <ol start="2" type="1">
 <li>负责处理自动装配</li>
 </ol>
 <ul>
-<li><span class="citation" data-cites="Autowired">@Autowired</span></li>
+<li><span class="citation" data-cites="Autowired"> @Autowired</span></li>
 <li><span class="citation" data-cites="Value">@Value</span></li>
 </ul>
 <ol start="3" type="1">
-<li>在 populate 方法执行时被调用</li>
+<li> 在 populate 方法执行时被调用</li>
 </ol></li>
 </ol>
 <p><strong>CommonAnnotationBeanPostProcessor</strong></p>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wxapwtyhj213v0c03ys.jpg" alt="CommonAnnotationBeanPostProcessor" /><figcaption>CommonAnnotationBeanPostProcessor</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g5wxapwtyhj213v0c03ys.jpg" alt="CommonAnnotationBeanPostProcessor"><figcaption>CommonAnnotationBeanPostProcessor</figcaption>
 </figure>
 <ol type="1">
-<li>是 <code>BeanPostProcessor</code> 类型</li>
+<li> 是 <code>BeanPostProcessor</code> 类型</li>
 <li>负责处理一些通用自动装配
 <ul>
 <li><span class="citation" data-cites="WebServiceRef">@WebServiceRef</span></li>
@@ -1230,12 +1313,12 @@
 <p>If you want to implement some custom logic after the Spring container finishes instantiating, configuring, and initializing a bean, you can plug in one or more custom BeanPostProcessor implementations.</p>
 </blockquote>
 <ul>
-<li>如果想改变 Bean 的属性, 则使用 <code>BeanPostProcessor</code></li>
+<li>如果想改变 Bean 的属性，则使用 <code>BeanPostProcessor</code></li>
 <li>如果想改变 BeanDefinition, 则使用 <code>BeanFactoryPostProcessor</code></li>
-<li>比如解析${}表达式并给对象赋值 (典型: 解析配置文件)</li>
-<li>Bean 先被初始化, 然后才执行 <code>PostProcessor</code> 的逻辑</li>
+<li>比如解析 ${} 表达式并给对象赋值 (典型：解析配置文件)</li>
+<li>Bean 先被初始化，然后才执行 <code>PostProcessor</code> 的逻辑</li>
 </ul>
-]]></content>
+</object></li></ul></li></ul>]]></content>
       <categories>
         <category>复习</category>
       </categories>
@@ -1247,26 +1330,26 @@
   <entry>
     <title>ubuntu20.04 安装图神经网络（GNN）相关包</title>
     <url>/2021/03/01/ubuntu20.04_install_gnn/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer" />
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
 <h1 id="ubuntu-20.04-安装图神经网络gnn相关包">ubuntu 20.04 安装图神经网络（GNN）相关包</h1>
 <h2 id="前言">前言</h2>
 <p>做好 Windows、Ubuntu 双系统之后开始安装图神经网络需要的各种包。遇到了各种问题，花了整整一天的时间才最终调试完毕。完美运行代码，没有 error 没有 warning。</p>
 <h2 id="安装显卡驱动略">安装显卡驱动（略）</h2>
 <p>查看显卡驱动是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
-<h2 id="安装anaconda略">安装Anaconda（略）</h2>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="安装anaconda略">安装 Anaconda（略）</h2>
 <p><strong>使用 conda 环境本来是方便包管理，但是安装 pyG 和 torch 必须只能用 pip install，不然会报错（错误内容见 pyG 安装）。</strong></p>
 <p><strong>用 conda 只是图个创建环境方便，一旦使用 pip，以后安装就尽量全部使用 pip，防止包冲突。</strong></p>
 <ul>
-<li><a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">Anaconda清华源</a></li>
+<li><a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">Anaconda 清华源</a></li>
 </ul>
 <span id="more"></span>
 <h2 id="创建-conda-环境">创建 conda 环境</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">conda create -n gnn python=3.7 numpy=1.16.1</span><br><span class="line">conda activate gnn</span><br></pre></td></tr></table></figure>
-<p>注：为什么numpy版本用 1.16.1 呢？</p>
-<p>详见<a href="https://github.com/scikit-image/scikit-image/issues/3655">numpy.ufunc size changed, may indicate binary incompatibility. Expected 216 from C header, got 192 from PyObject.</a></p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">conda create -n gnn python=3.7 numpy=1.16.1</span><br><span class="line">conda activate gnn</span><br></pre></td></tr></tbody></table></figure>
+<p>注：为什么 numpy 版本用 1.16.1 呢？</p>
+<p>详见 <a href="https://github.com/scikit-image/scikit-image/issues/3655">numpy.ufunc size changed, may indicate binary incompatibility. Expected 216 from C header, got 192 from PyObject.</a></p>
 <h2 id="安装-cuda-11.1">安装 CUDA 11.1</h2>
-<p><a href="https://developer.nvidia.com/zh-cn/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=2004&amp;target_type=runfilelocal">安装cuda(要使用runfile方式 用别的会出错)</a></p>
+<p><a href="https://developer.nvidia.com/zh-cn/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=2004&amp;target_type=runfilelocal">安装 cuda (要使用 runfile 方式 用别的会出错)</a></p>
 <p>注：使用 runfile 安装时要取消勾选显卡驱动（既不安装显卡驱动，因为它会自动卸载已安装的显卡驱动，并且安装的驱动可能是很旧的版本），安装完成后要添加环境变量。</p>
 <blockquote>
 <p>Please make sure that</p>
@@ -1275,22 +1358,22 @@
 <li>LD_LIBRARY_PATH includes /usr/local/cuda-11.1/lib64, or, add /usr/local/cuda-11.1/lib64 to /etc/ld.so.conf and run ldconfig as root</li>
 </ul>
 </blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$PATH</span>:/usr/local/cuda-11.1/bin&quot;</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="string">&quot;/usr/local/cuda-11.1/lib64&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="string">"<span class="variable">$PATH</span>:/usr/local/cuda-11.1/bin"</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="string">"/usr/local/cuda-11.1/lib64"</span></span><br></pre></td></tr></tbody></table></figure>
 <h2 id="安装-cudnn略">安装 CUDNN（略）</h2>
-<h2 id="安装torch">安装torch</h2>
+<h2 id="安装torch">安装 torch</h2>
 <ul>
-<li><p>配置pip</p>
-<p><a href="https://mirrors.tuna.tsinghua.edu.cn/help/pypi/">pip清华源</a></p></li>
+<li><p>配置 pip</p>
+<p><a href="https://mirrors.tuna.tsinghua.edu.cn/help/pypi/">pip 清华源</a></p></li>
 <li><p>安装</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install torch==<span class="number">1.7</span><span class="number">.0</span>+cu110 torchvision==<span class="number">0.8</span><span class="number">.1</span>+cu110 torchaudio===<span class="number">0.7</span><span class="number">.0</span> -f https://download.pytorch.org/whl/torch_stable.html</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">pip install torch==<span class="number">1.7</span><span class="number">.0</span>+cu110 torchvision==<span class="number">0.8</span><span class="number">.1</span>+cu110 torchaudio===<span class="number">0.7</span><span class="number">.0</span> -f https://download.pytorch.org/whl/torch_stable.html</span><br></pre></td></tr></tbody></table></figure></li>
 </ul>
 <p><strong><em>版本对应非常重要，一定要注意！！！</em></strong></p>
 <p><strong><em>版本对应非常重要，一定要注意！！！</em></strong></p>
 <p><strong><em>版本对应非常重要，一定要注意！！！</em></strong></p>
 <p><strong><em>版本对应非常重要，一定要注意！！！</em></strong></p>
 <p><strong><em>版本对应非常重要，一定要注意！！！</em></strong></p>
-<h2 id="安装pyg">安装pyG</h2>
-<p>如果采用conda安装会遇到<a href="https://github.com/rusty1s/pytorch_geometric/issues/999">Undefined symbol: _ZN5torch3jit17parseSchemaOrNameERKSs</a>问题</p>
+<h2 id="安装pyg">安装 pyG</h2>
+<p>如果采用 conda 安装会遇到 <a href="https://github.com/rusty1s/pytorch_geometric/issues/999">Undefined symbol: _ZN5torch3jit17parseSchemaOrNameERKSs</a> 问题</p>
 <blockquote>
 <p>I have solved this problem. The reason is that: do not install pytorch via anaconda-navigator ! It will install both cpu and gpu versions, even though you only select the pytorch. You can download the specific version of the pytorch from:</p>
 <p>https://github.com/rusty1s/pytorch_geometric/issues/999</p>
@@ -1302,16 +1385,16 @@
 <p>torch_sparse-0.6.1+cu101-cp38-cp38-linux_x86_64.whl</p>
 <p>torch_spline_conv-1.2.0+cu101-cp38-cp38-linux_x86_64.whl</p>
 </blockquote>
-<p>应采用pip手动安装的方式，同样注意版本号的对应关系</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-geometric</span><br></pre></td></tr></table></figure>
+<p>应采用 pip 手动安装的方式，同样注意版本号的对应关系</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-<span class="number">1.7</span><span class="number">.0</span>+cu110.html</span><br><span class="line">pip install torch-geometric</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="安装-jupyter">安装 jupyter</h2>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">conda install -c conda-forge jupyterlab -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">conda install -c conda-forge jupyterlab -y</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="安装-networkx">安装 networkX</h2>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">conda install -c anaconda networkx -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">conda install -c anaconda networkx -y</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="安装-matplotlib">安装 matplotlib</h2>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">conda install -c conda-forge matplotlib -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">conda install -c conda-forge matplotlib -y</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="简单验证">简单验证</h2>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">a = torch.tensor(<span class="number">1.</span>)</span><br><span class="line">print(<span class="string">&quot;cuda is available: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(torch.cuda.is_available()))</span><br><span class="line">a.cuda()</span><br><span class="line"><span class="keyword">from</span> torch.backends <span class="keyword">import</span> cudnn</span><br><span class="line">print(<span class="string">&quot;cudnn is available: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(cudnn.is_available()))</span><br><span class="line">print(<span class="string">&quot;cudnn is acceptable: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(cudnn.is_acceptable(a.cuda())))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">a = torch.tensor(<span class="number">1.</span>)</span><br><span class="line">print(<span class="string">"cuda is available: {}"</span>.<span class="built_in">format</span>(torch.cuda.is_available()))</span><br><span class="line">a.cuda()</span><br><span class="line"><span class="keyword">from</span> torch.backends <span class="keyword">import</span> cudnn</span><br><span class="line">print(<span class="string">"cudnn is available: {}"</span>.<span class="built_in">format</span>(cudnn.is_available()))</span><br><span class="line">print(<span class="string">"cudnn is acceptable: {}"</span>.<span class="built_in">format</span>(cudnn.is_acceptable(a.cuda())))</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="究极验证">究极验证</h2>
 <p><a href="https://colab.research.google.com/drive/1CILdAekIkIh-AX2EXwZ3ZsZ6VcCbwc0t?usp=sharing">CS224W - Colab 0.ipynb</a></p>
 <p>如果上述代码下载到本地完美运行则代表完美安装成功</p>
@@ -1328,27 +1411,27 @@
   <entry>
     <title>激活函数与梯度的一些思考</title>
     <url>/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer" />
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
 <h1 id="常见激活函数">常见激活函数</h1>
 <h2 id="sigmoid">Sigmoid</h2>
 <p>优点 :</p>
 <ol type="1">
-<li>把函数值压缩到了[0,1]范围内</li>
-<li>have nice interpretation as a staturating &quot;firing rate&quot; of a neuron</li>
+<li>把函数值压缩到了 [0,1] 范围内</li>
+<li> have nice interpretation as a staturating "firing rate" of a neuron</li>
 </ol>
 <p>缺点 :</p>
 <ol type="1">
 <li><p>梯度消失</p>
-<p>当<span class="math inline">\(x\)</span>的值取正负无穷大时，Sigmoid函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为0。</p></li>
-<li><p>输出结果不是&quot;0中心&quot;</p>
+<p>当<span class="math inline"> \(x\)</span> 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。</p></li>
+<li><p>输出结果不是 "0 中心"</p>
 <span id="more"></span></li>
 <li><p>指数函数计算量过大</p></li>
 </ol>
 <h2 id="tanh">tanh</h2>
 <p>优点 :</p>
 <ol type="1">
-<li>把函数值压缩到了[-1,1]内</li>
-<li>输出结果是&quot;0中心&quot;</li>
+<li>把函数值压缩到了 [-1,1] 内</li>
+<li>输出结果是 "0 中心"</li>
 </ol>
 <p>缺点 :</p>
 <ol type="1">
@@ -1358,16 +1441,16 @@
 <p>优点 :</p>
 <ol type="1">
 <li>当 <span class="math inline">\(x &gt; 0\)</span> 时不会出现梯度消失</li>
-<li>计算量小，并且在实践中比sigmoid和tanh收敛速度要快很多</li>
+<li>计算量小，并且在实践中比 sigmoid 和 tanh 收敛速度要快很多</li>
 </ol>
 <p>缺点 :</p>
 <ol type="1">
-<li>输出结果不是&quot;0中心&quot;</li>
-<li>当<span class="math inline">\(x &lt; 0\)</span>时，会出现梯度消失</li>
+<li>输出结果不是 "0 中心"</li>
+<li> 当<span class="math inline"> \(x &lt; 0\)</span> 时，会出现梯度消失</li>
 </ol>
 <h2 id="leakly-relu">Leakly ReLU</h2>
 <h2 id="maxout">Maxout</h2>
-<h2 id="为什么要0中心">为什么要&quot;0中心&quot;</h2>
+<h2 id="为什么要0中心">为什么要 "0 中心"</h2>
 <p><a href="https://stats.stackexchange.com/questions/237169/why-are-non-zero-centered-activation-functions-a-problem-in-backpropagation">why zero centered</a></p>
 <h1 id="参考资料">参考资料</h1>
 <p>[1] <a href="https://en.wikipedia.org/wiki/Activation_function">Activation function</a></p>

@@ -21,14 +21,14 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-<meta name="description" content="JVM 知识整理 Q &amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老">
+<meta name="description" content="JVM 知识整理 Q &amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同，大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程，防止用户线程改变对象的引用. SWEEP - 清除阶段，扫描没有被标记的内存  COMPACT - 整理阶段，给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM 总结">
 <meta property="og:url" content="http://wucf.me/2019/08/15/jvm/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="JVM 知识整理 Q &amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用. SWEEP - 清除阶段, 扫描没有被标记的内存 COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老">
+<meta property="og:description" content="JVM 知识整理 Q &amp; A 为什么会 STW 根据不同的垃圾收集器 STW 的时机也不同，大体上可以分为 3 种  MARK - 标记阶段必须要暂停用户线程，防止用户线程改变对象的引用. SWEEP - 清除阶段，扫描没有被标记的内存  COMPACT - 整理阶段，给对象重新分配内存来减少内存碎片  注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg">
@@ -196,7 +196,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jvm-%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">JVM 知识整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#q-a"><span class="nav-number">1.1.</span> <span class="nav-text">Q &amp; A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A-stw"><span class="nav-number">1.1.1.</span> <span class="nav-text">为什么会 STW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-%E6%94%B6%E9%9B%86%E5%99%A8%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8F%AF%E8%83%BD%E8%A7%A6%E5%8F%91-stw-%E7%9A%84-full-gc"><span class="nav-number">1.1.2.</span> <span class="nav-text">CMS 收集器什么时候可能触发 STW 的 FULL GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%96%B0%E7%94%9F%E4%BB%A3%E5%86%85%E5%AD%98%E4%B8%8D%E5%A4%9F-%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5"><span class="nav-number">1.1.3.</span> <span class="nav-text">如果新生代内存不够, 会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%96%B0%E7%94%9F%E4%BB%A3-gc-%E5%90%8E%E5%86%85%E5%AD%98%E4%BE%9D%E7%84%B6%E4%B8%8D%E5%A4%9F-%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5"><span class="nav-number">1.1.4.</span> <span class="nav-text">如果新生代 GC 后内存依然不够, 会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eden-%E5%8C%BA%E6%89%A7%E8%A1%8C%E5%AE%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B9%8B%E5%90%8E%E4%BC%9A%E6%80%8E%E6%A0%B7"><span class="nav-number">1.1.5.</span> <span class="nav-text">Eden 区执行完垃圾回收之后会怎样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#survivor-%E5%8C%BA%E7%9A%84%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%B0%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84"><span class="nav-number">1.1.6.</span> <span class="nav-text">Survivor 区的对象是如何到老年代的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-%E6%94%B6%E9%9B%86%E5%99%A8%E7%9A%84%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.7.</span> <span class="nav-text">CMS 收集器的标记清除过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">1.1.8.</span> <span class="nav-text">常见的垃圾收集器有哪些</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.2.1.</span> <span class="nav-text">常见虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80"><span class="nav-number">1.2.2.</span> <span class="nav-text">Hotspot 垃圾回收算法基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%85%E5%AD%98"><span class="nav-number">1.2.3.</span> <span class="nav-text">Hotspot 虚拟机内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%B8%B8%E8%A7%81%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-number">1.2.4.</span> <span class="nav-text">Hotspot 虚拟机常见收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%A0%88%E5%B8%A7"><span class="nav-number">1.2.5.</span> <span class="nav-text">关于栈帧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E8%A1%A8"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E6%A0%88"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">动态连接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B-blog"><span class="nav-number">1.3.</span> <span class="nav-text">一些 blog</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jvm-%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">JVM 知识整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#q-a"><span class="nav-number">1.1.</span> <span class="nav-text">Q &amp; A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A-stw"><span class="nav-number">1.1.1.</span> <span class="nav-text">为什么会 STW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-%E6%94%B6%E9%9B%86%E5%99%A8%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8F%AF%E8%83%BD%E8%A7%A6%E5%8F%91-stw-%E7%9A%84-full-gc"><span class="nav-number">1.1.2.</span> <span class="nav-text">CMS 收集器什么时候可能触发 STW 的 FULL GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%96%B0%E7%94%9F%E4%BB%A3%E5%86%85%E5%AD%98%E4%B8%8D%E5%A4%9F-%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5"><span class="nav-number">1.1.3.</span> <span class="nav-text">如果新生代内存不够，会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%96%B0%E7%94%9F%E4%BB%A3-gc-%E5%90%8E%E5%86%85%E5%AD%98%E4%BE%9D%E7%84%B6%E4%B8%8D%E5%A4%9F-%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5"><span class="nav-number">1.1.4.</span> <span class="nav-text">如果新生代 GC 后内存依然不够，会出现什么情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eden-%E5%8C%BA%E6%89%A7%E8%A1%8C%E5%AE%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B9%8B%E5%90%8E%E4%BC%9A%E6%80%8E%E6%A0%B7"><span class="nav-number">1.1.5.</span> <span class="nav-text">Eden 区执行完垃圾回收之后会怎样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#survivor-%E5%8C%BA%E7%9A%84%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%B0%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84"><span class="nav-number">1.1.6.</span> <span class="nav-text">Survivor 区的对象是如何到老年代的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cms-%E6%94%B6%E9%9B%86%E5%99%A8%E7%9A%84%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.7.</span> <span class="nav-text">CMS 收集器的标记清除过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">1.1.8.</span> <span class="nav-text">常见的垃圾收集器有哪些</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.2.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.2.1.</span> <span class="nav-text">常见虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80"><span class="nav-number">1.2.2.</span> <span class="nav-text">Hotspot 垃圾回收算法基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%85%E5%AD%98"><span class="nav-number">1.2.3.</span> <span class="nav-text">Hotspot 虚拟机内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hotspot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%B8%B8%E8%A7%81%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-number">1.2.4.</span> <span class="nav-text">Hotspot 虚拟机常见收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%A0%88%E5%B8%A7"><span class="nav-number">1.2.5.</span> <span class="nav-text">关于栈帧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E8%A1%A8"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E6%A0%88"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">动态连接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B-blog"><span class="nav-number">1.3.</span> <span class="nav-text">一些 blog</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -212,7 +212,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -225,7 +225,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -317,29 +317,29 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="no-referrer">
 <h1 id="jvm-知识整理">JVM 知识整理</h1>
 <h2 id="q-a">Q &amp; A</h2>
 <h3 id="为什么会-stw">为什么会 STW</h3>
-<p>根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种</p>
+<p>根据不同的垃圾收集器 STW 的时机也不同，大体上可以分为 3 种</p>
 <ol type="1">
-<li>MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用.</li>
-<li>SWEEP - 清除阶段, 扫描没有被标记的内存</li>
-<li>COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片</li>
+<li>MARK - 标记阶段必须要暂停用户线程，防止用户线程改变对象的引用.</li>
+<li>SWEEP - 清除阶段，扫描没有被标记的内存</li>
+<li> COMPACT - 整理阶段，给对象重新分配内存来减少内存碎片</li>
 </ol>
-<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max{内存碎片}时, Serial Old GC 会进行碎片整理, 当然这需要花费很多时间.</p>
+<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max {内存碎片} 时，Serial Old GC 会进行碎片整理，当然这需要花费很多时间.</p>
 <span id="more"></span>
-<p>参考<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-惨嚎world">why STW</a></p>
+<p>参考 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16695874/why-does-the-jvm-full-gc-need-to-stop-the-惨嚎world">why STW</a></p>
 <h3 id="cms-收集器什么时候可能触发-stw-的-full-gc">CMS 收集器什么时候可能触发 STW 的 FULL GC</h3>
 <ol type="1">
 <li>Perm 空间不足</li>
-<li>CMS GC 时出现 promotion failed 和 concurrent mode failure（concurrent mode failure 发生的原因一般是CMS正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止 CMS，直接进行Serial Old GC）</li>
+<li> CMS GC 时出现 promotion failed 和 concurrent mode failure（concurrent mode failure 发生的原因一般是 CMS 正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止 CMS，直接进行 Serial Old GC）</li>
 <li>统计得到的 Young GC 晋升到老年代的平均大小大于老年代的剩余空间</li>
-<li>主动触发Full GC（执行jmap -histo:live [pid]）来避免碎片问题</li>
+<li>主动触发 Full GC（执行 jmap -histo:live [pid]）来避免碎片问题</li>
 </ol>
-<h3 id="如果新生代内存不够-会出现什么情况">如果新生代内存不够, 会出现什么情况</h3>
+<h3 id="如果新生代内存不够-会出现什么情况">如果新生代内存不够，会出现什么情况</h3>
 <p>会触发一次 Minor GC</p>
-<h3 id="如果新生代-gc-后内存依然不够-会出现什么情况">如果新生代 GC 后内存依然不够, 会出现什么情况</h3>
+<h3 id="如果新生代-gc-后内存依然不够-会出现什么情况">如果新生代 GC 后内存依然不够，会出现什么情况</h3>
 <blockquote>
 <p>When allocation inside a TLAB is not possible (typically because there’s not enough room there), the allocation moves on to a shared Eden space. If there’s not enough room in there either, a garbage collection process in Young Generation is triggered to free up more space. If the garbage collection also does not result in sufficient free memory inside Eden, then the object is allocated in the Old Generation.</p>
 </blockquote>
@@ -348,28 +348,28 @@
 <blockquote>
 <p>After the marking phase is completed, all the live objects in Eden are copied to one of the Survivor spaces. The whole Eden is now considered to be empty and can be reused to allocate more objects. Such an approach is called “<strong>Mark and Copy</strong>”: the live objects are marked, and then copied (<strong>not moved</strong>) to a survivor space.</p>
 </blockquote>
-<p>Eden区执行完垃圾回收后, 被标记为存活的对象会被 <strong>移动! 移动! 移动!</strong> 到 Survivor 区, 之后 Eden 区会被视作为空</p>
+<p>Eden 区执行完垃圾回收后，被标记为存活的对象会被 <strong>移动！移动！移动！</strong> 到 Survivor 区，之后 Eden 区会被视作为空</p>
 <h3 id="survivor-区的对象是如何到老年代的">Survivor 区的对象是如何到老年代的</h3>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69v0e5kvwj21a80fewfi.jpg"></p>
 <ol type="1">
-<li>每一次 GC 后依然存活的对象年龄会 +1 , Survivor 区年龄到15的对象会直接进入老年代
+<li>每一次 GC 后依然存活的对象年龄会 +1 , Survivor 区年龄到 15 的对象会直接进入老年代
 <ol type="1">
 <li>-XX:+MaxTenuringThreshold 来设置年龄</li>
 </ol></li>
-<li>一些特殊情况下, 会让对象被视作足够老, 从而被移动到老年代
+<li>一些特殊情况下，会让对象被视作足够老，从而被移动到老年代
 <ol type="1">
 <li>Survivor 区没有足够的空间去容纳所有年轻代的存活对象</li>
-<li>动态年龄调整, 当 Survivor 区中相同年龄的对象大小总和 &gt; Survivor 内存的一半时, 将直接进入老年代, 并且年龄阈值也会随之更改</li>
+<li>动态年龄调整，当 Survivor 区中相同年龄的对象大小总和 &gt; Survivor 内存的一半时，将直接进入老年代，并且年龄阈值也会随之更改</li>
 </ol></li>
 </ol>
 <h3 id="cms-收集器的标记清除过程">CMS 收集器的标记清除过程</h3>
 <ol type="1">
 <li>初始标记 (Init-mark)</li>
-<li>并发标记 (Concurrent-mark)</li>
-<li>重新标记 (Remark)</li>
+<li> 并发标记 (Concurrent-mark)</li>
+<li> 重新标记 (Remark)</li>
 </ol>
 <h3 id="常见的垃圾收集器有哪些">常见的垃圾收集器有哪些</h3>
-<p>Java 有4种垃圾收集器(jdk10 之前), JDK11 采用 ZGC</p>
+<p>Java 有 4 种垃圾收集器 (jdk10 之前), JDK11 采用 ZGC</p>
 <ol type="1">
 <li>Serial Garbage Collector S GC</li>
 <li>Parallel Garbage Collector P GC</li>
@@ -385,9 +385,9 @@
 <li>Java 10 - G1 GC</li>
 <li>Java 11 - ZGC</li>
 </ul>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg" /></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg" /></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg" /></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g68s29u7syj20tc0moab2.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69fpa2zq9j211w0gq425.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69g97mw5gj20gy0b4jrx.jpg"></p>
 <h2 id="基础知识">基础知识</h2>
 <h3 id="常见虚拟机">常见虚拟机</h3>
 <ul>
@@ -400,46 +400,46 @@
 <li>找到所有存活对象</li>
 <li>清理没有被使用的对象</li>
 </ul>
-<p><strong>如何找到存活对象呢?</strong></p>
+<p><strong>如何找到存活对象呢？</strong></p>
 <ul>
 <li><p>引用计数器</p>
 <p>难以解决对象循环引用问题</p></li>
 <li><p>对象可达性分析</p>
-<p>要实现可达性分析, 必须要规定一些起始点, 这些起始点叫做 GC Roots</p>
-<p><strong>4种 GC Roots</strong></p>
+<p>要实现可达性分析，必须要规定一些起始点，这些起始点叫做 GC Roots</p>
+<p><strong>4 种 GC Roots</strong></p>
 <ol type="1">
 <li>局部变量</li>
 <li>活跃线程</li>
-<li>java 本地方法</li>
+<li> java 本地方法</li>
 <li>静态变量</li>
 </ol></li>
 </ul>
-<p>通过 GC Roots 找到存活对象之后, 给对象标记为存活, 则堆中剩余其他对象则被视为垃圾</p>
+<p>通过 GC Roots 找到存活对象之后，给对象标记为存活，则堆中剩余其他对象则被视为垃圾</p>
 <p>需要额外注意的点有</p>
 <ol type="1">
-<li>标记阶段为了防止引用被应用所改变, 需要暂停所有用户线程, 也叫作 Stop The World</li>
-<li>标记阶段 STW 所消耗的时间既跟堆大小没关系, 又跟堆中的对象数量没关系. 唯一决定 STW 时间的是堆中存活对象的多少</li>
+<li>标记阶段为了防止引用被应用所改变，需要暂停所有用户线程，也叫作 Stop The World</li>
+<li> 标记阶段 STW 所消耗的时间既跟堆大小没关系，又跟堆中的对象数量没关系。唯一决定 STW 时间的是堆中存活对象的多少</li>
 </ol>
-<p>存活对象标记完成后, 进入清理阶段, 几种常见的清理算法有</p>
+<p>存活对象标记完成后，进入清理阶段，几种常见的清理算法有</p>
 <ol type="1">
 <li>标记 - 复制 (Mark - Copy)
 <ul>
-<li>优点 : 不存在内存碎片</li>
-<li>缺点 : 需要双倍内存用于复制存活对象</li>
+<li>优点：不存在内存碎片</li>
+<li>缺点：需要双倍内存用于复制存活对象</li>
 </ul></li>
 <li>标记 - 删除 (Mark - Sweep)
 <ul>
-<li>优点 : 占用内存较小</li>
-<li>缺点 : 存在大量内存碎片</li>
+<li>优点：占用内存较小</li>
+<li>缺点：存在大量内存碎片</li>
 </ul></li>
 <li>标记 - 整理 (Mark - Sweep - Compact)
 <ul>
-<li>优点 : 占用内存小, 不存在内存碎片</li>
-<li>缺点 : 整理时需要重新分配内存, 消耗大量时间</li>
+<li>优点：占用内存小，不存在内存碎片</li>
+<li>缺点：整理时需要重新分配内存，消耗大量时间</li>
 </ul></li>
 </ol>
 <h3 id="hotspot-虚拟机内存">Hotspot 虚拟机内存</h3>
-<p>在 Hotspot 虚拟机中, 堆内存被划分为了3大部分</p>
+<p>在 Hotspot 虚拟机中，堆内存被划分为了 3 大部分</p>
 <ul>
 <li>新生代 (Young Gen)
 <ul>
@@ -447,31 +447,31 @@
 <ul>
 <li>所有新生成的对象都会被分配到这个区域中</li>
 </ul></li>
-<li>Survivor
+<li> Survivor
 <ul>
 <li>两个区内存空间一样</li>
 <li>同一时间内两个区一定有一个为空</li>
-<li>当 Young Gen 触发 GC 时, Eden 区的存活对象和 Survivor from 中的存活对象都会被复制到 Survivor to 区当中</li>
+<li>当 Young Gen 触发 GC 时，Eden 区的存活对象和 Survivor from 中的存活对象都会被复制到 Survivor to 区当中</li>
 </ul></li>
 </ul></li>
 <li>老年代 (Old / Tenured Gen)</li>
-<li>永久代 (Perm Gen 永久代在 JDK8 之后被 MetaSpace 取代)</li>
+<li> 永久代 (Perm Gen 永久代在 JDK8 之后被 MetaSpace 取代)</li>
 </ul>
 <figure>
-<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory" /><figcaption>Java Heap Memory</figcaption>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g69th8vn7ej217m0fzdge.jpg" alt="Java Heap Memory"><figcaption>Java Heap Memory</figcaption>
 </figure>
-<p>为什么这么划分, 是根据现实场景中对象的生命周期分布来决定的, 大部分对象都是&quot;朝生夕死&quot;. 一般情况下, 经历过数次 GC 依然存活的对象会被分配到老年代中(有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
+<p>为什么这么划分，是根据现实场景中对象的生命周期分布来决定的，大部分对象都是 "朝生夕死". 一般情况下，经历过数次 GC 依然存活的对象会被分配到老年代中 (有例外), 而且不同分代上对应的垃圾回收器也不同.</p>
 <h3 id="hotspot-虚拟机常见收集器">Hotspot 虚拟机常见收集器</h3>
 <ul>
 <li>Serial</li>
 <li>G1</li>
 <li>Parallel</li>
-<li>CMS(只用于老年代垃圾回收)</li>
+<li>CMS (只用于老年代垃圾回收)</li>
 </ul>
 <h3 id="关于栈帧">关于栈帧</h3>
 <ul>
 <li><p>每个栈帧入栈出站都代表一次方法从开始到结束的过程</p></li>
-<li><p>只有位于栈顶的栈帧才是有效的, 这个栈帧叫做当前方法</p></li>
+<li><p>只有位于栈顶的栈帧才是有效的，这个栈帧叫做当前方法</p></li>
 <li><p>栈帧由以下元素组成</p>
 <ul>
 <li>局部变量表</li>
@@ -480,20 +480,20 @@
 <li>返回地址</li>
 <li>....</li>
 </ul>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg" /></p></li>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6f9s7ulndj20mk0fxtdd.jpg"></p></li>
 </ul>
 <h4 id="局部变量表">局部变量表</h4>
 <ol type="1">
-<li>基本单位为 Slot ,虚拟机规范并没有明确规定 Slot 大小</li>
+<li>基本单位为 Slot , 虚拟机规范并没有明确规定 Slot 大小</li>
 <li>必须能存的下 boolean byte char short int float reference returnAddress 类型的数据</li>
-<li>long 与 double 类型被分割存储</li>
+<li> long 与 double 类型被分割存储</li>
 <li>局部变量表的大小在编译时就被完全确定</li>
-<li>对于非静态方法, Slot 的第0位指向的是对象本身, 也就是 this</li>
+<li>对于非静态方法，Slot 的第 0 位指向的是对象本身，也就是 this</li>
 </ol>
 <h4 id="操作数栈">操作数栈</h4>
 <ol type="1">
 <li>编译时确定最大深度</li>
-<li>算术运算是取操作数栈的前两位, 运算结果再入栈</li>
+<li>算术运算是取操作数栈的前两位，运算结果再入栈</li>
 <li>也可以用来调用其他方法时传递参数</li>
 </ol>
 <h4 id="动态连接">动态连接</h4>
@@ -504,7 +504,7 @@
 <table>
 <thead>
 <tr class="header">
-<th>引用</th>
+<th>引用 </th>
 </tr>
 </thead>
 <tbody>
@@ -524,7 +524,7 @@
 <td><a target="_blank" rel="noopener" href="http://psy-lob-saw.blogspot.com/2014/10/the-jvm-write-barrier-card-marking.html">Card Marking 解决老年代引用新生代对象</a></td>
 </tr>
 <tr class="even">
-<td><a target="_blank" rel="noopener" href="https://tech.meituan.com/2017/12/29/jvm-optimize.html">从实际案例聊聊Java应用的GC优化</a></td>
+<td><a target="_blank" rel="noopener" href="https://tech.meituan.com/2017/12/29/jvm-optimize.html">从实际案例聊聊 Java 应用的 GC 优化</a></td>
 </tr>
 <tr class="odd">
 <td><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/library/it-haggar_bytecode/index.html">Java bytecode</a></td>
@@ -553,8 +553,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2019/12/14/SSD/" rel="next" title="浅谈目标检测之SSD">
-                  浅谈目标检测之SSD <i class="fa fa-chevron-right"></i>
+                <a href="/2019/12/14/SSD/" rel="next" title="浅谈目标检测之 SSD">
+                  浅谈目标检测之 SSD <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -619,6 +619,7 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   

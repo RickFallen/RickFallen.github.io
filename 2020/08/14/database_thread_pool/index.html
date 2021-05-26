@@ -23,24 +23,25 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-<meta name="description" content="常见激活函数 Sigmoid 优点 :  把函数值压缩到了 [0,1] 范围内  have nice interpretation as a staturating &quot;firing rate&quot; of a neuron  缺点 :  梯度消失 当 \(x\) 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。 输出结果不是 &quot;0 中心&quot;">
+<meta name="description" content="数据库连接池到底该配多大？ 前言 在我们平时开发中，很少会去改动数据库连接池的配置。偶尔也会看到些文章说线程池不是设置越大越好，比如说：“数据库连接池不要设置的过大”、“设置 100 就够了”。那 100 到底是不是最优解呢，数据库连接设置多少才够用呢？ 少即是多 10 年前，Oracle Real-World Performance 做了一项数据库连接池与查询响应的压力测试，整理成表格如下：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="激活函数与梯度的一些思考">
-<meta property="og:url" content="http://wucf.me/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/index.html">
+<meta property="og:title" content="数据库连接池到底该怎么配">
+<meta property="og:url" content="http://wucf.me/2020/08/14/database_thread_pool/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="常见激活函数 Sigmoid 优点 :  把函数值压缩到了 [0,1] 范围内  have nice interpretation as a staturating &quot;firing rate&quot; of a neuron  缺点 :  梯度消失 当 \(x\) 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。 输出结果不是 &quot;0 中心&quot;">
+<meta property="og:description" content="数据库连接池到底该配多大？ 前言 在我们平时开发中，很少会去改动数据库连接池的配置。偶尔也会看到些文章说线程池不是设置越大越好，比如说：“数据库连接池不要设置的过大”、“设置 100 就够了”。那 100 到底是不是最优解呢，数据库连接设置多少才够用呢？ 少即是多 10 年前，Oracle Real-World Performance 做了一项数据库连接池与查询响应的压力测试，整理成表格如下：">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-13T07:20:50.000Z">
-<meta property="article:modified_time" content="2021-03-02T15:45:32.489Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw7yfhmrkg20je063jr9.gif">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw92rr68wj20go09gq3m.jpg">
+<meta property="article:published_time" content="2020-08-14T14:49:52.000Z">
+<meta property="article:modified_time" content="2021-05-26T16:03:10.845Z">
 <meta property="article:author" content="Chengfu Wu">
-<meta property="article:tag" content="激活函数">
-<meta property="article:tag" content="Activation function">
-<meta property="article:tag" content="梯度消失">
-<meta property="article:tag" content="梯度爆炸">
+<meta property="article:tag" content="database">
+<meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw7yfhmrkg20je063jr9.gif">
 
 
-<link rel="canonical" href="http://wucf.me/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
+<link rel="canonical" href="http://wucf.me/2020/08/14/database_thread_pool/">
 
 
 <script class="page-configurations">
@@ -52,7 +53,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<title>激活函数与梯度的一些思考 | Ricky Wu</title>
+<title>数据库连接池到底该怎么配 | Ricky Wu</title>
   
 
 
@@ -191,7 +192,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">常见激活函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sigmoid"><span class="nav-number">1.1.</span> <span class="nav-text">Sigmoid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tanh"><span class="nav-number">1.2.</span> <span class="nav-text">tanh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#relu"><span class="nav-number">1.3.</span> <span class="nav-text">Relu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leakly-relu"><span class="nav-number">1.4.</span> <span class="nav-text">Leakly ReLU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maxout"><span class="nav-number">1.5.</span> <span class="nav-text">Maxout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%810%E4%B8%AD%E5%BF%83"><span class="nav-number">1.6.</span> <span class="nav-text">为什么要 &quot;0 中心&quot;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E5%88%B0%E5%BA%95%E8%AF%A5%E9%85%8D%E5%A4%9A%E5%A4%A7"><span class="nav-number">1.</span> <span class="nav-text">数据库连接池到底该配多大？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%91%E5%8D%B3%E6%98%AF%E5%A4%9A"><span class="nav-number">1.2.</span> <span class="nav-text">少即是多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E6%B3%95%E9%81%BF%E5%85%8D%E7%9A%84io"><span class="nav-number">1.3.</span> <span class="nav-text">无法避免的 I&#x2F;O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BC%98%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">最优计算公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81%E7%9A%84%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="nav-number">1.5.</span> <span class="nav-text">避免死锁的计算公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -259,7 +260,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wucf.me/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2020/08/14/database_thread_pool/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpg">
@@ -272,7 +273,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          激活函数与梯度的一些思考
+          数据库连接池到底该怎么配
         </h1>
 
         <div class="post-meta-container">
@@ -283,14 +284,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2020-01-13 15:20:50" itemprop="dateCreated datePublished" datetime="2020-01-13T15:20:50+08:00">2020-01-13</time>
+      <time title="创建时间：2020-08-14 22:49:52" itemprop="dateCreated datePublished" datetime="2020-08-14T22:49:52+08:00">2020-08-14</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-03-02 23:45:32" itemprop="dateModified" datetime="2021-03-02T23:45:32+08:00">2021-03-02</time>
+        <time title="修改时间：2021-05-27 00:03:10" itemprop="dateModified" datetime="2021-05-27T00:03:10+08:00">2021-05-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -298,7 +299,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/deep-learning/" itemprop="url" rel="index"><span itemprop="name">deep learning</span></a>
+          <a href="/categories/%E5%A4%8D%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">复习</span></a>
         </span>
     </span>
 
@@ -313,50 +314,76 @@
     
     <div class="post-body" itemprop="articleBody">
         <meta name="referrer" content="no-referrer">
-<h1 id="常见激活函数">常见激活函数</h1>
-<h2 id="sigmoid">Sigmoid</h2>
-<p>优点 :</p>
-<ol type="1">
-<li>把函数值压缩到了 [0,1] 范围内</li>
-<li> have nice interpretation as a staturating "firing rate" of a neuron</li>
-</ol>
-<p>缺点 :</p>
-<ol type="1">
-<li><p>梯度消失</p>
-<p>当<span class="math inline"> \(x\)</span> 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。</p></li>
-<li><p>输出结果不是 "0 中心"</p>
-<span id="more"></span></li>
-<li><p>指数函数计算量过大</p></li>
-</ol>
-<h2 id="tanh">tanh</h2>
-<p>优点 :</p>
-<ol type="1">
-<li>把函数值压缩到了 [-1,1] 内</li>
-<li>输出结果是 "0 中心"</li>
-</ol>
-<p>缺点 :</p>
-<ol type="1">
-<li>仍然会出现梯度消失</li>
-</ol>
-<h2 id="relu">Relu</h2>
-<p>优点 :</p>
-<ol type="1">
-<li>当 <span class="math inline">\(x &gt; 0\)</span> 时不会出现梯度消失</li>
-<li>计算量小，并且在实践中比 sigmoid 和 tanh 收敛速度要快很多</li>
-</ol>
-<p>缺点 :</p>
-<ol type="1">
-<li>输出结果不是 "0 中心"</li>
-<li> 当<span class="math inline"> \(x &lt; 0\)</span> 时，会出现梯度消失</li>
-</ol>
-<h2 id="leakly-relu">Leakly ReLU</h2>
-<h2 id="maxout">Maxout</h2>
-<h2 id="为什么要0中心">为什么要 "0 中心"</h2>
-<p><a target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/237169/why-are-non-zero-centered-activation-functions-a-problem-in-backpropagation">why zero centered</a></p>
+<h1 id="数据库连接池到底该配多大">数据库连接池到底该配多大？</h1>
+<h2 id="前言">前言</h2>
+<p>在我们平时开发中，很少会去改动数据库连接池的配置。偶尔也会看到些文章说线程池不是设置越大越好，比如说：“数据库连接池不要设置的过大”、“设置 100 就够了”。那 100 到底是不是最优解呢，数据库连接设置多少才够用呢？</p>
+<h2 id="少即是多">少即是多</h2>
+<p>10 年前，Oracle Real-World Performance 做了一项数据库连接池与查询响应的压力测试，整理成表格如下：</p>
+<span id="more"></span>
+<table>
+<thead>
+<tr class="header">
+<th>压测线程数</th>
+<th>线程池大小</th>
+<th>队列平均等待时间（单位 ms）</th>
+<th>平均响应时间（单位 ms）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9600</td>
+<td>2048</td>
+<td>33</td>
+<td>77</td>
+</tr>
+<tr class="even">
+<td>9600</td>
+<td>1024</td>
+<td>38</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>9600</td>
+<td>96</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，在硬件条件、软件条件等都不变的情况下，仅仅是减少线程池大小，便获得了数十倍的性能提升。可是为什么呢？原因就在于线程上下文的切换耗费了太多的时间（跟 Java 中 AtomicInteger 乐观锁实现一样，用 CAS 原理进行原子性操作，如果自增、自减操作更新失败则线程自旋，自旋一定次数后会休眠等待。因此当并发量特别大时，自旋的乐观锁反而性能会不好）</p>
+<figure>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw7yfhmrkg20je063jr9.gif" alt="多线程模型"><figcaption>多线程模型</figcaption>
+</figure>
+<p>如图所示，在单核 CPU 下，CPU 通过切换多个线程来执行任务让我们直观感觉任务是在同时进行，实际上同一时间只能有一个线程获得 CPU 资源。因此，单核 CPU 下多个任务按顺序执行一定比多线程 “同时” 执行要快。</p>
+<h2 id="无法避免的io">无法避免的 I/O</h2>
+<p>除了 CPU 线程切换之外，数据库吞吐量还受制于其他资源的限制：</p>
+<ul>
+<li>硬盘</li>
+<li>网络</li>
+</ul>
+<p>如果我们忽略掉 I/O，那么连接池的设置将会非常简单：CPU 几个核心，那么就设置多少线程池数量。8 个核心，线程池数量就设置为 8，16 个核心，线程池数量就设置为 16，以此类推。但是只要是涉及通信，I/O 的影响就不得不考虑在内。数据一般都存放在硬盘上，一般的机械硬盘通过一个读取头在高速旋转的金属碟片寻址、写入，这都要花费一定的时间，在此期间线程只能等待。此时 CPU 可以将那个空闲的核心服务于其他线程。因此，我们可以将线程池的数量设置成比 CPU 数量多一些。</p>
+<p>至于固态硬盘，没有寻址和旋转使其相比机械硬盘有更少的 I/O 时间，所以<strong>对于使用固态硬盘的系统来说线程池数量要小于使用机械硬盘的系统</strong>。</p>
+<p>网络和磁盘类似，通过以太网读取数据时也会形成阻塞，不过相比 CPU 和磁盘，网络并不是首先要考虑的因素。</p>
+<figure>
+<img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1gqw92rr68wj20go09gq3m.jpg" alt="数据库连接池"><figcaption>数据库连接池</figcaption>
+</figure>
+<h2 id="最优计算公式">最优计算公式</h2>
+<p><strong>连接数 = （核心数 * 2）+ 有效磁盘数</strong></p>
+<p>按这个公式，你的 4 核 i7 数据库服务器的连接池大小应该为 ((4 * 2) + 1) = 9，取个整就算是是 10 吧。是不是觉得太小了？跑个性能测试试一下，它能轻松搞定 3000 用户以 6000TPS 的速率并发执行简单查询的场景。如果连接池大小超过 10，你会看到响应时长开始增加，TPS 开始下降。</p>
+<p>很多小规模的 web 应用，通常只有几十个并发用户，却使用着一个 100 连接数的连接池，这样会给应用带来不必要的负担。</p>
+<h2 id="避免死锁的计算公式">避免死锁的计算公式</h2>
+<p>为了避免死锁，池大小的计算是一个相当简单的资源分配公式：</p>
+<p><strong>池大小 = 最大线程数 * （单线程所服务的最大连接数 - 1）+ 1</strong></p>
+<p>比如最多有八个线程，每个线程服务 3 个连接才能执行某些任务，则确保永不发生死锁所需的池大小为：8 * (3 - 1) + 1 = 17</p>
+<p>这个数量不是最优连接池计数量，但是却是避免死锁的最小连接池数量。</p>
+<p>在 HikariCP 中，默认的连接池数量为 10。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_POOL_SIZE = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> maxPoolSize = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (maxPoolSize &lt; <span class="number">1</span>) {</span><br><span class="line">  maxPoolSize = DEFAULT_POOL_SIZE;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="总结">总结</h2>
+<p>线程池的数量不是设置的越多越好，而且遵循着一定的规范，但是又不能太死板，需要根据应用场景（I/O 密集型、CPU 密集型）来把线程池数量调整到某一个适当的范围，如果非要找到一个最优配置，则需要通过压测来一点点的调整了。</p>
 <h1 id="参考资料">参考资料</h1>
-<p>[1] <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Activation_function">Activation function</a></p>
-<p>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_25737169/article/details/78847691">详解机器学习中的梯度消失、爆炸原因及其解决方法</a></p>
-<p>[3] <a target="_blank" rel="noopener" href="https://www.jiqizhixin.com/graph/technologies/1697e627-30e7-48a6-b799-39e2338ffab5">激活函数</a></p>
+<p>[1] <a target="_blank" rel="noopener" href="https://kwahome.medium.com/database-connections-less-is-more-86c406b6fad">Database Connections: Less is More</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing">About Pool Sizing</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xNDnVOCdvQ0">OLTP Performance - Concurrent Mid-Tier Connections</a></p>
 
     </div>
 
@@ -366,23 +393,21 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/" rel="tag"># 激活函数</a>
-              <a href="/tags/Activation-function/" rel="tag"># Activation function</a>
-              <a href="/tags/%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1/" rel="tag"># 梯度消失</a>
-              <a href="/tags/%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8/" rel="tag"># 梯度爆炸</a>
+              <a href="/tags/database/" rel="tag"># database</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2019/12/14/SSD/" rel="prev" title="浅谈目标检测之 SSD">
-                  <i class="fa fa-chevron-left"></i> 浅谈目标检测之 SSD
+                <a href="/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" rel="prev" title="激活函数与梯度的一些思考">
+                  <i class="fa fa-chevron-left"></i> 激活函数与梯度的一些思考
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2020/08/14/database_thread_pool/" rel="next" title="数据库连接池到底该怎么配">
-                  数据库连接池到底该怎么配 <i class="fa fa-chevron-right"></i>
+                <a href="/2021/03/01/ubuntu20.04_install_gnn/" rel="next" title="ubuntu20.04 安装图神经网络（GNN）相关包">
+                  ubuntu20.04 安装图神经网络（GNN）相关包 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -499,9 +524,9 @@
 
 <script>
   var disqus_config = function() {
-    this.page.url = "http://wucf.me/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/";
-    this.page.identifier = "2020/01/13/激活函数与梯度的一些思考/";
-    this.page.title = "激活函数与梯度的一些思考";
+    this.page.url = "http://wucf.me/2020/08/14/database_thread_pool/";
+    this.page.identifier = "2020/08/14/database_thread_pool/";
+    this.page.title = "数据库连接池到底该怎么配";
     };
   NexT.utils.loadComments('#disqus_thread', () => {
     if (window.DISQUS) {

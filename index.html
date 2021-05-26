@@ -21,7 +21,7 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 <meta name="description" content="黄沙百战穿金甲，不破楼兰终不还。">
 <meta property="og:type" content="website">
@@ -200,7 +200,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -213,7 +213,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -304,22 +304,114 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <meta name="referrer" content="no-referrer" />
+          <meta name="referrer" content="no-referrer">
 <h1 id="ubuntu-20.04-安装图神经网络gnn相关包">ubuntu 20.04 安装图神经网络（GNN）相关包</h1>
 <h2 id="前言">前言</h2>
 <p>做好 Windows、Ubuntu 双系统之后开始安装图神经网络需要的各种包。遇到了各种问题，花了整整一天的时间才最终调试完毕。完美运行代码，没有 error 没有 warning。</p>
 <h2 id="安装显卡驱动略">安装显卡驱动（略）</h2>
 <p>查看显卡驱动是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
-<h2 id="安装anaconda略">安装Anaconda（略）</h2>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="安装anaconda略">安装 Anaconda（略）</h2>
 <p><strong>使用 conda 环境本来是方便包管理，但是安装 pyG 和 torch 必须只能用 pip install，不然会报错（错误内容见 pyG 安装）。</strong></p>
 <p><strong>用 conda 只是图个创建环境方便，一旦使用 pip，以后安装就尽量全部使用 pip，防止包冲突。</strong></p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">Anaconda清华源</a></li>
+<li><a target="_blank" rel="noopener" href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">Anaconda 清华源</a></li>
 </ul>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/03/01/ubuntu20.04_install_gnn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2020/08/14/database_thread_pool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chengfu Wu">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ricky Wu">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/08/14/database_thread_pool/" class="post-title-link" itemprop="url">数据库连接池到底该怎么配</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-08-14 22:49:52" itemprop="dateCreated datePublished" datetime="2020-08-14T22:49:52+08:00">2020-08-14</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-05-27 00:03:10" itemprop="dateModified" datetime="2021-05-27T00:03:10+08:00">2021-05-27</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%A4%8D%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">复习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <meta name="referrer" content="no-referrer">
+<h1 id="数据库连接池到底该配多大">数据库连接池到底该配多大？</h1>
+<h2 id="前言">前言</h2>
+<p>在我们平时开发中，很少会去改动数据库连接池的配置。偶尔也会看到些文章说线程池不是设置越大越好，比如说：“数据库连接池不要设置的过大”、“设置 100 就够了”。那 100 到底是不是最优解呢，数据库连接设置多少才够用呢？</p>
+<h2 id="少即是多">少即是多</h2>
+<p>10 年前，Oracle Real-World Performance 做了一项数据库连接池与查询响应的压力测试，整理成表格如下：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/14/database_thread_pool/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -403,19 +495,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <meta name="referrer" content="no-referrer" />
+          <meta name="referrer" content="no-referrer">
 <h1 id="常见激活函数">常见激活函数</h1>
 <h2 id="sigmoid">Sigmoid</h2>
 <p>优点 :</p>
 <ol type="1">
-<li>把函数值压缩到了[0,1]范围内</li>
-<li>have nice interpretation as a staturating &quot;firing rate&quot; of a neuron</li>
+<li>把函数值压缩到了 [0,1] 范围内</li>
+<li> have nice interpretation as a staturating "firing rate" of a neuron</li>
 </ol>
 <p>缺点 :</p>
 <ol type="1">
 <li><p>梯度消失</p>
-<p>当<span class="math inline">\(x\)</span>的值取正负无穷大时，Sigmoid函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为0。</p></li>
-<li><p>输出结果不是&quot;0中心&quot;</p>
+<p>当<span class="math inline"> \(x\)</span> 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。</p></li>
+<li><p>输出结果不是 "0 中心"</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/#more" rel="contents">
@@ -462,7 +554,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/12/14/SSD/" class="post-title-link" itemprop="url">浅谈目标检测之SSD</a>
+          <a href="/2019/12/14/SSD/" class="post-title-link" itemprop="url">浅谈目标检测之 SSD</a>
         </h2>
 
         <div class="post-meta-container">
@@ -502,11 +594,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <meta name="referrer" content="no-referrer" />
-<h1 id="目标检测之ssd">目标检测之SSD</h1>
-<p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是ECCV2016年的一篇文章, 是 one-stage 目标检测模型的代表作之一.</p>
-<p>最近看了很多关于 SSD 的资料, 对 SSD 的来龙去脉也算是有点头绪, 遂打算记录下来, 另外本篇文章不涉及到具体算法, 只是从全局角度上对主要概念做下分析.</p>
-<p>我们知道, Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩, 但是受制于模型本身的 two-stage 架构Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片, 我们知道流畅的视频一般都是 24fps 以上, 因此 Faster R-CNN 还远远达不到实时处理视频的要求.
+          <meta name="referrer" content="no-referrer">
+<h1 id="目标检测之ssd">目标检测之 SSD</h1>
+<p>SSD 全称 <strong>Single Shot MultiBox Detector</strong> 是 ECCV2016 年的一篇文章，是 one-stage 目标检测模型的代表作之一.</p>
+<p>最近看了很多关于 SSD 的资料，对 SSD 的来龙去脉也算是有点头绪，遂打算记录下来，另外本篇文章不涉及到具体算法，只是从全局角度上对主要概念做下分析.</p>
+<p>我们知道，Faster R-CNN 在当时的目标检测领域已经取得了很不错的成绩，但是受制于模型本身的 two-stage 架构 Faster R-CNN 在 VOC2007 数据集上只能达到 7fps 也就是每秒钟处理 7 张图片，我们知道流畅的视频一般都是 24fps 以上，因此 Faster R-CNN 还远远达不到实时处理视频的要求.
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/12/14/SSD/#more" rel="contents">
@@ -593,17 +685,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <meta name="referrer" content="no-referrer" />
+          <meta name="referrer" content="no-referrer">
 <h1 id="jvm-知识整理">JVM 知识整理</h1>
 <h2 id="q-a">Q &amp; A</h2>
 <h3 id="为什么会-stw">为什么会 STW</h3>
-<p>根据不同的垃圾收集器 STW 的时机也不同, 大体上可以分为 3 种</p>
+<p>根据不同的垃圾收集器 STW 的时机也不同，大体上可以分为 3 种</p>
 <ol type="1">
-<li>MARK - 标记阶段必须要暂停用户线程, 防止用户线程改变对象的引用.</li>
-<li>SWEEP - 清除阶段, 扫描没有被标记的内存</li>
-<li>COMPACT - 整理阶段, 给对象重新分配内存来减少内存碎片</li>
+<li>MARK - 标记阶段必须要暂停用户线程，防止用户线程改变对象的引用.</li>
+<li>SWEEP - 清除阶段，扫描没有被标记的内存</li>
+<li> COMPACT - 整理阶段，给对象重新分配内存来减少内存碎片</li>
 </ol>
-<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max{内存碎片}时, Serial Old GC 会进行碎片整理, 当然这需要花费很多时间.</p>
+<p>注: CMS 收集器是不会进行内存整理的 (Compact), 但是当要进入老年代的对象大小 &gt; max {内存碎片} 时，Serial Old GC 会进行碎片整理，当然这需要花费很多时间.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/08/15/jvm/#more" rel="contents">
@@ -690,7 +782,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <meta name="referrer" content="no-referrer" />
+          <meta name="referrer" content="no-referrer">
 <h1 id="spring-mvc-总结">Spring MVC 总结</h1>
 <h2 id="qa">Q&amp;A</h2>
 <h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
@@ -698,7 +790,7 @@
 <blockquote>
 <p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
 </blockquote>
-<p>由此可见, 子容器是可以继承父容器的所有 Bean 的.</p>
+<p>由此可见，子容器是可以继承父容器的所有 Bean 的.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/08/14/spring-mvc/#more" rel="contents">
@@ -785,7 +877,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <meta name="referrer" content="no-referrer" />
+          <meta name="referrer" content="no-referrer">
 <h1 id="spring-core-个人总结">Spring Core 个人总结</h1>
 <h2 id="qa">Q&amp;A</h2>
 <h3 id="spring-framework">Spring Framework</h3>
@@ -831,7 +923,7 @@
 </tr>
 </tbody>
 </table>
-<p>简而言之, BeanFactory 只是加载了需要注入的 bean 而已,并没有注册后置处理器以及其他消息和事件管理</p>
+<p>简而言之，BeanFactory 只是加载了需要注入的 bean 而已，并没有注册后置处理器以及其他消息和事件管理</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/08/14/spring/#more" rel="contents">
@@ -878,7 +970,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/01/29/ml-ex3/" class="post-title-link" itemprop="url">吴恩达ml课程编程作业 machine-learning-ex3</a>
+          <a href="/2019/01/29/ml-ex3/" class="post-title-link" itemprop="url">吴恩达 ml 课程编程作业 machine-learning-ex3</a>
         </h2>
 
         <div class="post-meta-container">
@@ -913,8 +1005,8 @@
     
     <div class="post-body" itemprop="articleBody">
           <h2 id="lrcostfunction.m">lrCostFunction.m</h2>
-<p>  这道题在上一个练习里已经做过,不再赘述:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) +  lambda &#x2F; (2 * m) * sum(theta(2:end) .^ 2);</span><br><span class="line"></span><br><span class="line">theta_tmp &#x3D; theta;</span><br><span class="line">theta_tmp(1) &#x3D; 0;</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_tmp;</span><br></pre></td></tr></table></figure>
+<p>  这道题在上一个练习里已经做过，不再赘述:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h)) +  lambda / (2 * m) * sum(theta(2:end) .^ 2);</span><br><span class="line"></span><br><span class="line">theta_tmp = theta;</span><br><span class="line">theta_tmp(1) = 0;</span><br><span class="line">grad = 1 / m * (X' * (h - y)) + lambda / m * theta_tmp;</span><br></pre></td></tr></tbody></table></figure>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/01/29/ml-ex3/#more" rel="contents">
@@ -961,7 +1053,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/01/28/ml-ex2/" class="post-title-link" itemprop="url">吴恩达ml课程编程作业 machine-learning-ex2</a>
+          <a href="/2019/01/28/ml-ex2/" class="post-title-link" itemprop="url">吴恩达 ml 课程编程作业 machine-learning-ex2</a>
         </h2>
 
         <div class="post-meta-container">
@@ -996,7 +1088,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h2 id="sigmoid.m">sigmoid.m</h2>
-<p>第一题比较简单,让我们实现Sigmoid函数,函数如下: <span class="math display">\[
+<p>第一题比较简单，让我们实现 Sigmoid 函数，函数如下: <span class="math display">\[
     g(z)=\frac{1}{1+e^{-z}}
 \]</span></p>
           <!--noindex-->
@@ -1111,98 +1203,9 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/01/22/ml-ex1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpg">
-      <meta itemprop="name" content="Chengfu Wu">
-      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ricky Wu">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/01/22/ml-ex1/" class="post-title-link" itemprop="url">吴恩达ml课程编程作业 machine-learning-ex1</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-01-22 19:49:52" itemprop="dateCreated datePublished" datetime="2019-01-22T19:49:52+08:00">2019-01-22</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2019-01-28 23:46:19" itemprop="dateModified" datetime="2019-01-28T23:46:19+08:00">2019-01-28</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/ml%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/" itemprop="url" rel="index"><span itemprop="name">ml编程作业</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="warmupexercise.m">warmUpExercise.m</h2>
-<p>第一题很简单,跟标题一样,是个热身题.要求生成一个5x5的单位矩阵</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; eye(5);</span><br></pre></td></tr></table></figure>
-<p>完成</p>
-<h2 id="computecost.m-计算单变量代价函数">computeCost.m (计算单变量代价函数)</h2>
-<p>回想一下我们的单变量hypothesis公式
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/01/22/ml-ex1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 <script>
@@ -1251,6 +1254,7 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   

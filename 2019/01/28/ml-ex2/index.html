@@ -21,14 +21,14 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
-<meta name="description" content="sigmoid.m 第一题比较简单,让我们实现Sigmoid函数,函数如下: \[     g(z)&#x3D;\frac{1}{1+e^{-z}} \]">
+<meta name="description" content="sigmoid.m 第一题比较简单，让我们实现 Sigmoid 函数，函数如下: \[     g(z)&#x3D;\frac{1}{1+e^{-z}} \]">
 <meta property="og:type" content="article">
-<meta property="og:title" content="吴恩达ml课程编程作业 machine-learning-ex2">
+<meta property="og:title" content="吴恩达 ml 课程编程作业 machine-learning-ex2">
 <meta property="og:url" content="http://wucf.me/2019/01/28/ml-ex2/index.html">
 <meta property="og:site_name" content="Ricky Wu">
-<meta property="og:description" content="sigmoid.m 第一题比较简单,让我们实现Sigmoid函数,函数如下: \[     g(z)&#x3D;\frac{1}{1+e^{-z}} \]">
+<meta property="og:description" content="sigmoid.m 第一题比较简单，让我们实现 Sigmoid 函数，函数如下: \[     g(z)&#x3D;\frac{1}{1+e^{-z}} \]">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://wucf.me/images/ex2-submit.png">
 <meta property="article:published_time" content="2019-01-28T15:49:52.000Z">
@@ -55,7 +55,7 @@
     lang   : 'zh-CN'
   };
 </script>
-<title>吴恩达ml课程编程作业 machine-learning-ex2 | Ricky Wu</title>
+<title>吴恩达 ml 课程编程作业 machine-learning-ex2 | Ricky Wu</title>
   
 
 
@@ -210,7 +210,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -223,7 +223,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -275,7 +275,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          吴恩达ml课程编程作业 machine-learning-ex2
+          吴恩达 ml 课程编程作业 machine-learning-ex2
         </h1>
 
         <div class="post-meta-container">
@@ -310,55 +310,55 @@
     
     <div class="post-body" itemprop="articleBody">
         <h2 id="sigmoid.m">sigmoid.m</h2>
-<p>第一题比较简单,让我们实现Sigmoid函数,函数如下: <span class="math display">\[
+<p>第一题比较简单，让我们实现 Sigmoid 函数，函数如下: <span class="math display">\[
     g(z)=\frac{1}{1+e^{-z}}
 \]</span></p>
 <span id="more"></span>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g &#x3D; 1 .&#x2F; (1 + exp(-z));</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g = 1 ./ (1 + exp(-z));</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="costfunction.m-逻辑回归的代价函数">costFunction.m (逻辑回归的代价函数)</h2>
-<p>逻辑回归的hypothesis函数如下</p>
+<p>逻辑回归的 hypothesis 函数如下</p>
 <p><span class="math display">\[
     h_\theta(x)=g(\theta^Tx)
 \]</span></p>
-<p>其中<span class="math inline">\(g\)</span>就是我们刚才实现的sigmoid函数,逻辑回归的代价函数如下:</p>
+<p>其中<span class="math inline"> \(g\)</span> 就是我们刚才实现的 sigmoid 函数，逻辑回归的代价函数如下:</p>
 <p><span class="math display">\[
     J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)})))
 \]</span></p>
-<p>为什么这么复杂呢...因为这个函数可以把我们的代价函数变成非凸函数(non-convex),这样在求导的时候就不会出现local minimum</p>
-<p>有了ex-1的基础,用octave/matlib实现也不是那么困难了,代码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h));</span><br></pre></td></tr></table></figure>
+<p>为什么这么复杂呢... 因为这个函数可以把我们的代价函数变成非凸函数 (non-convex), 这样在求导的时候就不会出现 local minimum</p>
+<p>有了 ex-1 的基础，用 octave/matlib 实现也不是那么困难了，代码如下</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h));</span><br></pre></td></tr></tbody></table></figure>
 <p>逻辑回归的梯度下降与线性回归的梯度下降公式长的一样:</p>
 <p><span class="math display">\[
     \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
 \]</span></p>
-<p>注:下标<span class="math inline">\(j\)</span>代表第几个特征</p>
-<p>需要注意的是,虽然它们公式长的一样,但是注意<span class="math inline">\(h_\theta(x)\)</span>的实现方式是不同的,代码实现如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y));</span><br></pre></td></tr></table></figure>
+<p>注：下标<span class="math inline"> \(j\)</span> 代表第几个特征</p>
+<p>需要注意的是，虽然它们公式长的一样，但是注意<span class="math inline"> \(h_\theta(x)\)</span> 的实现方式是不同的，代码实现如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grad = 1 / m * (X' * (h - y));</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
 <h2 id="predict.m">predict.m</h2>
-<p>也是一道简单的题,直接上结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">p &#x3D; h &gt;&#x3D; 0.5;</span><br></pre></td></tr></table></figure>
+<p>也是一道简单的题，直接上结果</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">p = h &gt;= 0.5;</span><br></pre></td></tr></tbody></table></figure>
 <h2 id="costfunctionreg.m">costFunctionReg.m</h2>
-<p>这道题主要是代价函数的正则化,用来解决过拟合(over-fitting)的问题,算法如下:</p>
+<p>这道题主要是代价函数的正则化，用来解决过拟合 (over-fitting) 的问题，算法如下:</p>
 <p><span class="math display">\[
     J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))) + \frac{\lambda}{2m}\sum_{j=1}^{n}\theta_j^2
 \]</span></p>
-<p>其中<span class="math inline">\(m\)</span>代表数据的条数,<span class="math inline">\(n\)</span>代表特征个数,需要注意的是,正则化是不包括<span class="math inline">\(\theta_0\)</span>的</p>
-<p>关于向量的平方和已经在上一篇ex-1中介绍过了,因此代码实现如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">h &#x3D; sigmoid(X * theta);</span><br><span class="line">theta_temp &#x3D; theta(2:end);</span><br><span class="line">J &#x3D; -1 &#x2F; m * (y&#39; * log(h) + (1 - y)&#39; * log(1 - h)) + lambda &#x2F; (2 * m) * sum(theta_temp .^ 2);</span><br></pre></td></tr></table></figure>
-<p>接下来就要计算梯度值了,跟计算代价函数一样,计算梯度值的时候对<span class="math inline">\(\theta_0\)</span>不做正则化处理</p>
+<p>其中<span class="math inline"> \(m\)</span> 代表数据的条数，<span class="math inline">\(n\)</span> 代表特征个数，需要注意的是，正则化是不包括<span class="math inline"> \(\theta_0\)</span> 的</p>
+<p>关于向量的平方和已经在上一篇 ex-1 中介绍过了，因此代码实现如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">h = sigmoid(X * theta);</span><br><span class="line">theta_temp = theta(2:end);</span><br><span class="line">J = -1 / m * (y' * log(h) + (1 - y)' * log(1 - h)) + lambda / (2 * m) * sum(theta_temp .^ 2);</span><br></pre></td></tr></tbody></table></figure>
+<p>接下来就要计算梯度值了，跟计算代价函数一样，计算梯度值的时候对<span class="math inline"> \(\theta_0\)</span> 不做正则化处理</p>
 <p><span class="math display">\[
     \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}
 \]</span></p>
-<p>对于<span class="math inline">\(\theta_0\)</span>之外的参数,需要加上正则化处理</p>
+<p>对于<span class="math inline"> \(\theta_0\)</span> 之外的参数，需要加上正则化处理</p>
 <p><span class="math display">\[
 \frac{\partial}{\partial\theta}J(\theta)=\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})x_j^{(i)}+\frac{\lambda}{m}\theta_j
 \]</span></p>
-<p>因此,在计算的时候,我们可以手动的给<span class="math inline">\(\theta_0\)</span>赋值为0,这样就可以用一个公式来计算,不用判断是否为<span class="math inline">\(\theta_0\)</span>,计算梯度的代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">theta_temp &#x3D; [0;theta_temp];</span><br><span class="line">grad &#x3D; 1 &#x2F; m * (X&#39; * (h - y)) + lambda &#x2F; m * theta_temp;</span><br></pre></td></tr></table></figure>
+<p>因此，在计算的时候，我们可以手动的给<span class="math inline"> \(\theta_0\)</span> 赋值为 0, 这样就可以用一个公式来计算，不用判断是否为<span class="math inline"> \(\theta_0\)</span>, 计算梯度的代码如下:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">theta_temp = [0;theta_temp];</span><br><span class="line">grad = 1 / m * (X' * (h - y)) + lambda / m * theta_temp;</span><br></pre></td></tr></tbody></table></figure>
 <p>完成</p>
-<p><img data-src="/images/ex2-submit.png" /></p>
+<p><img data-src="/images/ex2-submit.png"></p>
 
     </div>
 
@@ -384,8 +384,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2019/01/29/ml-ex3/" rel="next" title="吴恩达ml课程编程作业 machine-learning-ex3">
-                  吴恩达ml课程编程作业 machine-learning-ex3 <i class="fa fa-chevron-right"></i>
+                <a href="/2019/01/29/ml-ex3/" rel="next" title="吴恩达 ml 课程编程作业 machine-learning-ex3">
+                  吴恩达 ml 课程编程作业 machine-learning-ex3 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -450,6 +450,7 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -503,7 +504,7 @@
   var disqus_config = function() {
     this.page.url = "http://wucf.me/2019/01/28/ml-ex2/";
     this.page.identifier = "2019/01/28/ml-ex2/";
-    this.page.title = "吴恩达ml课程编程作业 machine-learning-ex2";
+    this.page.title = "吴恩达 ml 课程编程作业 machine-learning-ex2";
     };
   NexT.utils.loadComments('#disqus_thread', () => {
     if (window.DISQUS) {
