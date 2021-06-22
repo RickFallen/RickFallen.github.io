@@ -17,10 +17,10 @@
   --btn-default-hover-bg: #222;
   --btn-default-hover-color: #fff;
   --btn-default-hover-border-color: #222;
-  --highlight-background: #282b2e;
-  --highlight-foreground: #a9b7c6;
-  --highlight-gutter-background: #34393d;
-  --highlight-gutter-foreground: #9ca9b6;
+  --highlight-background: #2b303b;
+  --highlight-foreground: #c0c5ce;
+  --highlight-gutter-background: #393e49;
+  --highlight-gutter-foreground: #b1b6bf;
 }
 html {
   line-height: 1.15; /* 1 */
@@ -359,63 +359,71 @@ td {
   top: -5px;
   transform: rotate(-45deg);
 }
-/*
-Date: 24 Fev 2015
-Author: Pedro Oliveira <kanytu@gmail . com>
-*/
+/* Ocean Dark Theme */
+/* https://github.com/gavsiu */
+/* Original theme - https://github.com/chriskempson/base16 */
 
-.hljs {
-  color: #a9b7c6;
-  background: #282b2e;
-  display: block;
-  overflow-x: auto;
-  padding: 0.5em;
-}
-
-.hljs-number,
-.hljs-literal,
-.hljs-symbol,
-.hljs-bullet {
-  color: #6897BB;
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-deletion {
-  color: #cc7832;
-}
-
-.hljs-variable,
-.hljs-template-variable,
-.hljs-link {
-  color: #629755;
-}
-
+/* Ocean Comment */
 .hljs-comment,
 .hljs-quote {
-  color: #808080;
+  color: #65737e;
 }
 
-.hljs-meta {
-  color: #bbb529;
-}
-
-.hljs-string,
-.hljs-attribute,
-.hljs-addition {
-  color: #6A8759;
-}
-
-.hljs-section,
-.hljs-title,
-.hljs-type {
-  color: #ffc66d;
-}
-
+/* Ocean Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
 .hljs-name,
 .hljs-selector-id,
-.hljs-selector-class {
-  color: #e8bf6a;
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #bf616a;
+}
+
+/* Ocean Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #d08770;
+}
+
+/* Ocean Yellow */
+.hljs-attribute {
+  color: #ebcb8b;
+}
+
+/* Ocean Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #a3be8c;
+}
+
+/* Ocean Blue */
+.hljs-title,
+.hljs-section {
+  color: #8fa1b3;
+}
+
+/* Ocean Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b48ead;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2b303b;
+  color: #c0c5ce;
+  padding: 0.5em;
 }
 
 .hljs-emphasis {
@@ -1282,6 +1290,76 @@ pre code {
 }
 .use-motion .menu-item {
   visibility: hidden;
+}
+.github-corner :hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+.github-corner svg {
+  color: #fff;
+  fill: #222;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+@media (max-width: 991px) {
+  .github-corner {
+    display: none;
+  }
+  .github-corner svg {
+    color: #222;
+    fill: #fff;
+  }
+  .github-corner .github-corner:hover .octo-arm {
+    animation: none;
+  }
+  .github-corner .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
+}
+@-moz-keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
+}
+@-webkit-keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
+}
+@-o-keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
+}
+@keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
 }
 .sidebar-inner {
   color: #999;

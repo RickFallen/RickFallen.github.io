@@ -154,6 +154,56 @@
       </tags>
   </entry>
   <entry>
+    <title>GNN 入门必读 Paper</title>
+    <url>/2021/03/11/gnn/</url>
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
+<h1 id="gnn入门资料持续整理中">GNN 入门资料（持续整理中）</h1>
+<h2 id="文献综述">文献综述</h2>
+<ol type="1">
+<li><p><strong>Introduction to Graph Neural Networks.</strong> Synthesis Lectures on Artificial Intelligence and Machine Learning, Morgan &amp; Claypool Publishers, 2020. <a href="https://www.morganclaypool.com/doi/10.2200/S00980ED1V01Y202001AIM045">book</a></p>
+<p><em>Zhiyuan Liu, Jie Zhou.</em></p></li>
+<li><p><strong>Graph Neural Networks: A Review of Methods and Applications.</strong> AI Open 2020. <a href="https://doi.org/10.1016/j.aiopen.2021.01.001">paper</a></p>
+<p><em>Jie Zhou, Ganqu Cui, Zhengyan Zhang, Cheng Yang, Zhiyuan Liu, Maosong Sun.</em></p></li>
+<li><p><strong>A Comprehensive Survey on Graph Neural Networks.</strong> arxiv 2019. <a href="https://arxiv.org/pdf/1901.00596.pdf">paper</a></p>
+<p><em>Zonghan Wu, Shirui Pan, Fengwen Chen, Guodong Long, Chengqi Zhang, Philip S. Yu.</em></p>
+<span id="more"></span></li>
+<li><p><strong>Adversarial Attack and Defense on Graph Data: A Survey.</strong> arxiv 2018. <a href="https://arxiv.org/pdf/1812.10528.pdf">paper</a></p>
+<p><em>Lichao Sun, Yingtong Dou, Carl Yang, Ji Wang, Philip S. Yu, Bo Li.</em></p></li>
+<li><p><strong>Deep Learning on Graphs: A Survey.</strong> arxiv 2018. <a href="https://arxiv.org/pdf/1812.04202.pdf">paper</a></p>
+<p><em>Ziwei Zhang, Peng Cui, Wenwu Zhu.</em></p></li>
+<li><p><strong>Relational Inductive Biases, Deep Learning, and Graph Networks.</strong> arxiv 2018. <a href="https://arxiv.org/pdf/1806.01261.pdf">paper</a></p>
+<p><em>Battaglia, Peter W and Hamrick, Jessica B and Bapst, Victor and Sanchez-Gonzalez, Alvaro and Zambaldi, Vinicius and Malinowski, Mateusz and Tacchetti, Andrea and Raposo, David and Santoro, Adam and Faulkner, Ryan and others.</em></p></li>
+<li><p><strong>Geometric Deep Learning: Going beyond Euclidean data.</strong> IEEE SPM 2017. <a href="https://arxiv.org/pdf/1611.08097.pdf">paper</a></p>
+<p><em>Bronstein, Michael M and Bruna, Joan and LeCun, Yann and Szlam, Arthur and Vandergheynst, Pierre.</em></p></li>
+<li><p><strong>Computational Capabilities of Graph Neural Networks.</strong> IEEE TNN 2009. <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=4703190">paper</a></p>
+<p><em>Scarselli, Franco and Gori, Marco and Tsoi, Ah Chung and Hagenbuchner, Markus and Monfardini, Gabriele.</em></p></li>
+<li><p><strong>Neural Message Passing for Quantum Chemistry.</strong> ICML 2017. <a href="https://arxiv.org/pdf/1704.01212.pdf">paper</a></p>
+<p><em>Gilmer, Justin and Schoenholz, Samuel S and Riley, Patrick F and Vinyals, Oriol and Dahl, George E.</em></p></li>
+<li><p><strong>Non-local Neural Networks.</strong> CVPR 2018. <a href="http://openaccess.thecvf.com/content_cvpr_2018/papers/Wang_Non-Local_Neural_Networks_CVPR_2018_paper.pdf">paper</a></p>
+<p><em>Wang, Xiaolong and Girshick, Ross and Gupta, Abhinav and He, Kaiming.</em></p></li>
+<li><p><strong>The Graph Neural Network Model.</strong> IEEE TNN 2009. <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=4700287">paper</a></p>
+<p><em>Scarselli, Franco and Gori, Marco and Tsoi, Ah Chung and Hagenbuchner, Markus and Monfardini, Gabriele.</em></p></li>
+<li><p><strong>Benchmarking Graph Neural Networks.</strong> arxiv 2020. <a href="https://arxiv.org/pdf/2003.00982.pdf">paper</a></p>
+<p><em>Dwivedi, Vijay Prakash and Joshi, Chaitanya K. and Laurent, Thomas and Bengio, Yoshua and Bresson, Xavier.</em></p></li>
+<li><p><strong>Foundations and modelling of dynamic networks using Dynamic Graph Neural Networks: A survey.</strong> arxiv 2020. <a href="https://arxiv.org/abs/2005.07496">paper</a></p>
+<p><em>Skarding, Joakim and Gabrys, Bogdan and Musial, Katarzyna.</em></p></li>
+<li><p><strong>Bridging the Gap between Spatial and Spectral Domains: A Survey on Graph Neural Networks.</strong> arxiv 2020. <a href="https://arxiv.org/abs/2002.11867">paper</a></p>
+<p><em>Zhiqian Chen, Fanglan Chen, Lei Zhang, Taoran Ji, Kaiqun Fu, Liang Zhao, Feng Chen, Chang-Tien Lu.</em></p></li>
+</ol>
+<h2 id="网课">网课</h2>
+<ol type="1">
+<li><a href="http://web.stanford.edu/class/cs224w/">CS224W</a></li>
+<li><a href="https://www.youtube.com/playlist?list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn">CS224W: Machine Learning with Graphs | 2021</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>GNN</category>
+      </categories>
+      <tags>
+        <tag>入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM 总结</title>
     <url>/2019/08/15/jvm/</url>
     <content><![CDATA[<meta name="referrer" content="no-referrer">
@@ -644,6 +694,304 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring MVC 总结</title>
+    <url>/2019/08/14/spring-mvc/</url>
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
+<h1 id="spring-mvc-总结">Spring MVC 总结</h1>
+<h2 id="qa">Q&amp;A</h2>
+<h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
+<p>Spring 官方文档的一张图就很好诠释了父子容器</p>
+<blockquote>
+<p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
+</blockquote>
+<p>由此可见，子容器是可以继承父容器的所有 Bean 的.</p>
+<span id="more"></span>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg"></p>
+<ol type="1">
+<li>在 web.xml 中，ContextLoaderListener 会初始化父容器
+<ol type="1">
+<li>创建 ConfigurableWebApplicationContext
+<ul>
+<li>configureAndRefreshWebApplicationContext</li>
+<li> 喜闻乐见的 refresh 方法，开始创建 IOC 容器</li>
+</ul></li>
+<li>父容器创建完成之后，创建 DispatcherServlet
+<ul>
+<li>执行 Servlet 的 init</li>
+<li> 执行 initServletBean</li>
+<li>initWebApplicationContext</li>
+<li>setParent</li>
+<li>configureAndRefreshWebApplicationContext</li>
+<li> 喜闻乐见的 refresh 方法，开始创建 IOC 容器</li>
+</ul></li>
+</ol></li>
+</ol>
+<h3 id="只有子容器-没有父容器可以吗">只有子容器，没有父容器可以吗</h3>
+<p>当然可以</p>
+<h3 id="spring-mvc-如何实现注解自动装配">Spring MVC 如何实现注解自动装配</h3>
+<ol type="1">
+<li>要实现自动装配，必须借助于 Servlet 的 SPI
+<ol type="1">
+<li>SPI 要求我们必须在 META-INF.services 包下指定实现 ServletContainerInitializer 接口的类</li>
+<li> spring-web 包就已经提供了这个实现叫做 SpringServletContainerInitializer</li>
+</ol></li>
+<li> 阅读 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span> 源码可知，Spring 已经给我们默认提供了几个 <code>WebApplicationInitialize</code> 实现
+<ul>
+<li>AbstractContextLoaderInitializer</li>
+<li>AbstractDispatcherServletInitializer</li>
+<li>AbstractAnnotationConfigDispatcherServletInitializer</li>
+</ul></li>
+<li> 我们只需要实现 AbstractAnnotationConfigDispatcherServletInitializer 即可
+<ol type="1">
+<li>指定 RootConfigClass 也就是父容器 (可不指定)</li>
+<li> 指定 ServletConfigClass</li>
+<li> 指定拦截路径</li>
+</ol></li>
+</ol>
+<p>有了自动装配，我们就可以使用 java 编程的方式实现 web 开发，不需要任何的 xml 文件 (包括 web.xml)</p>
+<h3 id="spring-boot-如何实现自动装配">Spring Boot 如何实现自动装配</h3>
+<ol type="1">
+<li>前端控制器装配 : DispatcherServletAutoConfiguration</li>
+<li> 配置装配 : WebMvcAutoConfiguration 替换 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span></li>
+<li>Servlet 容器装配 : ServletWebServerFactoryAutoConfiguration</li>
+</ol>
+<h2 id="基础知识">基础知识</h2>
+<h3 id="spring-web-mvc-架构">Spring Web MVC 架构</h3>
+<p><a href="http://www.corej2eepatterns.com/FrontController.htm">前端控制器模式</a></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg"></p>
+<h3 id="mvc-核心组件">MVC 核心组件</h3>
+<table>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Bean 类型</th>
+<th style="text-align: left;">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"> HandlerMapping</td>
+<td style="text-align: left;"> 映射请求（Request）到处理器（Handler）加上其关联的拦截器（HandlerInterceptor）列表，其映射关系基于不同的 HandlerMapping 实现的一些标准细节。其中两种主要 HandlerMapping 实现， RequestMappingHandlerMapping 支持标注 <span class="citation" data-cites="RequestMapping">@RequestMapping</span> 的方法， SimpleUrlHandlerMapping 维护精确的 URI 路径与处理器的映射</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"> HandlerAdapter</td>
+<td style="text-align: left;"> 帮助 DispatcherServlet 调用请求处理器（Handler），无需关注其中实际的调用细节。比如，调用注解实现的 Controller 需要解析其关联的注解. HandlerAdapter 的主要目的是为了屏蔽与 DispatcherServlet 之间的诸多细节。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-exceptionhandlers">HandlerExceptionResolver</a></td>
+<td style="text-align: left;"> 解析异常，可能策略是将异常处理映射到其他处理器（Handlers） 、或到某个 HTML 错误页面，或者其他。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-viewresolver">ViewResolver</a></td>
+<td style="text-align: left;"> 从处理器（Handler）返回字符类型的逻辑视图名称解析出实际的 View 对象，该对象将渲染后的内容输出到 HTTP 响应中。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-localeresolver">LocaleResolver</a>, <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-timezone">LocaleContextResolver</a></td>
+<td style="text-align: left;"> 从客户端解析出 Locale ，为其实现国际化视图。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart">MultipartResolver</a></td>
+<td style="text-align: left;"> 解析多部分请求（如 Web 浏览器文件上传）的抽象实现</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mvc-交互流程">MVC 交互流程</h3>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg"></p>
+<h3 id="注解驱动实现-spring-web-mvc">注解驱动实现 Spring Web MVC</h3>
+<ol type="1">
+<li>注解配置: <span class="citation" data-cites="Configuration">@Configuration</span></li>
+<li> 组件激活: <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span>
+<ul>
+<li> 注册 RequestMappingHandlerMapping</li>
+<li> 注册 RequestMappingHandlerAdapter</li>
+</ul></li>
+<li> 自定义组件: WebMvcConfigurer
+<ul>
+<li>添加拦截器</li>
+<li>配置内容协商器</li>
+<li>配置异步支持</li>
+<li>等等...</li>
+</ul></li>
+</ol>
+<h3 id="rest-内容协商">REST 内容协商</h3>
+<p>内容协商其实不仅仅包含 REST , 还有视图协商，由于工作中已经不再使用视图解析器，所以主要来研究 REST 内容协商.</p>
+<table>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 27%">
+<col style="width: 54%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>组件名称</th>
+<th>实现</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>内容协商管理器</td>
+<td> ContentNegotiationManager</td>
+<td>ContentNegotiationStrategy 控制策略</td>
+</tr>
+<tr class="even">
+<td>媒体类型</td>
+<td> MediaType</td>
+<td>HTTP 消息媒体类型，如 text/html</td>
+</tr>
+<tr class="odd">
+<td> 消费媒体类型</td>
+<td><span class="citation" data-cites="RequestMapping#consumes"> @RequestMapping#consumes</span></td>
+<td> 请求头 Content-type 媒体类型映射</td>
+</tr>
+<tr class="even">
+<td>生产媒体类型</td>
+<td><span class="citation" data-cites="RequestMapping#produces"> @RequestMapping#produces</span></td>
+<td> 响应头 Content-type 媒体类型映射</td>
+</tr>
+<tr class="odd">
+<td> HTTP 消息转换器</td>
+<td> HttpMessageConverter</td>
+<td>HTTP 消息转换器，用于反序列化 HTTP 请求或序列化响应配置 REST 相关的组件</td>
+</tr>
+<tr class="even">
+<td> Web MVC 配置器</td>
+<td> WebMvcConfigurer</td>
+<td> 配置 REST 的相关组件</td>
+</tr>
+<tr class="odd">
+<td>处理方法</td>
+<td> HandlerMethod</td>
+<td><span class="citation" data-cites="RequestMapping">@RequestMapping</span> 标注的方法</td>
+</tr>
+<tr class="even">
+<td>处理方法参数解析器</td>
+<td> HandlerMethodArgumentResolver</td>
+<td> 用于 HTTP 请求中解析 HandlerMethod 参数内容</td>
+</tr>
+<tr class="odd">
+<td>处理方法返回值解析器</td>
+<td> HandlerMethodReturnValueHandler</td>
+<td> 用于 HandlerMethod 返回值解析为 HTTP 相应内容</td>
+</tr>
+</tbody>
+</table>
+<p>知道了内容协商的核心组件后，再来看看 Spring MVC 的 REST 处理流程</p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg"></p>
+<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg"></p>
+<h3 id="spring-异常处理机制">Spring 异常处理机制</h3>
+<p>官方文档中说 <code>DispatcherServlet</code> 会委托给一个 <code>HandlerExceptionResolver</code> 链去处理异常</p>
+<p>Spring MVC 自带的异常处理器有如下几种</p>
+<table>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>HandlerExceptionResolver</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SimpleMappingExceptionResolver</td>
+<td>A mapping between exception class names and error view names. Useful for rendering error pages in a browser application.</td>
+</tr>
+<tr class="even">
+<td><a href="https://docs.spring.io/spring-framework/docs/5.0.15.RELEASE/javadoc-api/org/springframework/web/servlet/mvc/support/DefaultHandlerExceptionResolver.html">DefaultHandlerExceptionResolver</a></td>
+<td>Resolves exceptions raised by Spring MVC and maps them to HTTP status codes. Also see alternative <code>ResponseEntityExceptionHandler</code> and <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-rest-exceptions">REST API exceptions</a>.</td>
+</tr>
+<tr class="odd">
+<td>ResponseStatusExceptionResolver</td>
+<td>Resolves exceptions with the <code>@ResponseStatus</code> annotation and maps them to HTTP status codes based on the value in the annotation.</td>
+</tr>
+<tr class="even">
+<td>ExceptionHandlerExceptionResolver</td>
+<td>Resolves exceptions by invoking an <code>@ExceptionHandler</code> method in an <code>@Controller</code> or a <code>@ControllerAdvice</code> class. See <span class="citation" data-cites="ExceptionHandler">[@ExceptionHandler methods]</span>(https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-exceptionhandler).</td>
+</tr>
+</tbody>
+</table>
+<p>需要注意的点:</p>
+<ul>
+<li><p>只需声明我们自定义的 HandlerExceptionResolver 实现为 Spring 组件，就会被 Spring 添加到异常处理链中</p></li>
+<li><p> HandlerExceptionResolver 返回的 ModelAndView 即为错误页面</p></li>
+<li><p>如果异常处理完成且不希望中断异常执行链，则返回 null</p></li>
+<li><p> 如果异常处理完成且希望中断异常执行链，则返回空的 ModelAndView 即可</p></li>
+<li><p>可以实现 Ordered 接口来指定 HandlerExceptionResolver 的调用顺序</p></li>
+</ul>
+<h3 id="spring-mvc-常用注解">Spring MVC 常用注解</h3>
+<table>
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>注解</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="citation" data-cites="RequestParam"> @RequestParam</span></td>
+<td> 从请求中获取参数值</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="RequestHeader"> @RequestHeader</span></td>
+<td> 获取请求头 <br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Accept-Encoding")<br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Keep-Alive")</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="CookieValue">@CookieValue</span></td>
+<td> 获取 Cookie 中的值 <br><span class="citation" data-cites="CookieValue">@CookieValue</span>("JSESSIONID")</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="ModelAttribute">@ModelAttribute</span></td>
+<td> 从 request 中获取参数值，并赋值到对应的对象中</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="RequestBody"> @RequestBody</span></td>
+<td> 从 request 中通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 反序列化到对象中</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="ResponseBody"> @ResponseBody</span></td>
+<td> 把返回对象通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 序列化到 response 中</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="ExceptionHandler"> @ExceptionHandler</span></td>
+<td> 处理自定义异常<br>写在 Controller 里则只处理本 Controller 里的异常<br>如果想要处理全局异常，则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br>注意全局异常在本地异常方法执行后才执行</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="ControllerAdvice"> @ControllerAdvice</span></td>
+<td> 支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br>官方不建议随意使用，会显著的影响性能</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="InitBinder"> @InitBinder</span></td>
+<td> 需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br>目的是为了自定义类型转换</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="PathVariable"> @PathVariable</span></td>
+<td> 用来解析 REST 请求中的变量</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="CrossOrigin"> @CrossOrigin</span></td>
+<td> 跨域支持<br>可以标注在 Controller 方法和类上<br>如果想实现更加精细的配置，在 WebMvcConfigurer 中重写 addCorsMappings</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+      <categories>
+        <category>复习</category>
+      </categories>
+      <tags>
+        <tag>spring</tag>
+        <tag>spring framework</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring Core 总结</title>
     <url>/2019/08/14/spring/</url>
     <content><![CDATA[<meta name="referrer" content="no-referrer">
@@ -1030,360 +1378,30 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring MVC 总结</title>
-    <url>/2019/08/14/spring-mvc/</url>
+    <title>思考：Spring 启动后如何修改 Bean 对象的属性值</title>
+    <url>/2021/06/22/spring_dynamic_update/</url>
     <content><![CDATA[<meta name="referrer" content="no-referrer">
-<h1 id="spring-mvc-总结">Spring MVC 总结</h1>
-<h2 id="qa">Q&amp;A</h2>
-<h3 id="如何理解-spring-mvc-的父子容器">如何理解 Spring MVC 的父子容器</h3>
-<p>Spring 官方文档的一张图就很好诠释了父子容器</p>
-<blockquote>
-<p>The root <code>WebApplicationContext</code> typically contains infrastructure beans such as data repositories and business services that need to be shared across multiple <code>Servlet</code> instances. Those beans are effectively inherited and could be overridden (i.e. re-declared) in the Servlet-specific, child <code>WebApplicationContext</code> which typically contains beans local to the given <code>Servlet</code></p>
-</blockquote>
-<p>由此可见，子容器是可以继承父容器的所有 Bean 的.</p>
+<h1 id="思考spring启动后如何修改bean对象的属性值">思考：Spring 启动后如何修改 Bean 对象的属性值</h1>
+<h2 id="前言">前言</h2>
+<p>在复习 Spring 知识时突然想到一个问题，在 Spring 初始化过程中，我们可以使用 <code>BeanPostProcessor</code> 在对象初始化前后、实例化前后、属性设值之后修改 bean 的属性值。那当 Spring 容器已经启动之后呢？如何修改 Bean 对象的属性值</p>
 <span id="more"></span>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6b7v6dcjnj20g60ewwfy.jpg"></p>
+<h2 id="解决方案">解决方案</h2>
 <ol type="1">
-<li>在 web.xml 中，ContextLoaderListener 会初始化父容器
-<ol type="1">
-<li>创建 ConfigurableWebApplicationContext
-<ul>
-<li>configureAndRefreshWebApplicationContext</li>
-<li> 喜闻乐见的 refresh 方法，开始创建 IOC 容器</li>
-</ul></li>
-<li>父容器创建完成之后，创建 DispatcherServlet
-<ul>
-<li>执行 Servlet 的 init</li>
-<li> 执行 initServletBean</li>
-<li>initWebApplicationContext</li>
-<li>setParent</li>
-<li>configureAndRefreshWebApplicationContext</li>
-<li> 喜闻乐见的 refresh 方法，开始创建 IOC 容器</li>
-</ul></li>
-</ol></li>
+<li><p>在 Bean 方法中写 reload 方法</p>
+<p>当接收到触发修改 bean 的事件时，通过 SpringContext 拿到对应的 Bean，然后调用 Bean 对象事先写好的 reload 方法修改对象。由于 Bean 实例的引用存在 Spring 容器中，所以只要这一处修改处处生效</p></li>
+<li><p>在 Bean Registry 中删除并重新注册 Bean，但缺点是已经持有修改 Bean 之前的对象不会更新属性值</p>
+<figure class="highlight java"><table><tbody><tr><td class="code"><pre><span class="line">DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) context.getBeanFactory();</span><br><span class="line">registry.destroySingleton({yourbean}) <span class="comment">//销毁bean</span></span><br><span class="line">registry.registerSingleton({yourbeanname}, {newbeanobject}) <span class="comment">//重新注册bean</span></span><br></pre></td></tr></tbody></table></figure></li>
+<li><p><span class="citation" data-cites="RefreshScope">@RefreshScope</span></p></li>
 </ol>
-<h3 id="只有子容器-没有父容器可以吗">只有子容器，没有父容器可以吗</h3>
-<p>当然可以</p>
-<h3 id="spring-mvc-如何实现注解自动装配">Spring MVC 如何实现注解自动装配</h3>
-<ol type="1">
-<li>要实现自动装配，必须借助于 Servlet 的 SPI
-<ol type="1">
-<li>SPI 要求我们必须在 META-INF.services 包下指定实现 ServletContainerInitializer 接口的类</li>
-<li> spring-web 包就已经提供了这个实现叫做 SpringServletContainerInitializer</li>
-</ol></li>
-<li> 阅读 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span> 源码可知，Spring 已经给我们默认提供了几个 <code>WebApplicationInitialize</code> 实现
-<ul>
-<li>AbstractContextLoaderInitializer</li>
-<li>AbstractDispatcherServletInitializer</li>
-<li>AbstractAnnotationConfigDispatcherServletInitializer</li>
-</ul></li>
-<li> 我们只需要实现 AbstractAnnotationConfigDispatcherServletInitializer 即可
-<ol type="1">
-<li>指定 RootConfigClass 也就是父容器 (可不指定)</li>
-<li> 指定 ServletConfigClass</li>
-<li> 指定拦截路径</li>
-</ol></li>
-</ol>
-<p>有了自动装配，我们就可以使用 java 编程的方式实现 web 开发，不需要任何的 xml 文件 (包括 web.xml)</p>
-<h3 id="spring-boot-如何实现自动装配">Spring Boot 如何实现自动装配</h3>
-<ol type="1">
-<li>前端控制器装配 : DispatcherServletAutoConfiguration</li>
-<li> 配置装配 : WebMvcAutoConfiguration 替换 <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span></li>
-<li>Servlet 容器装配 : ServletWebServerFactoryAutoConfiguration</li>
-</ol>
-<h2 id="基础知识">基础知识</h2>
-<h3 id="spring-web-mvc-架构">Spring Web MVC 架构</h3>
-<p><a href="http://www.corej2eepatterns.com/FrontController.htm">前端控制器模式</a></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6c9yawlgjj20n60fgwgt.jpg"></p>
-<h3 id="mvc-核心组件">MVC 核心组件</h3>
-<table>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Bean 类型</th>
-<th style="text-align: left;">作用</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"> HandlerMapping</td>
-<td style="text-align: left;"> 映射请求（Request）到处理器（Handler）加上其关联的拦截器（HandlerInterceptor）列表，其映射关系基于不同的 HandlerMapping 实现的一些标准细节。其中两种主要 HandlerMapping 实现， RequestMappingHandlerMapping 支持标注 <span class="citation" data-cites="RequestMapping">@RequestMapping</span> 的方法， SimpleUrlHandlerMapping 维护精确的 URI 路径与处理器的映射</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"> HandlerAdapter</td>
-<td style="text-align: left;"> 帮助 DispatcherServlet 调用请求处理器（Handler），无需关注其中实际的调用细节。比如，调用注解实现的 Controller 需要解析其关联的注解. HandlerAdapter 的主要目的是为了屏蔽与 DispatcherServlet 之间的诸多细节。</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-exceptionhandlers">HandlerExceptionResolver</a></td>
-<td style="text-align: left;"> 解析异常，可能策略是将异常处理映射到其他处理器（Handlers） 、或到某个 HTML 错误页面，或者其他。</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-viewresolver">ViewResolver</a></td>
-<td style="text-align: left;"> 从处理器（Handler）返回字符类型的逻辑视图名称解析出实际的 View 对象，该对象将渲染后的内容输出到 HTTP 响应中。</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-localeresolver">LocaleResolver</a>, <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-timezone">LocaleContextResolver</a></td>
-<td style="text-align: left;"> 从客户端解析出 Locale ，为其实现国际化视图。</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart">MultipartResolver</a></td>
-<td style="text-align: left;"> 解析多部分请求（如 Web 浏览器文件上传）的抽象实现</td>
-</tr>
-</tbody>
-</table>
-<h3 id="mvc-交互流程">MVC 交互流程</h3>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6cati11faj20x80m6418.jpg"></p>
-<h3 id="注解驱动实现-spring-web-mvc">注解驱动实现 Spring Web MVC</h3>
-<ol type="1">
-<li>注解配置: <span class="citation" data-cites="Configuration">@Configuration</span></li>
-<li> 组件激活: <span class="citation" data-cites="EnableWebMvc">@EnableWebMvc</span>
-<ul>
-<li> 注册 RequestMappingHandlerMapping</li>
-<li> 注册 RequestMappingHandlerAdapter</li>
-</ul></li>
-<li> 自定义组件: WebMvcConfigurer
-<ul>
-<li>添加拦截器</li>
-<li>配置内容协商器</li>
-<li>配置异步支持</li>
-<li>等等...</li>
-</ul></li>
-</ol>
-<h3 id="rest-内容协商">REST 内容协商</h3>
-<p>内容协商其实不仅仅包含 REST , 还有视图协商，由于工作中已经不再使用视图解析器，所以主要来研究 REST 内容协商.</p>
-<table>
-<colgroup>
-<col style="width: 18%">
-<col style="width: 27%">
-<col style="width: 54%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>组件名称</th>
-<th>实现</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>内容协商管理器</td>
-<td> ContentNegotiationManager</td>
-<td>ContentNegotiationStrategy 控制策略</td>
-</tr>
-<tr class="even">
-<td>媒体类型</td>
-<td> MediaType</td>
-<td>HTTP 消息媒体类型，如 text/html</td>
-</tr>
-<tr class="odd">
-<td> 消费媒体类型</td>
-<td><span class="citation" data-cites="RequestMapping#consumes"> @RequestMapping#consumes</span></td>
-<td> 请求头 Content-type 媒体类型映射</td>
-</tr>
-<tr class="even">
-<td>生产媒体类型</td>
-<td><span class="citation" data-cites="RequestMapping#produces"> @RequestMapping#produces</span></td>
-<td> 响应头 Content-type 媒体类型映射</td>
-</tr>
-<tr class="odd">
-<td> HTTP 消息转换器</td>
-<td> HttpMessageConverter</td>
-<td>HTTP 消息转换器，用于反序列化 HTTP 请求或序列化响应配置 REST 相关的组件</td>
-</tr>
-<tr class="even">
-<td> Web MVC 配置器</td>
-<td> WebMvcConfigurer</td>
-<td> 配置 REST 的相关组件</td>
-</tr>
-<tr class="odd">
-<td>处理方法</td>
-<td> HandlerMethod</td>
-<td><span class="citation" data-cites="RequestMapping">@RequestMapping</span> 标注的方法</td>
-</tr>
-<tr class="even">
-<td>处理方法参数解析器</td>
-<td> HandlerMethodArgumentResolver</td>
-<td> 用于 HTTP 请求中解析 HandlerMethod 参数内容</td>
-</tr>
-<tr class="odd">
-<td>处理方法返回值解析器</td>
-<td> HandlerMethodReturnValueHandler</td>
-<td> 用于 HandlerMethod 返回值解析为 HTTP 相应内容</td>
-</tr>
-</tbody>
-</table>
-<p>知道了内容协商的核心组件后，再来看看 Spring MVC 的 REST 处理流程</p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6d6x1172yj217n0gn772.jpg"></p>
-<p><img data-src="http://ww1.sinaimg.cn/large/a2abb2b5ly1g6dfeizzdej211w0kjdi3.jpg"></p>
-<h3 id="spring-异常处理机制">Spring 异常处理机制</h3>
-<p>官方文档中说 <code>DispatcherServlet</code> 会委托给一个 <code>HandlerExceptionResolver</code> 链去处理异常</p>
-<p>Spring MVC 自带的异常处理器有如下几种</p>
-<table>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>HandlerExceptionResolver</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>SimpleMappingExceptionResolver</td>
-<td>A mapping between exception class names and error view names. Useful for rendering error pages in a browser application.</td>
-</tr>
-<tr class="even">
-<td><a href="https://docs.spring.io/spring-framework/docs/5.0.15.RELEASE/javadoc-api/org/springframework/web/servlet/mvc/support/DefaultHandlerExceptionResolver.html">DefaultHandlerExceptionResolver</a></td>
-<td>Resolves exceptions raised by Spring MVC and maps them to HTTP status codes. Also see alternative <code>ResponseEntityExceptionHandler</code> and <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-rest-exceptions">REST API exceptions</a>.</td>
-</tr>
-<tr class="odd">
-<td>ResponseStatusExceptionResolver</td>
-<td>Resolves exceptions with the <code>@ResponseStatus</code> annotation and maps them to HTTP status codes based on the value in the annotation.</td>
-</tr>
-<tr class="even">
-<td>ExceptionHandlerExceptionResolver</td>
-<td>Resolves exceptions by invoking an <code>@ExceptionHandler</code> method in an <code>@Controller</code> or a <code>@ControllerAdvice</code> class. See <span class="citation" data-cites="ExceptionHandler">[@ExceptionHandler methods]</span>(https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/web.html#mvc-ann-exceptionhandler).</td>
-</tr>
-</tbody>
-</table>
-<p>需要注意的点:</p>
-<ul>
-<li><p>只需声明我们自定义的 HandlerExceptionResolver 实现为 Spring 组件，就会被 Spring 添加到异常处理链中</p></li>
-<li><p> HandlerExceptionResolver 返回的 ModelAndView 即为错误页面</p></li>
-<li><p>如果异常处理完成且不希望中断异常执行链，则返回 null</p></li>
-<li><p> 如果异常处理完成且希望中断异常执行链，则返回空的 ModelAndView 即可</p></li>
-<li><p>可以实现 Ordered 接口来指定 HandlerExceptionResolver 的调用顺序</p></li>
-</ul>
-<h3 id="spring-mvc-常用注解">Spring MVC 常用注解</h3>
-<table>
-<colgroup>
-<col style="width: 22%">
-<col style="width: 77%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>注解</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="citation" data-cites="RequestParam"> @RequestParam</span></td>
-<td> 从请求中获取参数值</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="RequestHeader"> @RequestHeader</span></td>
-<td> 获取请求头 <br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Accept-Encoding")<br><span class="citation" data-cites="RequestHeader">@RequestHeader</span>("Keep-Alive")</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="CookieValue">@CookieValue</span></td>
-<td> 获取 Cookie 中的值 <br><span class="citation" data-cites="CookieValue">@CookieValue</span>("JSESSIONID")</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="ModelAttribute">@ModelAttribute</span></td>
-<td> 从 request 中获取参数值，并赋值到对应的对象中</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="RequestBody"> @RequestBody</span></td>
-<td> 从 request 中通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 反序列化到对象中</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="ResponseBody"> @ResponseBody</span></td>
-<td> 把返回对象通过 <a href="https://docs.spring.io/spring/docs/5.0.15.RELEASE/spring-framework-reference/integration.html#rest-message-conversion">HttpMessageConverter</a> 序列化到 response 中</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="ExceptionHandler"> @ExceptionHandler</span></td>
-<td> 处理自定义异常<br>写在 Controller 里则只处理本 Controller 里的异常<br>如果想要处理全局异常，则需要配合 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 并标注在类上<br>注意全局异常在本地异常方法执行后才执行</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="ControllerAdvice"> @ControllerAdvice</span></td>
-<td> 支持 <span class="citation" data-cites="ExceptionHandler">@ExceptionHandler</span> <span class="citation" data-cites="InitBinder">@InitBinder</span> <span class="citation" data-cites="ModelAttribute">@ModelAttribute</span> 的全局处理<br>官方不建议随意使用，会显著的影响性能</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="InitBinder"> @InitBinder</span></td>
-<td> 需配合 <span class="citation" data-cites="Controller">@Controller</span> 或者 <span class="citation" data-cites="ControllerAdvice">@ControllerAdvice</span> 使用<br>目的是为了自定义类型转换</td>
-</tr>
-<tr class="even">
-<td><span class="citation" data-cites="PathVariable"> @PathVariable</span></td>
-<td> 用来解析 REST 请求中的变量</td>
-</tr>
-<tr class="odd">
-<td><span class="citation" data-cites="CrossOrigin"> @CrossOrigin</span></td>
-<td> 跨域支持<br>可以标注在 Controller 方法和类上<br>如果想实现更加精细的配置，在 WebMvcConfigurer 中重写 addCorsMappings</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-      <categories>
-        <category>复习</category>
-      </categories>
-      <tags>
-        <tag>spring</tag>
-        <tag>spring framework</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>激活函数与梯度的一些思考</title>
-    <url>/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</url>
-    <content><![CDATA[<meta name="referrer" content="no-referrer">
-<h1 id="常见激活函数">常见激活函数</h1>
-<h2 id="sigmoid">Sigmoid</h2>
-<p>优点 :</p>
-<ol type="1">
-<li>把函数值压缩到了 [0,1] 范围内</li>
-<li> have nice interpretation as a staturating "firing rate" of a neuron</li>
-</ol>
-<p>缺点 :</p>
-<ol type="1">
-<li><p>梯度消失</p>
-<p>当<span class="math inline"> \(x\)</span> 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。</p></li>
-<li><p>输出结果不是 "0 中心"</p>
-<span id="more"></span></li>
-<li><p>指数函数计算量过大</p></li>
-</ol>
-<h2 id="tanh">tanh</h2>
-<p>优点 :</p>
-<ol type="1">
-<li>把函数值压缩到了 [-1,1] 内</li>
-<li>输出结果是 "0 中心"</li>
-</ol>
-<p>缺点 :</p>
-<ol type="1">
-<li>仍然会出现梯度消失</li>
-</ol>
-<h2 id="relu">Relu</h2>
-<p>优点 :</p>
-<ol type="1">
-<li>当 <span class="math inline">\(x &gt; 0\)</span> 时不会出现梯度消失</li>
-<li>计算量小，并且在实践中比 sigmoid 和 tanh 收敛速度要快很多</li>
-</ol>
-<p>缺点 :</p>
-<ol type="1">
-<li>输出结果不是 "0 中心"</li>
-<li> 当<span class="math inline"> \(x &lt; 0\)</span> 时，会出现梯度消失</li>
-</ol>
-<h2 id="leakly-relu">Leakly ReLU</h2>
-<h2 id="maxout">Maxout</h2>
-<h2 id="为什么要0中心">为什么要 "0 中心"</h2>
-<p><a href="https://stats.stackexchange.com/questions/237169/why-are-non-zero-centered-activation-functions-a-problem-in-backpropagation">why zero centered</a></p>
 <h1 id="参考资料">参考资料</h1>
-<p>[1] <a href="https://en.wikipedia.org/wiki/Activation_function">Activation function</a></p>
-<p>[2] <a href="https://blog.csdn.net/qq_25737169/article/details/78847691">详解机器学习中的梯度消失、爆炸原因及其解决方法</a></p>
-<p>[3] <a href="https://www.jiqizhixin.com/graph/technologies/1697e627-30e7-48a6-b799-39e2338ffab5">激活函数</a></p>
+<p>[1] <a href="https://jeroenbellen.com/manage-and-reload-spring-application-properties-on-the-fly/">MANAGE AND RELOAD SPRING APPLICATION PROPERTIES ON THE FLY</a></p>
+<p>[2] <a href="https://stackoverflow.com/questions/51218086/how-to-reinitialize-a-spring-bean">How to reinitialize a Spring Bean?</a></p>
 ]]></content>
       <categories>
-        <category>deep learning</category>
+        <category>思考</category>
       </categories>
       <tags>
-        <tag>激活函数</tag>
-        <tag>Activation function</tag>
-        <tag>梯度消失</tag>
-        <tag>梯度爆炸</tag>
+        <tag>Spring</tag>
       </tags>
   </entry>
   <entry>
@@ -1465,6 +1483,170 @@
         <tag>ubuntu 20.04</tag>
         <tag>图神经网络</tag>
         <tag>软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>激活函数与梯度的一些思考</title>
+    <url>/2020/01/13/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E4%B8%8E%E6%A2%AF%E5%BA%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</url>
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
+<h1 id="常见激活函数">常见激活函数</h1>
+<h2 id="sigmoid">Sigmoid</h2>
+<p>优点 :</p>
+<ol type="1">
+<li>把函数值压缩到了 [0,1] 范围内</li>
+<li> have nice interpretation as a staturating "firing rate" of a neuron</li>
+</ol>
+<p>缺点 :</p>
+<ol type="1">
+<li><p>梯度消失</p>
+<p>当<span class="math inline"> \(x\)</span> 的值取正负无穷大时，Sigmoid 函数的导数几乎为零，这导致在反向传播应用链式法则时梯度几乎为 0。</p></li>
+<li><p>输出结果不是 "0 中心"</p>
+<span id="more"></span></li>
+<li><p>指数函数计算量过大</p></li>
+</ol>
+<h2 id="tanh">tanh</h2>
+<p>优点 :</p>
+<ol type="1">
+<li>把函数值压缩到了 [-1,1] 内</li>
+<li>输出结果是 "0 中心"</li>
+</ol>
+<p>缺点 :</p>
+<ol type="1">
+<li>仍然会出现梯度消失</li>
+</ol>
+<h2 id="relu">Relu</h2>
+<p>优点 :</p>
+<ol type="1">
+<li>当 <span class="math inline">\(x &gt; 0\)</span> 时不会出现梯度消失</li>
+<li>计算量小，并且在实践中比 sigmoid 和 tanh 收敛速度要快很多</li>
+</ol>
+<p>缺点 :</p>
+<ol type="1">
+<li>输出结果不是 "0 中心"</li>
+<li> 当<span class="math inline"> \(x &lt; 0\)</span> 时，会出现梯度消失</li>
+</ol>
+<h2 id="leakly-relu">Leakly ReLU</h2>
+<h2 id="maxout">Maxout</h2>
+<h2 id="为什么要0中心">为什么要 "0 中心"</h2>
+<p><a href="https://stats.stackexchange.com/questions/237169/why-are-non-zero-centered-activation-functions-a-problem-in-backpropagation">why zero centered</a></p>
+<h1 id="参考资料">参考资料</h1>
+<p>[1] <a href="https://en.wikipedia.org/wiki/Activation_function">Activation function</a></p>
+<p>[2] <a href="https://blog.csdn.net/qq_25737169/article/details/78847691">详解机器学习中的梯度消失、爆炸原因及其解决方法</a></p>
+<p>[3] <a href="https://www.jiqizhixin.com/graph/technologies/1697e627-30e7-48a6-b799-39e2338ffab5">激活函数</a></p>
+]]></content>
+      <categories>
+        <category>deep learning</category>
+      </categories>
+      <tags>
+        <tag>激活函数</tag>
+        <tag>Activation function</tag>
+        <tag>梯度消失</tag>
+        <tag>梯度爆炸</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>面试造飞机，工作拧螺丝</title>
+    <url>/2019/07/14/%E9%9D%A2%E8%AF%95%E9%80%A0%E9%A3%9E%E6%9C%BA%EF%BC%8C%E5%B7%A5%E4%BD%9C%E6%8B%A7%E8%9E%BA%E4%B8%9D/</url>
+    <content><![CDATA[<meta name="referrer" content="no-referrer">
+<h1 id="面试造飞机工作拧螺丝">面试造飞机，工作拧螺丝</h1>
+<h2 id="阿里面试1-高级">阿里面试 1 （高级）</h2>
+<ol type="1">
+<li>负载均衡算法有哪几种、根据服务器负载选择轮询</li>
+<li>如何监控 nginx、如何变更负载均衡规则</li>
+<li>有遇到分布式事务问题吗、了解什么是事务吗</li>
+<li>分布式锁有了解吗</li>
+<li> springcloud 的 feign 组件和 dubbo 的区别</li>
+<li> zookeeper 怎么注册、发现服务、zookeeper 牺牲了可用性体现在哪里、听说过 CAP 理论吗，zookeeper 属于 CAP 中的哪两个、zookeeper 选举时还怎么进行服务发现、怎么解决脑裂</li>
+<li>了解线程池吗、线程池核心参数有哪些</li>
+<li>线程的状态、什么时候会阻塞、没有拿到时间片的线程处于什么状态</li>
+<li>有遇到内存溢出问题吗、怎么不重启发现内存的溢出</li>
+<li>描述下 JVM 内存模型</li>
+<li>说一下 Jdk 自带的锁、工作中有用到过 jdk 自带锁吗</li>
+<li>用过 redis 吗？主要用来做什么？缓存穿透、缓存击穿是什么怎么解决</li>
+<li> redis 如何扩容</li>
+<li> mysql 的 myisam、innodb 引擎有什么区别？myisam 有什么优缺点？innodb 事务隔离级别</li>
+<li>用过消息队列吗？什么场景用？消息队列数据倾斜怎么处理？消息积压过吗？</li>
+<li>讲下 Spring 启动流程和 Bean 的声明周期</li>
+<li> SpringBoot 是如何自动装配的</li>
+<li> SPI 机制有了解过吗</li>
+<li>设计模式有了解过吗</li>
+<li>了解过 DDD 吗</li>
+</ol>
+<span id="more"></span>
+<h2 id="阿里面试2-中级">阿里面试 2 （中级）</h2>
+<ol type="1">
+<li><p>1k QPS 到 8k QPS 你是怎么优化的，怎么高并发的扣库存</p></li>
+<li><p>面向对象设计原则有几种，策略模式解决什么问题、抽象工厂解决了什么问题</p></li>
+<li><p>怎么做 sql 优化</p></li>
+<li><p> mysql 底层索引结构</p></li>
+<li><p> redis 数据机构、zset 底层是怎么实现的、为什么用跳表</p></li>
+<li><p> innodb 的隔离级别、RC 是怎么实现、RR 是怎么实现的</p></li>
+<li><p> eureka 和 zookeeper 是怎么实现服务发现的？eureka 挂了一台，此时它还没被剔除，这个怎么避免</p></li>
+<li><p> sychronized 和 ReentrantLock 有什么区别</p></li>
+<li><p> JIT 了解过吗？JVM 内存结构？JMM 内存模型、volatile 关键字</p></li>
+<li><p> kafka 如何保证消息不丢失</p></li>
+<li><p>聊聊 redis 集群？聊聊内存淘汰策略？redis 集群如何扩展？某一个节点挂了怎么办？主从同步是同步还是异步、有什么问题？redis 持久化方式</p></li>
+</ol>
+<h2 id="阿里面试3-中级">阿里面试 3 （中级）</h2>
+<ol type="1">
+<li><p>HashMap 扩容机制介绍一下</p></li>
+<li><p>线程池参数介绍一下</p></li>
+<li><p> mysql 慢查询优化</p>
+<p>in 操作回表、联合索引回表？让一些报表查询走从库</p></li>
+<li><p> redis 压缩列表，快速列表</p></li>
+<li><p> redis 淘汰策略、redis 持久化策略、aof rdb 怎么做的</p></li>
+<li><p>缓存雪崩、缓存穿透怎么解决</p></li>
+<li><p>聊聊布隆过滤器、bitmap 怎么删除？</p>
+<p>生成新的布隆过滤器，然后做迁移</p></li>
+<li><p>怎么保证服务的可用性</p></li>
+</ol>
+<h2 id="阿里面试4-中级">阿里面试 4 （中级）</h2>
+<ol type="1">
+<li><p>说说 hystrix 熔断和降级</p></li>
+<li><p> redis 如何实现分布式锁，具体描述一下</p>
+<p>setnx、watchdog、lua 脚本</p></li>
+<li><p> redis 和 zookeeper 哪个做分布式锁更好</p></li>
+<li><p> mq 会丢数据吗？发消息的时候挂了怎么办</p></li>
+<li><p> mysql 慢查询如何优化、</p></li>
+<li><p>遇到过 JVM 相关的问题吗</p></li>
+<li><p>你们系统哪个模块你觉得挑战最大</p></li>
+<li><p>布隆过滤器支持删除吗？如果非要删除的话怎么做</p></li>
+<li><p>说说分库和分表有什么不一样</p></li>
+<li><p> mysql 分页，偏移量越大性能越差吗，为什么</p></li>
+<li><p>分布式 id 了解过吗，讲讲解决方案</p>
+<p>雪花算法（注意时间回拨问题）、提前生成放内存再去取</p></li>
+</ol>
+<h2 id="阿里面试5-高级">阿里面试 5 （高级）</h2>
+<ol type="1">
+<li>你们系统 QPS 峰值大概多少</li>
+<li>你做的最有挑战的业务是什么</li>
+<li> redis 中 zset 实现原理</li>
+<li>已读未读功能用 redis 怎么实现</li>
+<li>有做过性能优化吗</li>
+<li>系统告警是怎么做的</li>
+<li> sql 慢的原因，怎么优化</li>
+<li>数据库死锁如何排查</li>
+<li>间隙锁解决了 mysql 的什么问题</li>
+<li> MVCC 了解过吗，它解决了什么问题、快照读和当前读是什么、快照读加什么锁、了解过意向锁吗</li>
+<li>简单介绍下 spring bean 的生命周期、想要修改 bean 的属性值应该怎么做</li>
+<li> nacos、zk、eureka 哪个更适合做注册中心，为什么</li>
+<li>服务限流、降级怎么做</li>
+<li> java 序列化怎么做、为什么要这么做</li>
+<li> jdk 为啥要做泛型</li>
+<li> java 类加载过程</li>
+<li> STW 是什么，为什么会出现 STW，哪个阶段出现 STW</li>
+<li> 卡表了解过吗</li>
+<li>介绍下 java 的锁、volatile、在应用中过多的使用 volatile 会有什么影响（应该回答总线风暴）</li>
+<li>用过 fork、join 吗，什么情况下会用</li>
+<li>发海量消息怎么设计？（提示用延时队列）</li>
+<li>已读未读功能怎么设计（提示 bitmap） 一个用户一个 bitmap 还是一条消息一个 bitmap</li>
+</ol>
+]]></content>
+      <categories>
+        <category>复习</category>
+      </categories>
+      <tags>
+        <tag>面经</tag>
       </tags>
   </entry>
   <entry>
