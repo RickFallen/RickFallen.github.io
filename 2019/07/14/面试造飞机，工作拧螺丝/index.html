@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wucf.me","root":"/","images":"/images","scheme":"Pisces","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInUp","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="面试造飞机，工作拧螺丝 阿里面试 1 （高级）  负载均衡算法有哪几种、根据服务器负载选择轮询 如何监控 nginx、如何变更负载均衡规则 有遇到分布式事务问题吗、了解什么是事务吗 分布式锁有了解吗  springcloud 的 feign 组件和 dubbo 的区别  zookeeper 怎么注册、发现服务、zookeeper 牺牲了可用性体现在哪里、听说过 CAP 理论吗，zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试造飞机，工作拧螺丝">
+<meta property="og:url" content="http://wucf.me/2019/07/14/%E9%9D%A2%E8%AF%95%E9%80%A0%E9%A3%9E%E6%9C%BA%EF%BC%8C%E5%B7%A5%E4%BD%9C%E6%8B%A7%E8%9E%BA%E4%B8%9D/index.html">
+<meta property="og:site_name" content="Ricky Wu">
+<meta property="og:description" content="面试造飞机，工作拧螺丝 阿里面试 1 （高级）  负载均衡算法有哪几种、根据服务器负载选择轮询 如何监控 nginx、如何变更负载均衡规则 有遇到分布式事务问题吗、了解什么是事务吗 分布式锁有了解吗  springcloud 的 feign 组件和 dubbo 的区别  zookeeper 怎么注册、发现服务、zookeeper 牺牲了可用性体现在哪里、听说过 CAP 理论吗，zookeeper">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-14T03:49:52.000Z">
+<meta property="article:modified_time" content="2021-06-22T10:47:03.471Z">
+<meta property="article:author" content="Chengfu Wu">
+<meta property="article:tag" content="面经">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://wucf.me/2019/07/14/%E9%9D%A2%E8%AF%95%E9%80%A0%E9%A3%9E%E6%9C%BA%EF%BC%8C%E5%B7%A5%E4%BD%9C%E6%8B%A7%E8%9E%BA%E4%B8%9D/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>面试造飞机，工作拧螺丝 | Ricky Wu</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Ricky Wu</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">that's not the shape of my heart</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E9%80%A0%E9%A3%9E%E6%9C%BA%E5%B7%A5%E4%BD%9C%E6%8B%A7%E8%9E%BA%E4%B8%9D"><span class="nav-number">1.</span> <span class="nav-text">面试造飞机，工作拧螺丝</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E9%9D%A2%E8%AF%951-%E9%AB%98%E7%BA%A7"><span class="nav-number">1.1.</span> <span class="nav-text">阿里面试 1 （高级）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E9%9D%A2%E8%AF%952-%E4%B8%AD%E7%BA%A7"><span class="nav-number">1.2.</span> <span class="nav-text">阿里面试 2 （中级）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E9%9D%A2%E8%AF%953-%E4%B8%AD%E7%BA%A7"><span class="nav-number">1.3.</span> <span class="nav-text">阿里面试 3 （中级）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E9%9D%A2%E8%AF%954-%E4%B8%AD%E7%BA%A7"><span class="nav-number">1.4.</span> <span class="nav-text">阿里面试 4 （中级）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E9%9D%A2%E8%AF%955-%E9%AB%98%E7%BA%A7"><span class="nav-number">1.5.</span> <span class="nav-text">阿里面试 5 （高级）</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chengfu Wu"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Chengfu Wu</p>
+  <div class="site-description" itemprop="description">黄沙百战穿金甲，不破楼兰终不还。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/RickFallen" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wucf.me/2019/07/14/%E9%9D%A2%E8%AF%95%E9%80%A0%E9%A3%9E%E6%9C%BA%EF%BC%8C%E5%B7%A5%E4%BD%9C%E6%8B%A7%E8%9E%BA%E4%B8%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chengfu Wu">
+      <meta itemprop="description" content="黄沙百战穿金甲，不破楼兰终不还。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ricky Wu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面试造飞机，工作拧螺丝
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-07-14 11:49:52" itemprop="dateCreated datePublished" datetime="2019-07-14T11:49:52+08:00">2019-07-14</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-22 18:47:03" itemprop="dateModified" datetime="2021-06-22T18:47:03+08:00">2021-06-22</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%A4%8D%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">复习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <meta name="referrer" content="no-referrer">
+<h1 id="面试造飞机工作拧螺丝">面试造飞机，工作拧螺丝</h1>
+<h2 id="阿里面试1-高级">阿里面试 1 （高级）</h2>
+<ol type="1">
+<li>负载均衡算法有哪几种、根据服务器负载选择轮询</li>
+<li>如何监控 nginx、如何变更负载均衡规则</li>
+<li>有遇到分布式事务问题吗、了解什么是事务吗</li>
+<li>分布式锁有了解吗</li>
+<li> springcloud 的 feign 组件和 dubbo 的区别</li>
+<li> zookeeper 怎么注册、发现服务、zookeeper 牺牲了可用性体现在哪里、听说过 CAP 理论吗，zookeeper 属于 CAP 中的哪两个、zookeeper 选举时还怎么进行服务发现、怎么解决脑裂</li>
+<li>了解线程池吗、线程池核心参数有哪些</li>
+<li>线程的状态、什么时候会阻塞、没有拿到时间片的线程处于什么状态</li>
+<li>有遇到内存溢出问题吗、怎么不重启发现内存的溢出</li>
+<li>描述下 JVM 内存模型</li>
+<li>说一下 Jdk 自带的锁、工作中有用到过 jdk 自带锁吗</li>
+<li>用过 redis 吗？主要用来做什么？缓存穿透、缓存击穿是什么怎么解决</li>
+<li> redis 如何扩容</li>
+<li> mysql 的 myisam、innodb 引擎有什么区别？myisam 有什么优缺点？innodb 事务隔离级别</li>
+<li>用过消息队列吗？什么场景用？消息队列数据倾斜怎么处理？消息积压过吗？</li>
+<li>讲下 Spring 启动流程和 Bean 的声明周期</li>
+<li> SpringBoot 是如何自动装配的</li>
+<li> SPI 机制有了解过吗</li>
+<li>设计模式有了解过吗</li>
+<li>了解过 DDD 吗</li>
+</ol>
+<span id="more"></span>
+<h2 id="阿里面试2-中级">阿里面试 2 （中级）</h2>
+<ol type="1">
+<li><p>1k QPS 到 8k QPS 你是怎么优化的，怎么高并发的扣库存</p></li>
+<li><p>面向对象设计原则有几种，策略模式解决什么问题、抽象工厂解决了什么问题</p></li>
+<li><p>怎么做 sql 优化</p></li>
+<li><p> mysql 底层索引结构</p></li>
+<li><p> redis 数据机构、zset 底层是怎么实现的、为什么用跳表</p></li>
+<li><p> innodb 的隔离级别、RC 是怎么实现、RR 是怎么实现的</p></li>
+<li><p> eureka 和 zookeeper 是怎么实现服务发现的？eureka 挂了一台，此时它还没被剔除，这个怎么避免</p></li>
+<li><p> sychronized 和 ReentrantLock 有什么区别</p></li>
+<li><p> JIT 了解过吗？JVM 内存结构？JMM 内存模型、volatile 关键字</p></li>
+<li><p> kafka 如何保证消息不丢失</p></li>
+<li><p>聊聊 redis 集群？聊聊内存淘汰策略？redis 集群如何扩展？某一个节点挂了怎么办？主从同步是同步还是异步、有什么问题？redis 持久化方式</p></li>
+</ol>
+<h2 id="阿里面试3-中级">阿里面试 3 （中级）</h2>
+<ol type="1">
+<li><p>HashMap 扩容机制介绍一下</p></li>
+<li><p>线程池参数介绍一下</p></li>
+<li><p> mysql 慢查询优化</p>
+<p>in 操作回表、联合索引回表？让一些报表查询走从库</p></li>
+<li><p> redis 压缩列表，快速列表</p></li>
+<li><p> redis 淘汰策略、redis 持久化策略、aof rdb 怎么做的</p></li>
+<li><p>缓存雪崩、缓存穿透怎么解决</p></li>
+<li><p>聊聊布隆过滤器、bitmap 怎么删除？</p>
+<p>生成新的布隆过滤器，然后做迁移</p></li>
+<li><p>怎么保证服务的可用性</p></li>
+</ol>
+<h2 id="阿里面试4-中级">阿里面试 4 （中级）</h2>
+<ol type="1">
+<li><p>说说 hystrix 熔断和降级</p></li>
+<li><p> redis 如何实现分布式锁，具体描述一下</p>
+<p>setnx、watchdog、lua 脚本</p></li>
+<li><p> redis 和 zookeeper 哪个做分布式锁更好</p></li>
+<li><p> mq 会丢数据吗？发消息的时候挂了怎么办</p></li>
+<li><p> mysql 慢查询如何优化、</p></li>
+<li><p>遇到过 JVM 相关的问题吗</p></li>
+<li><p>你们系统哪个模块你觉得挑战最大</p></li>
+<li><p>布隆过滤器支持删除吗？如果非要删除的话怎么做</p></li>
+<li><p>说说分库和分表有什么不一样</p></li>
+<li><p> mysql 分页，偏移量越大性能越差吗，为什么</p></li>
+<li><p>分布式 id 了解过吗，讲讲解决方案</p>
+<p>雪花算法（注意时间回拨问题）、提前生成放内存再去取</p></li>
+</ol>
+<h2 id="阿里面试5-高级">阿里面试 5 （高级）</h2>
+<ol type="1">
+<li>你们系统 QPS 峰值大概多少</li>
+<li>你做的最有挑战的业务是什么</li>
+<li> redis 中 zset 实现原理</li>
+<li>已读未读功能用 redis 怎么实现</li>
+<li>有做过性能优化吗</li>
+<li>系统告警是怎么做的</li>
+<li> sql 慢的原因，怎么优化</li>
+<li>数据库死锁如何排查</li>
+<li>间隙锁解决了 mysql 的什么问题</li>
+<li> MVCC 了解过吗，它解决了什么问题、快照读和当前读是什么、快照读加什么锁、了解过意向锁吗</li>
+<li>简单介绍下 spring bean 的生命周期、想要修改 bean 的属性值应该怎么做</li>
+<li> nacos、zk、eureka 哪个更适合做注册中心，为什么</li>
+<li>服务限流、降级怎么做</li>
+<li> java 序列化怎么做、为什么要这么做</li>
+<li> jdk 为啥要做泛型</li>
+<li> java 类加载过程</li>
+<li> STW 是什么，为什么会出现 STW，哪个阶段出现 STW</li>
+<li> 卡表了解过吗</li>
+<li>介绍下 java 的锁、volatile、在应用中过多的使用 volatile 会有什么影响（应该回答总线风暴）</li>
+<li>用过 fork、join 吗，什么情况下会用</li>
+<li>发海量消息怎么设计？（提示用延时队列）</li>
+<li>已读未读功能怎么设计（提示 bitmap） 一个用户一个 bitmap 还是一条消息一个 bitmap</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E7%BB%8F/" rel="tag"># 面经</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/01/29/ml-ex3/" rel="prev" title="吴恩达 ml 课程编程作业 machine-learning-ex3">
+                  <i class="fa fa-chevron-left"></i> 吴恩达 ml 课程编程作业 machine-learning-ex3
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/08/14/spring/" rel="next" title="Spring Core 总结">
+                  Spring Core 总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chengfu Wu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+
+
+
+
+  <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'none'
+      },
+      options: {
+        renderActions: {
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://wucf.me/2019/07/14/%E9%9D%A2%E8%AF%95%E9%80%A0%E9%A3%9E%E6%9C%BA%EF%BC%8C%E5%B7%A5%E4%BD%9C%E6%8B%A7%E8%9E%BA%E4%B8%9D/";
+    this.page.identifier = "2019/07/14/面试造飞机，工作拧螺丝/";
+    this.page.title = "面试造飞机，工作拧螺丝";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ricky-wu.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
